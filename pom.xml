@@ -33,6 +33,12 @@
             <artifactId>devsjava</artifactId>
             <version>3.1.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.jgraph/jgraphx -->
+        <dependency>
+            <groupId>com.github.jgraph</groupId>
+            <artifactId>jgraphx</artifactId>
+            <version>v3.9.3</version>
+        </dependency>
 <!--
         <dependency>
             <groupId>org.apache.commons</groupId>
