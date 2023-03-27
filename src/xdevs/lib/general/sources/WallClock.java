@@ -65,6 +65,7 @@ public class WallClock extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         currentTime += e;
         if (!iStop.isEmpty()) {
             super.passivate();
