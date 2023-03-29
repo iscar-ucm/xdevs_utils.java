@@ -88,7 +88,7 @@ public class CoupledView extends Coupled {
             super.addCoupling(c.getPortFrom(), c.getPortTo());
         });
     }
-
+/* 
     private Component getViewAdapter(String componentName) {
         if (this.getName().equals(componentName)) {
             return this;
@@ -100,7 +100,7 @@ public class CoupledView extends Coupled {
         }
         return null;
     }
-
+*/
     public void setBounds(String componentName, double x, double y, double w, double h) {
         if (super.getName().equals(componentName)) {
             mxGeometry geometry = block.getGeometry();

@@ -1,4 +1,4 @@
-package xdevs.lib.students.mips;
+package xdevs.lib.projects.mips;
 
 import java.util.logging.Logger;
 import xdevs.core.modeling.Atomic;

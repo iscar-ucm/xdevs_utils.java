@@ -2,7 +2,7 @@
  * Node J
  */
 
-package xdevs.lib.students.mips;
+package xdevs.lib.projects.mips;
 
 import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Port;

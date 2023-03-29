@@ -1,23 +1,22 @@
-package xdevs.lib.students.mips;
+package xdevs.lib.projects.mips;
 
 import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Port;
 
-
-public class VCC extends Atomic {
+public class GND extends Atomic {
     // Nombres de los puertos de entrada/salida. En este caso, al tratarse de
     // un GND, sólo tenemos un puerto de salida.
 
     protected Port<Integer> out = new Port<>("out");
     protected double delay;
 
-    public VCC(String name, double delay) {
+    public GND(String name, double delay) {
         super(name);
-        super.addOutPort(out);        
+        super.addOutPort(out);
         this.delay = delay;
     }
 
-    public VCC(String name) {
+    public GND(String name) {
         this(name, 0.0);
     }
 
@@ -28,7 +27,7 @@ public class VCC extends Atomic {
 
     @Override
     public void lambda() {
-        out.addValue(1);
+        out.addValue(0);
     }
 
     // La función deltext no es necesaria porque este elemento no tiene
@@ -47,3 +46,4 @@ public class VCC extends Atomic {
     public void exit() {
     }
 }
+
