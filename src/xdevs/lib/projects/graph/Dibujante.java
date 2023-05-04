@@ -1,12 +1,10 @@
 package xdevs.lib.projects.graph;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
 
-import ssii2007.grafico.estructura.Camara;
-import ssii2007.grafico.estructura.PV3D;
-import ssii2007.grafico.estructura.terreno.Terreno;
-import ssii2007.modelo.CoupledSimulacion;
+import xdevs.lib.projects.graph.structs.Camara;
+import xdevs.lib.projects.graph.structs.terrain.Terreno;
 
 public class Dibujante {
 	private Terreno _terreno;
@@ -23,8 +21,8 @@ public class Dibujante {
 	}
 	
 	public void dibujar3D(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
-		gl.glPolygonMode(GL.GL_FRONT_AND_BACK,GL.GL_FILL);
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glPolygonMode(GL2.GL_FRONT_AND_BACK,GL2.GL_FILL);
 		_camara.actualizar(gl);
 		_terreno.dibujar3D(gl);
 		_simulacion.dibujar3D(gl);
@@ -46,7 +44,7 @@ public class Dibujante {
 	}
 	
 	public void repintarTerreno(GLAutoDrawable drawable, float ancho, float alto, float xLeft, float xRight, float yBot, float yTop) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glPointSize(1);
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		_terreno.dibujar2D(gl, ancho, alto, xLeft, xRight, yBot, yTop);

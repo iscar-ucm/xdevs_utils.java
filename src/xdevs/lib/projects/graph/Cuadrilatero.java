@@ -1,9 +1,9 @@
 package xdevs.lib.projects.graph;
 
-import ssii2007.grafico.estructura.Cara;
-import ssii2007.grafico.estructura.Malla;
-import ssii2007.grafico.estructura.PV3D;
-import ssii2007.grafico.estructura.VerticeNormal;
+import xdevs.lib.projects.graph.structs.Cara;
+import xdevs.lib.projects.graph.structs.Malla;
+import xdevs.lib.projects.graph.structs.PV3D;
+import xdevs.lib.projects.graph.structs.VerticeNormal;
 
 public class Cuadrilatero extends Malla {
 	

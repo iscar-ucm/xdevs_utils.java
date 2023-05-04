@@ -1,10 +1,8 @@
 package xdevs.lib.projects.graph;
 
-import ssii2007.grafico.estructura.terreno.Terreno;
-import ssii2007.modelo.ControladorAplicacion;
-import ssii2007.modelo.CoupledSimulacion;
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.Coordinator;
+import xdevs.core.modeling.Coupled;
+import xdevs.lib.projects.graph.models.ControladorAplicacion;
+import xdevs.lib.projects.graph.structs.terrain.Terreno;
 
 public class VistaDEVS extends Coupled implements Runnable{
 	private ManagerVista _managerVista;

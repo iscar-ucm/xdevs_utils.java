@@ -1,12 +1,12 @@
 package xdevs.lib.projects.graph;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL2;
 
-import ssii2007.grafico.estructura.Objeto3D;
-import ssii2007.grafico.estructura.ObjetoCompuesto3D;
+import xdevs.lib.projects.graph.structs.Objeto3D;
+import xdevs.lib.projects.graph.structs.ObjetoCompuesto3D;
 
 public class Bosque extends ObjetoCompuesto3D {
-	public Bosque(float ii, float id, float si, float sd, int arboles, GL gl) {
+	public Bosque(float ii, float id, float si, float sd, int arboles, GL2 gl) {
 		System.out.println("ii: "+ii);
 		System.out.println("id: "+ii);
 		System.out.println("si: "+ii);
@@ -26,7 +26,6 @@ public class Bosque extends ObjetoCompuesto3D {
 		System.out.println("p11: "+p11);
 		System.out.println("Calculado: "+altura);
 		Objeto3D[] objetos = new Objeto3D[arboles];
-		float tronco,copa;
 		for (int i=0; i<arboles; i++) {
 		//	tronco = (float)(2+Math.random()*5);
 		//	copa = 2*tronco;

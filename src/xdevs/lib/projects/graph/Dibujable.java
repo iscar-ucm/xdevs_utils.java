@@ -1,11 +1,9 @@
 package xdevs.lib.projects.graph;
 
-import javax.media.opengl.GL;
-
-import ssii2007.grafico.estructura.PV3D;
+import com.jogamp.opengl.GL2;
 
 public interface Dibujable {
-	public void inicializar(GL gl);
-	public void dibujar3D(GL gl);
-	public void dibujar2D(GL gl);
+	public void inicializar(GL2 gl);
+	public void dibujar3D(GL2 gl);
+	public void dibujar2D(GL2 gl);
 }
