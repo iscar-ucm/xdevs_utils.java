@@ -57,7 +57,7 @@ public class UAV extends Coupled {
 		addCoupling(this,UAV.INcontrolador,_controlador,ControladorRumboState.InPosRef);
 		
 		//addCoupling(this,UAV.OUT,_avion,AvionState.OutTodo);
-		addCoupling(_avion,AvionState.OutTodo,this,UAV.OUT);
+		addCoupling(_avion,AvionState.outTodo,this,UAV.OUT);
 		addCoupling(_controlador,ControladorRumboState.PeticionPunto,this,UAV.OUTcontrolador);
 		
 		//De reloj a peticiones
@@ -70,7 +70,7 @@ public class UAV extends Coupled {
 		addCoupling(_ruta,RutaState.OutWayPoint,_controlador,ControladorRumboState.InPosRefCon);
 		
 		//AVION A RUTA
-		addCoupling(_avion,AvionState.OutTodo,_ruta,RutaState.InAvion);		
+		addCoupling(_avion,AvionState.outTodo,_ruta,RutaState.InAvion);		
 		
 		//PeticionesState A AVION
 		addCoupling(_peticion,PeticionesState.PeticionAvion,_avion,AvionState.InSolicitud1);
@@ -81,7 +81,7 @@ public class UAV extends Coupled {
 		addCoupling(_avion,AvionState.OutAngulos,_receptor,ReceptorState.InAngulos);
 		addCoupling(_avion,AvionState.OutFuel,_receptor,ReceptorState.InFuel);
 		addCoupling(_avion,AvionState.OutEstado,_receptor,ReceptorState.InEstado);
-		addCoupling(_avion,AvionState.OutTodo,_receptor,ReceptorState.InTodo);
+		addCoupling(_avion,AvionState.outTodo,_receptor,ReceptorState.InTodo);
 		
 		//PeticionesState A CONTROLADOR
 		addCoupling(_peticion,PeticionesState.PeticionControladorRumbo,_controlador,ControladorRumboState.InPosRef);
@@ -90,7 +90,7 @@ public class UAV extends Coupled {
 		addCoupling(_controlador,ControladorRumboState.OutPeticion,_avion,AvionState.InSolicitud2);
 		addCoupling(_avion,AvionState.controlador,_controlador,ControladorRumboState.Inicializar);
 		
-		addCoupling(_avion,AvionState.OutTodo,_controlador,ControladorRumboState.InAvion);
+		addCoupling(_avion,AvionState.outTodo,_controlador,ControladorRumboState.InAvion);
 		this.
 		_id = id;
 	}

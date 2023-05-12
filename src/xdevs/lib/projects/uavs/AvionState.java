@@ -1,23 +1,20 @@
 package xdevs.lib.projects.uavs;
 import java.util.Vector;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL2;
 
-import ssii2007.matematico.IFuncion;
-import ssii2007.matematico.IIntegrador;
-import ssii2007.matematico.RungeKutta;
-
-import ssii2007.grafico.Dibujable;
-import ssii2007.grafico.Dibujante;
-import ssii2007.grafico.ModeloAvion;
-import ssii2007.grafico.Seguible;
-import ssii2007.grafico.estructura.PV3D;
-import ssii2007.grafico.estructura.TAfin;
-import ssii2007.grafico.estructura.terreno.Terreno;
-
-import testing.kernel.modeling.AtomicState;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.AtomicState;
+import xdevs.core.modeling.Port;
+import xdevs.lib.projects.graph.Dibujable;
+import xdevs.lib.projects.graph.Dibujante;
+import xdevs.lib.projects.graph.ModeloAvion;
+import xdevs.lib.projects.graph.Seguible;
+import xdevs.lib.projects.graph.structs.PV3D;
+import xdevs.lib.projects.graph.structs.TAfin;
+import xdevs.lib.projects.graph.structs.terrain.Terreno;
+import xdevs.lib.projects.math.IFuncion;
+import xdevs.lib.projects.math.IIntegrador;
+import xdevs.lib.projects.math.RungeKutta;
 
 
 /**
@@ -34,12 +31,12 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 	/**
 	 * Constante para el puerto de entrada de las solicitudes 1
 	 */
-	protected Port<Vector> InSolicitud1 = new Port<Vector>("INsolicitud1");
+	protected Port<Vector> inSolicitud1 = new Port<Vector>("INsolicitud1");
 	
 	/**
 	 * Constante para el puerto de entrada de las solicitudes 2
 	 */
-	protected Port<Vector> InSolicitud2 = new Port<Vector>("INsolicitud2");
+	protected Port<Vector> inSolicitud2 = new Port<Vector>("INsolicitud2");
 	
 	
 	//Puertos de salida
@@ -71,7 +68,7 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 	/**
 	 * Constante para el puerto de salida para el controlador
 	 */
-	protected Port<Vector> OutTodo = new Port<Vector>("OUTTodo");
+	protected Port<Vector> outTodo = new Port<Vector>("OUTTodo");
 	
 	protected Port<Vector> controlador = new Port<Vector>("controlador");
 	
@@ -313,15 +310,15 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 	public AvionState (String name, double kp, Terreno terreno) {
 		super(name);
 		integrador=new RungeKutta();
-		addInport(InSolicitud1);			//Establecemos los puertos de entrada
-		addInport(InSolicitud2);			//Establecemos los puertos de entrada
+		addInPort(inSolicitud1);			//Establecemos los puertos de entrada
+		addInPort(inSolicitud2);			//Establecemos los puertos de entrada
 //		addOutport(AvionState.OutPosicion); 			//Establecemos los puertos de salida
-		addOutport(controlador); 
+		addOutPort(controlador); 
 		//addOutport(AvionState.OutVelocidad);
 		//addOutport(AvionState.OutAngulos);
 		//addOutport(AvionState.OutFuel);
 		//addOutport(AvionState.OutEstado);
-		addOutport(OutTodo);
+		addOutPort(outTodo);
 		//addOutport(AvionState.OutActualizados);
 		addState(phase);						//A�adimos los estados
 		addState(AvionState.kp);
@@ -368,6 +365,16 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 	}
 	
 	
+	@Override
+	public void exit() {
+	}
+
+
+	@Override
+	public void initialize() {
+		super.passivate();
+	}
+
 	@SuppressWarnings("unchecked")
 	/**
 	 * Funci�n de transici�n externa para el modelo at�mico del avi�n
@@ -375,10 +382,11 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 	 * @param arg1
 	 */
 	public void deltext(double e) {
+		super.resume(e);
 		if (getStateValue(phase).intValue() != AvionState.DESTRUIDO) {
-			if (InSolicitud1.getValue()!=null) {
+			if (!inSolicitud1.isEmpty()) {
 				//En primer lugar obtenemos el tipo de solicitud
-				Vector solicitud = InSolicitud1.getValue();
+				Vector solicitud = inSolicitud1.getSingleValue();
 				//En funci�n del tipo de solicitud, obtenemos los datos y realizamos la operaci�n requerida
 				switch ((Integer)solicitud.get(0)) {
 				case AvionState.Reset: {
@@ -439,10 +447,10 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 				}
 			}
 			
-			if (InSolicitud2.getValue()!=null) {
+			if (!inSolicitud2.isEmpty()) {
 				
 				//En primer lugar obtenemos el tipo de solicitud
-				Vector solicitud = InSolicitud2.getValue();
+				Vector solicitud = inSolicitud2.getSingleValue();
 				//En funci�n del tipo de solicitud, obtenemos los datos y realizamos la operaci�n requerida
 				
 				switch ((Integer)solicitud.get(0)) {
@@ -665,19 +673,19 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 			Vector iniciar = new Vector();
 			iniciar.add(ControladorRumboState.Iniciar);
 			this.setStateValue(iniciarControlador, 0);
-			controlador.setValue(iniciar);
+			controlador.addValue(iniciar);
 		}
 		
 		//else{
 		Vector<Number> posicion = new Vector<Number>(3,0);
 		
-		posicion.add(new Double(getStateValue("pe").doubleValue()));
-		posicion.add(new Double(getStateValue("pn").doubleValue()));
-		posicion.add(new Double(getStateValue("ph").doubleValue()));
+		posicion.add(getStateValue("pe").doubleValue());
+		posicion.add(getStateValue("pn").doubleValue());
+		posicion.add(getStateValue("ph").doubleValue());
 		Vector<Number> velocidad = new Vector<Number>(3,0);	
-		velocidad.add(new Double( dameComponentesV(1)));
-		velocidad.add(new Double( dameComponentesV(2)));
-		velocidad.add(new Double( dameComponentesV(3)));
+		velocidad.add(dameComponentesV(1));
+		velocidad.add(dameComponentesV(2));
+		velocidad.add(dameComponentesV(3));
 		Vector<Number> angulos = new Vector<Number>(3,0);
 		angulos.add(getStateValue("alabeo"));
 		angulos.add(getStateValue("cabeceo"));
@@ -690,10 +698,7 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 		todo.add(getStateValue(phase).doubleValue());
 		todo.add(getStateValue(dt).doubleValue());
 		todo.add((Integer)Integer.parseInt(this.getName()));
-		OutTodo.setValue(todo);
-		//}
-
-		
+		outTodo.addValue(todo);
 	}
 	
     @Override
@@ -899,13 +904,13 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 
 
 	@Override
-	public void dibujar2D(GL gl) {
+	public void dibujar2D(GL2 gl) {
 		_modeloAvion.dibujar2D((getStateValue("pn")).floatValue(), (getStateValue("pe")).floatValue(), gl);
 	}
 
 
 	@Override
-	public void dibujar3D(GL gl) {
+	public void dibujar3D(GL2 gl) {
 		_modeloAvion = new ModeloAvion(gl,_terreno);
 		TAfin angulos = new TAfin();
 //		angulos.giroAbsolutoX((getStateValue("cabeceo")).floatValue()*360/(float)(2*Math.PI), gl);
@@ -931,7 +936,7 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 		_modeloAvion.dibujar3D(gl);*/
 	}
 	
-	public void inicializar(GL gl) {
+	public void inicializar(GL2 gl) {
 		_modeloAvion = new ModeloAvion(gl,_terreno);
 		_modeloAvion.getTafin().escalar(100, 100, 100, gl);
 	}
@@ -952,4 +957,6 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 	public int devolverTipoSeguible() {
 		return 1;
 	}
+
+
 }

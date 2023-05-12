@@ -1,6 +1,6 @@
 package xdevs.lib.projects.graph;
 
-import ssii2007.grafico.estructura.PV3D;
+import xdevs.lib.projects.graph.structs.PV3D;
 
 public interface Seguible {
 	public PV3D obtenerPosicion();

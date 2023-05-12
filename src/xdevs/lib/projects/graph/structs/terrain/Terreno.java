@@ -1,12 +1,10 @@
 package xdevs.lib.projects.graph.structs.terrain;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL2;
 
-import ssii2007.grafico.estructura.Cara;
-import ssii2007.grafico.estructura.Color;
-import ssii2007.grafico.estructura.Objeto3D;
-import ssii2007.grafico.estructura.ObjetoDegradado;
-import ssii2007.grafico.estructura.PV3D;
+import xdevs.lib.projects.graph.structs.Color;
+import xdevs.lib.projects.graph.structs.Objeto3D;
+import xdevs.lib.projects.graph.structs.PV3D;
 
 public abstract class Terreno extends Objeto3D {
 	
@@ -339,7 +337,7 @@ public abstract class Terreno extends Objeto3D {
 		else return new Color(0,0,(80f/256f));
 	}
 	
-	public void dibujar3D(GL gl) {
+	public void dibujar3D(GL2 gl) {
 		boolean sumergido;
 		Color color;
         gl.glPushMatrix();
@@ -350,7 +348,7 @@ public abstract class Terreno extends Objeto3D {
                 	
                 	//Primera cara
                     sumergido = true;
-                    gl.glBegin(GL.GL_POLYGON);
+                    gl.glBegin(GL2.GL_POLYGON);
 	                	//Vertice x,z
 	                	color = colorDeAltura(_alturas[fila][columna]);
 	                    gl.glColor3f(color.getRed(),color.getGreen(),color.getBlue());
@@ -374,7 +372,7 @@ public abstract class Terreno extends Objeto3D {
                     gl.glEnd();
                     
                     if (sumergido) {
-                        gl.glBegin(GL.GL_POLYGON);
+                        gl.glBegin(GL2.GL_POLYGON);
                         	//Vertice x,z
                         	color = colorDeAltura(_alturas[fila][columna]);
 	                    	gl.glColor3f(color.getRed(),color.getGreen(),color.getBlue());
@@ -397,7 +395,7 @@ public abstract class Terreno extends Objeto3D {
                     
                   //Segunda cara
                     sumergido = true;
-                    gl.glBegin(GL.GL_POLYGON);
+                    gl.glBegin(GL2.GL_POLYGON);
 	                	//Vertice x,z+1
 	                	color = colorDeAltura(_alturas[fila][columna+1]);
 	                    gl.glColor3f(color.getRed(),color.getGreen(),color.getBlue());
@@ -421,7 +419,7 @@ public abstract class Terreno extends Objeto3D {
                     gl.glEnd();
                     
                     if (sumergido) {
-                        gl.glBegin(GL.GL_POLYGON);
+                        gl.glBegin(GL2.GL_POLYGON);
                         	//Vertice x,z+1
                         	color = colorDeAltura(_alturas[fila][columna+1]);
 	                    	gl.glColor3f(color.getRed(),color.getGreen(),color.getBlue());
@@ -489,12 +487,12 @@ public abstract class Terreno extends Objeto3D {
         return normales;
 	}
 	
-	public void dibujar2D(GL gl, float ancho, float alto, float xLeft, float xRight, float yBot, float yTop) {	
+	public void dibujar2D(GL2 gl, float ancho, float alto, float xLeft, float xRight, float yBot, float yTop) {	
 		Color color;
 		float margenError=0.05f;
 		float incremento = (xRight-xLeft)/ancho;
 		incremento=incremento-incremento*margenError;
-		gl.glBegin(GL.GL_POINTS);
+		gl.glBegin(GL2.GL_POINTS);
 		float x = xLeft;
 		float y = yBot;
 		float altura;

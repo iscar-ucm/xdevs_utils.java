@@ -2,24 +2,17 @@ package xdevs.lib.projects.graph.models;
 
 import java.util.ArrayList;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL2;
 
-import ssii2007.Mux.Mux;
-import ssii2007.aviones.UAV;
-import ssii2007.barcos.Barco;
-import ssii2007.grafico.Dibujable;
-import ssii2007.grafico.estructura.terreno.Terreno;
-import ssii2007.incidencias.Naufrago;
-import ssii2007.simulacion.Controlador;
-
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.Coordinator;
+import xdevs.core.modeling.Coupled;
+import xdevs.lib.projects.graph.Dibujable;
+import xdevs.lib.projects.uavs.UAV;
 
 /**
  * Clase que implementa la clase simulaci�n, que es el modelo acoplado que
  * contiene toda la simulaci�n
  */
-public class CoupledSimulacion extends Coupled implements Dibujable,Runnable{
+public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 
 	/**
 	 * Lista que contiene los aviones
@@ -187,7 +180,7 @@ public class CoupledSimulacion extends Coupled implements Dibujable,Runnable{
 	}
 
 	@Override
-	public void dibujar2D(GL gl) {
+	public void dibujar2D(GL2 gl) {
 		for(int i=0;i<_aviones.size();i++) {
 			_aviones.get(i).getAvion().dibujar2D(gl);
 		}
