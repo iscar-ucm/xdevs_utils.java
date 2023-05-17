@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.Vector;
 
 import xdevs.core.modeling.AtomicState;
+import xdevs.core.modeling.Port;
 import xdevs.lib.projects.math.IFuncion;
 import xdevs.lib.projects.math.IIntegrador;
 import xdevs.lib.projects.math.RungeKutta;
@@ -18,10 +19,10 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 	/** Puerto por el que entra la informacion de la peticion*/
 	public static final String puertoIn = "puertoIn";
 	
-	public static final String puertoInAlgoritmo = "puertoInAlgoritmo";
+	public Port<Vector<Number>> puertoInAlgoritmo = new Port<>("puertoInAlgoritmo");
 	
 	/** Puerto por el que entra la comunicacion del barco*/
-	public static final String puertoInBarco = "puertoInBarco";
+	public Port<Vector<Vector<Number>>> puertoInBarco = new Port<>("puertoInBarco");
 	
 	/** Puerto por el que sale la peticion del nuevo angulo*/
 	public static final String puertoOut = "puertoOut";
@@ -80,9 +81,9 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 	public ControladorBarco(String name) {
 		super(name);
 		integrador=new RungeKutta();
-		addInport(puertoInAlgoritmo);
+		addInPort(puertoInAlgoritmo);
 		addInport(puertoIn);
-		addInport(puertoInBarco);
+		addInPort(puertoInBarco);
 		addOutport(puertoOut);
 		addOutport(puertoConexionExterior);
 		addState("x");
@@ -114,15 +115,14 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 		setSigma(5);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void deltext(double e, DevsDessMessage x) {
-	
-		Iterator iteradorBarco = x.getValuesOnPort(ControladorBarco.puertoInBarco).iterator();
+	public void deltext(double e) {
+		super.resume(e);
+		Iterator<Vector<Vector<Number>>> iteradorBarco = puertoInBarco.getValues().iterator();
 		
 		while (iteradorBarco.hasNext()) {
-			Vector solicitud = ((Vector)iteradorBarco.next());
-			Vector estados = (Vector)(solicitud.get(0));
+			Vector<Vector<Number>> solicitud = iteradorBarco.next();
+			Vector<Number> estados = solicitud.get(0);
 			//NOTA:
 			//QUEREMOS, POSICION, VELOCIDAD Y ANGULO PARA DESPUES CALCULAR PSI
 			this.setStateValue("x", (Double)(estados.get(0)));
@@ -135,9 +135,9 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 			}
 		}
 		
-		Iterator iteradorPeticion = x.getValuesOnPort(ControladorBarco.puertoInAlgoritmo).iterator();
+		Iterator<Vector<Number>> iteradorPeticion = puertoInAlgoritmo.getValues().iterator();
 		while (iteradorPeticion.hasNext()) {
-			Vector solicitud = ((Vector)iteradorPeticion.next());
+			Vector<Number> solicitud = iteradorPeticion.next();
 			if((Integer)solicitud.get(0)==Integer.parseInt(this.getName())){
 				if(this.getStateValue("phase").intValue()==PARADA){
 					this.setStateValue("phase", RUNNING);
@@ -193,7 +193,6 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 
 	@Override
 	public void deltint() {
-		_msg = new DevsDessMessage();
 		avanzaTiempo();
 		//if((this.getStateValue("phase").doubleValue()==RUNNING)){
 		//imprimeEstado();	
@@ -205,17 +204,12 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 		}
 		if((pedir)||((this.getStateValue("temporizador").doubleValue())<0)){
 			pedir=false;
-
 			this.setStateValue("temporizador", Double.MAX_VALUE);
-			Vector solicitud = new Vector();
-			solicitud.add(new Integer(Controlador.ActualizaPosicion));
-			solicitud.add(new Integer(Integer.parseInt(this.getName())));
-			_msg.add(ControladorBarco.puertoConexionExterior,solicitud);
+			Vector<Number> solicitud = new Vector<>();
+			solicitud.add(Controlador.ActualizaPosicion);
+			solicitud.add(Integer.parseInt(this.getName()));
+
 		}	
-		//}
-
-		
-
 		setSigma(5);
 	}
 	
@@ -296,11 +290,11 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 		return _msg;
 	}
 	
-	public void deltcon(double e, DevsDessMessage x) {
+	public void deltcon(double e) {
 		//En el caso de que se produzca una transicion externa de manera simultanea a una transici�n interna,
 		//realizaremos en primer lugar la funci�n de transicion externa, puesto que tras la funci�n de transici�n
 		//interna tendremos calculados los valores de los datos del avion para el instante k+1
-		deltext(e,x);	
+		deltext(e);	
 		deltint();
 	}
 

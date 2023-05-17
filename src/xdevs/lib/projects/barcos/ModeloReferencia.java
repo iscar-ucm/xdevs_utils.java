@@ -1,23 +1,21 @@
-package ssii2007.barcos;
+package xdevs.lib.projects.barcos;
 
 import java.util.Iterator;
 import java.util.Vector;
 
-import testing.kernel.modeling.AtomicState;
-import testing.kernel.modeling.DevsDessMessage;
+import xdevs.core.modeling.AtomicState;
+import xdevs.core.modeling.Port;
+import xdevs.lib.projects.math.IFuncion;
+import xdevs.lib.projects.math.IIntegrador;
+import xdevs.lib.projects.math.RungeKutta;
 
-import ssii2007.matematico.IFuncion;
-import ssii2007.matematico.IIntegrador;
-import ssii2007.matematico.RungeKutta;
-
-public class ModeloReferencia extends AtomicState implements IFuncion{
+public class ModeloReferencia extends AtomicState implements IFuncion {
 	
 	private IIntegrador integrador;
-	
-	public static final String puertoIn = "puertoIn";
-	
-	//TODO DEVUELVE TODOS LOS DATOS POR ESTE PUERTO
-	public static final String puertoOut = "puertoOut";
+		
+	// TODO DEVUELVE TODOS LOS DATOS POR ESTE PUERTO
+	public Port<Vector<Number>> puertoIn = new Port<>("puertoIn");
+	public Port<Vector<Number>> puertoOut = new Port<>("puertoOut");
 	
 	public static final int Reset = 101; //Reset inicializa
 	
@@ -37,7 +35,7 @@ public class ModeloReferencia extends AtomicState implements IFuncion{
 	
 	public ModeloReferencia(String name,double _Wr,double _Zr,double _dt) {
 		super(name);
-		integrador=new RungeKutta();
+		integrador = new RungeKutta();
 		//Creamos las variables de las que dependeran las ecuaciones
 		addState("Wr");
 		setStateValue("Wr",_Wr);
@@ -54,18 +52,27 @@ public class ModeloReferencia extends AtomicState implements IFuncion{
 		setStateValue("x2",0);
 		addState("x3");
 		setStateValue("x3",0);
-		//Damos valores a las constantes
+		// Damos valores a las constantes
 		setStateValue("dt",_dt);
-		//Puertos de entrada
-		addInport(puertoIn);
-		//Puertos de salida
-		addOutport(puertoOut);
-		//Ponemos el tiempo a infinito, hasta que se inicie
-		setSigma(INFINITY);
+		// Puertos de entrada
+		addInPort(puertoIn);
+		// Puertos de salida
+		addOutPort(puertoOut);
+		// Ponemos el tiempo a infinito, hasta que se inicie
+		super.passivate();
 		
 	}
 
-	public void ponValor(double valor){
+	@Override
+	public void initialize() {
+		super.passivate();
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	public void ponValor(Number valor){
 		setStateValue("tactual",0);
 		setStateValue("Psid",valor);
 		//System.out.println("angulo "+this.getStateValue("Psid").doubleValue());
@@ -73,13 +80,13 @@ public class ModeloReferencia extends AtomicState implements IFuncion{
 	}
 	
 	@Override
-	public void deltext(double e, DevsDessMessage x) {
+	public void deltext(double e) {
 		// TODO Auto-generated method stub
 	//	System.out.println("llegada mensaje modelo referencia");
-		Iterator iteradorSolicitud = x.getValuesOnPort(ModeloReferencia.puertoIn).iterator();
+		Iterator<Vector<Number>> iteradorSolicitud = puertoIn.getValues().iterator();
 		while (iteradorSolicitud.hasNext()) {
 			//En primer lugar obtenemos el tipo de solicitud
-			Vector solicitud = ((Vector)iteradorSolicitud.next());
+			Vector<Number> solicitud = iteradorSolicitud.next();
 			//En función del tipo de solicitud, obtenemos los datos y realizamos la operación requerida
 			switch ((Integer)solicitud.get(0)) {
 			case ModeloReferencia.Reset: {
@@ -129,11 +136,10 @@ public class ModeloReferencia extends AtomicState implements IFuncion{
 	}
 
 	@Override
-	public DevsDessMessage lambda() {
+	public void lambda() {
 		// TODO Auto-generated method stub
 		avanzaTiempo();
 		//imprimeEstado();
-		DevsDessMessage msg = new DevsDessMessage();
 		Vector<Number> vector = new Vector<Number>(3,0);
 		double psir = this.getStateValue("x1").doubleValue();
 		double rr= this.getStateValue("x2").doubleValue();
@@ -150,9 +156,7 @@ public class ModeloReferencia extends AtomicState implements IFuncion{
 		vector.add(psir);
 		vector.add(rr);
 		vector.add(alfar);
-		msg.add(ModeloReferencia.puertoOut, vector);
-		return msg;
-		
+		puertoOut.addValue(vector);		
 		//ORDEN PSI-> 0, RR ->1, ALFA->2
 	}
 
@@ -223,5 +227,4 @@ public class ModeloReferencia extends AtomicState implements IFuncion{
 		estado[2]=getStateValue("x3").doubleValue();
 		return estado;
 	}
-
 }

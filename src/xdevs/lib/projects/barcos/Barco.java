@@ -73,11 +73,11 @@ public class Barco extends Coupled {
 		addComponent(_controlador_rumbo);
 		addComponent(_controlador);
 		
-		addCoupling(this,Barco.IN,_barco,BarcoState.InSolicitud1);
-		addCoupling(_barco,BarcoState.OutTodo,this,Barco.OUT);
+		addCoupling(this.in, _barco.inSolicitud1);
+		addCoupling(_barco.outTodo, this.out);
 		
-		addCoupling(this,Barco.INcontroladorBarco,_controlador,ControladorBarco.puertoInAlgoritmo);
-		addCoupling(_controlador,ControladorBarco.puertoConexionExterior,this,Barco.Outcontrolador);
+		addCoupling(this.inControladorBarco, _controlador.puertoInAlgoritmo);
+		addCoupling(_controlador,ControladorBarco.puertoConexionExterior, this.outControlador);
 		//addCoupling(this,UAV.OUT,_avion,AvionState.OutTodo);
 		
 		//TODO HAY QUE HACER....

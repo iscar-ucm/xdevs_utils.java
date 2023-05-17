@@ -1,19 +1,19 @@
 package xdevs.lib.projects.graph;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL2;
 
-import ssii2007.grafico.estructura.Cilindro;
-import ssii2007.grafico.estructura.Color;
-import ssii2007.grafico.estructura.Objeto3D;
-import ssii2007.grafico.estructura.ObjetoCompuesto3D;
-import ssii2007.grafico.estructura.PV3D;
-import ssii2007.grafico.estructura.terreno.Terreno;
+import xdevs.lib.projects.graph.structs.Cilindro;
+import xdevs.lib.projects.graph.structs.Color;
+import xdevs.lib.projects.graph.structs.Objeto3D;
+import xdevs.lib.projects.graph.structs.ObjetoCompuesto3D;
+import xdevs.lib.projects.graph.structs.PV3D;
+import xdevs.lib.projects.graph.structs.terrain.Terreno;
 
 public class ModeloNaufrago extends ObjetoCompuesto3D {
 	private Terreno _terreno;
 	private PV3D _pAnterior;
 	
-	public ModeloNaufrago(GL gl, Terreno terreno) {
+	public ModeloNaufrago(GL2 gl, Terreno terreno) {
 		int nObjetos = 3;
 		int nLados = 8;
 		Objeto3D[] objetos = new Objeto3D[nObjetos];
@@ -39,26 +39,26 @@ public class ModeloNaufrago extends ObjetoCompuesto3D {
 		this._terreno = terreno;
 	}
 	
-	public void roll(float ang, GL gl) {
+	public void roll(float ang, GL2 gl) {
 		this.getTafin().giroAbsolutoZ(ang, gl);
 	}
 	
-	public void yaw(float ang, GL gl) {
+	public void yaw(float ang, GL2 gl) {
 		this.getTafin().giroAbsolutoY(ang, gl);
 	}
 	
-	public void pitch(float ang, GL gl) {
+	public void pitch(float ang, GL2 gl) {
 		this.getTafin().giroAbsolutoX(ang, gl);
 	}
 	
-	public void posicionar(float x, float y, float z, GL gl) {
+	public void posicionar(float x, float y, float z, GL2 gl) {
 		this.getTafin().translacionAbsolutaXYZ(x, y, z, gl);
 	}
 	
-	public void dibujar2D(float x, float y, GL gl) {
+	public void dibujar2D(float x, float y, GL2 gl) {
 		float p00,p10,p01,p11,altura;
 		gl.glPointSize(4);
-		gl.glBegin(GL.GL_POINTS);
+		gl.glBegin(GL2.GL_POINTS);
 			if (_pAnterior!=null) {
 				if ((x>=0)&&((x/1000)<_terreno.getLongitud())&&((y/1000)<_terreno.getAnchura())&&(y>=0)) {
 					int auxX = (int)x/1000;

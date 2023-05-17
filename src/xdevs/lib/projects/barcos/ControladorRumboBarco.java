@@ -1,24 +1,21 @@
-package ssii2007.barcos;
+package xdevs.lib.projects.barcos;
 
 import java.util.Iterator;
 import java.util.Vector;
 
-import testing.kernel.modeling.AtomicState;
-import testing.kernel.modeling.DevsDessMessage;
-
-import ssii2007.matematico.IFuncion;
-import ssii2007.matematico.IIntegrador;
-import ssii2007.matematico.RungeKutta;
+import xdevs.core.modeling.AtomicState;
+import xdevs.core.modeling.Port;
+import xdevs.lib.projects.math.IFuncion;
+import xdevs.lib.projects.math.IIntegrador;
+import xdevs.lib.projects.math.RungeKutta;
 
 public class ControladorRumboBarco extends AtomicState implements IFuncion{
 
 	private IIntegrador integrador;
 	
-	public static final String puertoInMRef = "puertoInMRef";
-	
-	public static final String puertoInBarco = "puertoInBarco";
-	
-	public static final String puertoOut = "puertoOut";
+	public Port<Vector<Number>> puertoInMRef = new Port<>("puertoInMRef");	
+	public Port<Vector<Vector<Number>>> puertoInBarco = new Port<>("puertoInBarco");
+	public Port<Vector<Number>> puertoOut = new Port<>("puertoOut");
 	
 	public static final String dt = "dt";
 	
@@ -54,10 +51,10 @@ public class ControladorRumboBarco extends AtomicState implements IFuncion{
 		super(name);
 		addState("x1");
 		addState("deltac");
-		addInport(puertoInMRef);
-		addInport(puertoInBarco);
-		addOutport(puertoOut);
-		integrador=new RungeKutta();
+		addInPort(puertoInMRef);
+		addInPort(puertoInBarco);
+		addOutPort(puertoOut);
+		integrador = new RungeKutta();
 		this.addState("Kp");
 		this.addState("Kn");
 		this.addState("Tn");
@@ -77,70 +74,64 @@ public class ControladorRumboBarco extends AtomicState implements IFuncion{
 		this.setStateValue("Ti", _ti);
 		this.setStateValue("x1", 0);
 		this.setStateValue("tactual",0);
-		setSigma(INFINITY);
+		super.passivate();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void deltext(double e, DevsDessMessage x) {
+	public void initialize() {
+		super.passivate();
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void deltext(double e) {
 		
 		//si llega de avion, almacenar
 		//se llega de modelo referencia, enviar a avion, poner sigma a cero
 		
-			Iterator iteradorBarco = x.getValuesOnPort(ControladorRumboBarco.puertoInBarco).iterator();
-			Iterator iteradorModeloRef = x.getValuesOnPort(ControladorRumboBarco.puertoInMRef).iterator();
+			Iterator<Vector<Vector<Number>>> iteradorBarco = puertoInBarco.getValues().iterator();
+			Iterator<Vector<Number>> iteradorModeloRef = puertoInMRef.getValues().iterator();
 			while (iteradorBarco.hasNext()) {
-				Vector solicitud = ((Vector)iteradorBarco.next());
-				Vector estados = (Vector)(solicitud.get(0));
-
-				/*ERROR*/
-				
-				
-				this.setStateValue("psi", (Double)(estados.get(2)));
-				this.setStateValue("r",(Double)(estados.get(3)));
+				Vector<Vector<Number>> solicitud = iteradorBarco.next();
+				Vector<Number> estados = solicitud.get(0);
+				this.setStateValue("psi", estados.get(2));
+				this.setStateValue("r", estados.get(3));
 			}
 			
 			while (iteradorModeloRef.hasNext()) {
 				//En primer lugar obtenemos el tipo de solicitud
-				Vector solicitud = ((Vector)iteradorModeloRef.next());
-				
-				
-				this.setStateValue("psir", (Double)(solicitud.get(0)));
-				this.setStateValue("rr", (Double)(solicitud.get(1)));
-				this.setStateValue("alfar", (Double)(solicitud.get(2)));
+				Vector<Number> solicitud = iteradorModeloRef.next();
+				this.setStateValue("psir", solicitud.get(0));
+				this.setStateValue("rr", solicitud.get(1));
+				this.setStateValue("alfar", solicitud.get(2));
 				this.setSigma(0);
 			}
 	}
 
 	@Override
 	public void deltint() {
-		setSigma(INFINITY);
+		super.passivate();
 		
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public DevsDessMessage lambda() {
+	public void lambda() {
 		avanzaTiempo();
-		//imprimeEstado();
-		DevsDessMessage msg = new DevsDessMessage();
-		Vector mensaje = new Vector(5,0);
-		mensaje.add(new Integer(BarcoState.CambiarAnguloTimon));
-		mensaje.add(new Double (getStateValue("deltac").doubleValue()));
-		msg.add("puertoOut", mensaje);
-		return msg;
-		
+		Vector<Number> mensaje = new Vector<>(5,0);
+		mensaje.add(BarcoState.CambiarAnguloTimon);
+		mensaje.add(getStateValue("deltac"));
+		puertoOut.addValue(mensaje);		
 	}
 
 	public void actualizaEstados(double[] estadosActuales) {
-		// TODO Auto-generated method stub
 		this.setStateValue("x1",estadosActuales[0]);
 		
 	}
 
 	public void avanzaTiempo() {
-		// TODO Auto-generated method stub
-		
 		this.actualizaEstados(integrador.integra(this, 5,this.getStateValue("tactual").doubleValue()));
 		this.setStateValue("tactual", this.getStateValue("tactual").doubleValue()+5);
 		double vdeltac=0;
@@ -165,7 +156,6 @@ public class ControladorRumboBarco extends AtomicState implements IFuncion{
 	}
 
 	public double[] dameControlActual() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	
@@ -192,7 +182,6 @@ public class ControladorRumboBarco extends AtomicState implements IFuncion{
 
 	public double[] dameDerivadas(double tiempo, double[] estados,
 			double[] control) {
-		// TODO Auto-generated method stub
 		double[] derivadas= new double[6];
 		double vpsir,vpsi;
 		double vkp,vti;
@@ -211,14 +200,10 @@ public class ControladorRumboBarco extends AtomicState implements IFuncion{
 		if(angulo < -Math.PI){angulo_normalizado=normalizar(angulo + 2*Math.PI);}
 		return angulo_normalizado;
 	}
-	
-
-	
+		
 	public double[] dameEstadoActual() {
-		// TODO Auto-generated method stub
 		double[] estado=new double[1];
 		estado[0]=this.getStateValue("x1").doubleValue();
 		return estado;
 	}
-
 }

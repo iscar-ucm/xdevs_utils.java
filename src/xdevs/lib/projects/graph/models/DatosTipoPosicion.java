@@ -34,6 +34,10 @@ public class DatosTipoPosicion {
 		this.punto=punto;
 		this.ruta=null;
 	}
+
+	public Ruta geRuta() {
+		return ruta;
+	}
 	
 	public Punto getPunto() {
 		return punto;
