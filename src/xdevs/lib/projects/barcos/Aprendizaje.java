@@ -1,4 +1,4 @@
-package ssii2007.simulacion;
+package xdevs.lib.projects.barcos;
 
 public class Aprendizaje {
 	private int tiempo;

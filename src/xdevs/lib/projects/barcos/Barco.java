@@ -77,40 +77,40 @@ public class Barco extends Coupled {
 		addCoupling(_barco.outTodo, this.out);
 		
 		addCoupling(this.inControladorBarco, _controlador.puertoInAlgoritmo);
-		addCoupling(_controlador,ControladorBarco.puertoConexionExterior, this.outControlador);
+		addCoupling(_controlador.puertoConexionExterior, this.outControlador);
 		//addCoupling(this,UAV.OUT,_avion,AvionState.OutTodo);
 		
 		//TODO HAY QUE HACER....
-		//CONEXIONES DUPLICADAS AHORA MISMO, OJO:
+		// CONEXIONES DUPLICADAS AHORA MISMO, OJO:
 		// ENTRADA MODELO REFERENCIA
 		// SALIDAS DE PETICIONES, VAN A VARIOS, AISLAR PETICIONES... DISTINTO NUMERO
 		//De controlador a Modelo de Referencia
-		addCoupling(this._controlador,ControladorBarco.puertoOut,this._modelo_referencia,ModeloReferencia.puertoIn);
+		addCoupling(_controlador.puertoOut, _modelo_referencia.puertoIn);
 		//De peticiones a controlador
-		addCoupling(this._peticion,PeticionesStateBarco.PeticionBarco,this._controlador,ControladorBarco.puertoIn);
+		addCoupling(_peticion.peticionBarco, _controlador.puertoIn);
 		//De barco a controlador
-		addCoupling(this._barco,BarcoState.OutTodo,this._controlador,ControladorBarco.puertoInBarco);
+		addCoupling(_barco.outTodo, _controlador.puertoInBarco);
 		//De peticiones a Modelo de Referencia
-		addCoupling(this._peticion,PeticionesStateBarco.PeticionBarco,_modelo_referencia,ModeloReferencia.puertoIn);
+		addCoupling(_peticion.peticionBarco, _modelo_referencia.puertoIn);
 		//De modelo de Referencia a Controlador
-		addCoupling(this._modelo_referencia,ModeloReferencia.puertoOut,_controlador_rumbo,ControladorRumboBarco.puertoInMRef);
+		addCoupling(_modelo_referencia.puertoOut, _controlador_rumbo.puertoInMRef);
 		//De controlador a barcoState
-		addCoupling(this._controlador_rumbo,ControladorRumboBarco.puertoOut,this._barco,BarcoState.InSolicitud2);
+		addCoupling(_controlador_rumbo.puertoOut, _barco.inSolicitud2);
 		//De barcoState a controlador (feedback)
-		addCoupling(this._barco,BarcoState.OutTodo,this._controlador_rumbo,ControladorRumboBarco.puertoInBarco);
+		addCoupling(_barco.outTodo, _controlador_rumbo.puertoInBarco);
 		//De reloj a peticiones
 		//addCoupling(_reloj,RelojState.OUT,_peticion,PeticionesStateBarco.In);
 				
 		//PeticionesState A BARCO
-		addCoupling(_peticion,PeticionesStateBarco.PeticionBarco,_barco,BarcoState.InSolicitud1);
+		addCoupling(_peticion.peticionBarco, _barco.inSolicitud1);
 		
 		//AVION A RECEPTOR
-		addCoupling(_barco,BarcoState.OutPosicion,_receptor,ReceptorStateBarco.InPosicion);
-		addCoupling(_barco,BarcoState.OutVelocidad,_receptor,ReceptorStateBarco.InVelocidad);
-		addCoupling(_barco,BarcoState.OutAngulos,_receptor,ReceptorStateBarco.InAngulos);
-		addCoupling(_barco,BarcoState.OutFuel,_receptor,ReceptorStateBarco.InFuel);
-		addCoupling(_barco,BarcoState.OutEstado,_receptor,ReceptorStateBarco.InEstado);
-		addCoupling(_barco,BarcoState.OutTodo,_receptor,ReceptorStateBarco.InTodo);
+		addCoupling(_barco.outPosicion,  _receptor.inPosicion);
+		addCoupling(_barco.outVelocidad, _receptor.inVelocidad);
+		addCoupling(_barco.outAngulos, _receptor.inAngulos);
+		addCoupling(_barco.outFuel, _receptor.inFuel);
+		addCoupling(_barco.outEstado, _receptor.inEstado);
+		addCoupling(_barco.outTodo, _receptor.inTodo);
 		
 
 

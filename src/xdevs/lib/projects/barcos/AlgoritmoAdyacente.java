@@ -1,16 +1,15 @@
-package ssii2007.simulacion;
+package xdevs.lib.projects.barcos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import java.util.TreeSet;
 import java.util.Vector;
 
-import ssii2007.incidencias.ProbabilidadNaufrago;
-import ssii2007.incidencias.ProbabilidadNaufragoCasillas;
-import ssii2007.matematico.FuncionProbabilidadAbstracta;
+import xdevs.lib.projects.graph.structs.Punto;
+import xdevs.lib.projects.graph.structs.Ruta;
+import xdevs.lib.projects.math.FuncionProbabilidadAbstracta;
 
-public class AlgoritmoAdyacente implements Algoritmo{
+public class AlgoritmoAdyacente implements Algoritmo {
 	public static final int numPuntos = 20;
 	public static final int distancia = 2000;
 	public static final int ka = 500;

@@ -1,5 +1,6 @@
 package xdevs.lib.projects.barcos;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -12,23 +13,21 @@ import xdevs.lib.projects.math.RungeKutta;
 /** Clase que implementa el comportamiento del controlador del barco*/
 public class ControladorBarco extends AtomicState implements IFuncion{
 
-	private IIntegrador integrador;
+	public Port<Object> puertoConexionExterior = new Port<>("puertoConexionExterior");
+
+    private IIntegrador integrador;
 	
 	public static final int cambioRumbo = 11;
-	
-	/** Puerto por el que entra la informacion de la peticion*/
-	public static final String puertoIn = "puertoIn";
-	
+
+	public Port<ArrayList<Vector<Double>>> puertoIn = new Port<>("OutPeticionBarco");
+		
 	public Port<Vector<Number>> puertoInAlgoritmo = new Port<>("puertoInAlgoritmo");
 	
 	/** Puerto por el que entra la comunicacion del barco*/
 	public Port<Vector<Vector<Number>>> puertoInBarco = new Port<>("puertoInBarco");
 	
 	/** Puerto por el que sale la peticion del nuevo angulo*/
-	public static final String puertoOut = "puertoOut";
-	
-	/** Puerto por el que sale la peticion del nuevo angulo*/
-	public static final String puertoConexionExterior = "puertoCE";
+	public Port<Vector<Number>> puertoOut = new Port<>("puertoOut");
 	
 	/** Posicion x del barco*/
 	public static final String x = "x";
@@ -81,11 +80,11 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 	public ControladorBarco(String name) {
 		super(name);
 		integrador=new RungeKutta();
+		addInPort(puertoIn);
 		addInPort(puertoInAlgoritmo);
-		addInport(puertoIn);
 		addInPort(puertoInBarco);
-		addOutport(puertoOut);
-		addOutport(puertoConexionExterior);
+		addInPort(puertoConexionExterior);
+		addOutPort(puertoOut);
 		addState("x");
 		addState("y");
 		addState(racha);
@@ -183,8 +182,8 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 		}
 
 		//ARRANCAMOS EL FUNCIONAMIENTO
-			double angulo= Math.atan2(this.getStateValue("y_objetivo").doubleValue()-this.getStateValue("y").doubleValue(), 
-					this.getStateValue("x_objetivo").doubleValue()-this.getStateValue("x").doubleValue());
+			//double angulo= Math.atan2(this.getStateValue("y_objetivo").doubleValue()-this.getStateValue("y").doubleValue(), 
+			//		this.getStateValue("x_objetivo").doubleValue()-this.getStateValue("x").doubleValue());
 			
 			this.setStateValue("ang_barco",this.getStateValue("ang_barco2").doubleValue());
 		
@@ -216,12 +215,12 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 	private Vector<Double> transformarEjes(double xi, Vector<Double> punto) {
 		Vector<Double> resultado = new Vector<Double>(2,0);
 		Vector<Double> t = new Vector<Double>(4,0);
-		t.add(new Double(Math.cos(xi)));
-		t.add(new Double(Math.sin(xi)));
-		t.add(new Double(-Math.sin(xi)));
-		t.add(new Double(Math.cos(xi)));
-		resultado.add(new Double (t.get(0).doubleValue()*punto.get(0).doubleValue()+t.get(1).doubleValue()*punto.get(1).doubleValue()));
-		resultado.add(new Double (t.get(2).doubleValue()*punto.get(0).doubleValue()+t.get(3).doubleValue()*punto.get(1).doubleValue()));
+		t.add(Math.cos(xi));
+		t.add(Math.sin(xi));
+		t.add(Math.sin(xi));
+		t.add(Math.cos(xi));
+		resultado.add(t.get(0).doubleValue()*punto.get(0).doubleValue()+t.get(1).doubleValue()*punto.get(1).doubleValue());
+		resultado.add(t.get(2).doubleValue()*punto.get(0).doubleValue()+t.get(3).doubleValue()*punto.get(1).doubleValue());
 		return resultado;
 	}
 
@@ -240,8 +239,8 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 	private double calculaControl(){
 		
 		Vector<Double> aux = new Vector<Double>(2,0);
-		aux.add(new Double (this.getStateValue("x").doubleValue()-getStateValue("x_objetivo").doubleValue()));
-		aux.add(new Double (this.getStateValue("y").doubleValue()-getStateValue("y_objetivo").doubleValue()));
+		aux.add(this.getStateValue("x").doubleValue()-getStateValue("x_objetivo").doubleValue());
+		aux.add(this.getStateValue("y").doubleValue()-getStateValue("y_objetivo").doubleValue());
 		Vector<Double> pn = transformarEjes(this.getStateValue("ang_barco").doubleValue(), aux);
 		aux = new Vector<Double>(2,0);
 		aux.add(this.getStateValue("vx").doubleValue());
@@ -278,16 +277,11 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 
 	}
 	
-	@SuppressWarnings("unchecked")
-	@Override
-	public DevsDessMessage lambda() {
-		if(_msg==null)_msg = new DevsDessMessage();
-		Vector peticion =new Vector();
-		peticion.add(new Integer (ModeloReferencia.CambioRumbo));
-		
-		peticion.add(this.getStateValue("ang_objetivo").doubleValue());
-		_msg.add(puertoOut, peticion);
-		return _msg;
+	public void lambda() {
+		Vector<Number> peticion =new Vector<>();
+		peticion.add(Integer.valueOf(ModeloReferencia.CambioRumbo));		
+		peticion.add(this.getStateValue("ang_objetivo"));
+		puertoOut.addValue(peticion);
 	}
 	
 	public void deltcon(double e) {
@@ -323,5 +317,14 @@ public class ControladorBarco extends AtomicState implements IFuncion{
 		double[] estado= new double[1];
 		estado[0]= this.getStateValue("ang_objetivo").doubleValue();
 		return estado;
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.passivate();
 	}
 }
