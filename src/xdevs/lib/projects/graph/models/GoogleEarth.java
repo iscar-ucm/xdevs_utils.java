@@ -97,27 +97,27 @@ public class GoogleEarth {
 			String icono = null;
 			double[] lonlat;
 			Punto punto;
-			for (int i=0;i<lista.dameLista().size();i++) {
-				punto = lista.dameLista().get(i).getPunto();
+			for (int i=0;i<lista.getLista().size();i++) {
+				punto = lista.getLista().get(i).getPunto();
 				lonlat = transformarXYLatLon(punto.getN(),punto.getE(), latInf, lonIzq);
-				switch (lista.dameLista().get(i).getTipoVehiculo()) {
+				switch (lista.getLista().get(i).getTipoVehiculo()) {
 				case DatosTipoPosicion.Avion: {
 					nombreE = "Avión"; 
-					descripcionE = "Avión "+lista.dameLista().get(i).getNombre();
+					descripcionE = "Avión "+lista.getLista().get(i).getNombre();
 					icono = "http://maps.google.com/mapfiles/kml/shapes/airports.png";
 				};break;
 				case DatosTipoPosicion.Barco: {
 					nombreE = "Barco";
-					descripcionE = "Barco "+lista.dameLista().get(i).getNombre();
+					descripcionE = "Barco "+lista.getLista().get(i).getNombre();
 					icono = "http://maps.google.com/mapfiles/kml/shapes/sailing.png";
 				};break;
 				case DatosTipoPosicion.Naufrago: {
 					nombreE = "Naufrago";
-					descripcionE = "Naufrago "+lista.dameLista().get(i).getNombre();
+					descripcionE = "Naufrago "+lista.getLista().get(i).getNombre();
 					icono = "http://maps.google.com/mapfiles/kml/shapes/swimming.png";
 				};break;
 				}
-				document.appendChild(crearPlacemark(doc,nombreE,descripcionE,icono,lonlat[0],lonlat[1],punto.getH(),lista.dameLista().get(i).getTipoVehiculo(),lista.dameLista().get(i).getNombre(),simulacion));
+				document.appendChild(crearPlacemark(doc,nombreE,descripcionE,icono,lonlat[0],lonlat[1],punto.getH(),lista.getLista().get(i).getTipoVehiculo(),lista.getLista().get(i).getNombre(),simulacion));
 			}
 			
 			doc.appendChild(kml);

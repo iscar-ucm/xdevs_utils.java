@@ -19,7 +19,7 @@ public class ListaPosicion {
 		int posicion=buscaPosicion(nueva);
 		if(posicion!=-1){
 			DatosTipoPosicion antigua=lista.get(posicion);
-			nueva.ponRuta(antigua.ruta, false);
+			nueva.ponRuta(antigua.getRuta(), false);
 			lista.set(posicion, nueva);
 			
 		}
@@ -32,7 +32,7 @@ public class ListaPosicion {
 
 	public void eliminaPosicion(int nombre,int tipoVehiculo){
 		for (int cont=0;cont<lista.size();cont++){
-			if((lista.get(cont).nombre==nombre)&&(lista.get(cont).tipoVehiculo==tipoVehiculo)){
+			if((lista.get(cont).getNombre()==nombre)&&(lista.get(cont).getTipoVehiculo()==tipoVehiculo)){
 				lista.remove(cont);
 			}
 		}
@@ -60,7 +60,7 @@ public class ListaPosicion {
 		
 	}
 	
-	public ArrayList<DatosTipoPosicion> dameLista(){
+	public ArrayList<DatosTipoPosicion> getLista(){
 		return lista;
 	}
 	
