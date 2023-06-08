@@ -1,4 +1,4 @@
-package ssii2007.incidencias;
+package xdevs.lib.projects.barcos;
 
 import java.io.Serializable;
 

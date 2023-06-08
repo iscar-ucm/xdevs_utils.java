@@ -1,16 +1,13 @@
-package ssii2007.Mux;
+package xdevs.lib.projects.barcos;
 
 import java.util.Vector;
 
-import testing.kernel.modeling.AtomicState;
-import testing.kernel.modeling.DevsDessMessage;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.AtomicState;
+import xdevs.core.modeling.Port;
 
 public class Mux extends AtomicState{
 	public Port[] In ;
 	public final Port Out= new Port("OUT");
-	public DevsDessMessage msj;
 	public Vector<DatoMux> enviar;
 	
 	@SuppressWarnings("unchecked")
@@ -25,7 +22,7 @@ public class Mux extends AtomicState{
 				System.out.println("cont"+cont);
 			}
 			In[cont] = new Port("In"+((Integer)cont).toString());
-			this.addInport(In[cont]);
+			this.addInPort(In[cont]);
 			enviar[cont]=new Vector();
 		}
 		
@@ -33,7 +30,7 @@ public class Mux extends AtomicState{
 		
 		
 		//A�adimos el puerto de salida
-		this.addOutport(Out);
+		this.addOutPort(Out);
 	}
 	
 
@@ -45,7 +42,7 @@ public class Mux extends AtomicState{
 		//Iterator iterador=null;
 		
 		for(int cont=0;cont<In.length;cont++)
-				enviar.add(new DatoMux(cont,In[cont].getValue()));
+				enviar.add(new DatoMux(cont,In[cont].getSingleValue()));
 				//System.out.println("siguiente "+iterador.next());
 				//iterador.next();
 				
@@ -75,11 +72,22 @@ public class Mux extends AtomicState{
 		Vector todo= new Vector();
 		todo.add(this.enviar);
 		enviar= new Vector<DatoMux>();
-		Out.setValue(todo);
+		Out.addValue(todo);
 	}
 	
 	public int dameTamaño(){
 		return In.length;
+	}
+
+
+	@Override
+	public void exit() {
+	}
+
+
+	@Override
+	public void initialize() {
+		super.passivate();
 	}
 	
 }

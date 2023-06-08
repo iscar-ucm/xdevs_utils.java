@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import com.jogamp.opengl.GL2;
 
 import xdevs.core.modeling.Coupled;
+import xdevs.lib.projects.barcos.Barco;
+import xdevs.lib.projects.barcos.Mux;
+import xdevs.lib.projects.barcos.Naufrago;
 import xdevs.lib.projects.graph.Dibujable;
+import xdevs.lib.projects.graph.structs.terrain.Terreno;
 import xdevs.lib.projects.uavs.UAV;
 
 /**
@@ -124,9 +128,9 @@ public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 			_aviones.add(uav);
 			this.addComponent(uav);
 			this.addCoupling(uav, UAV.OUT, _muxaviones, _muxaviones.In[i]);
-			this.addCoupling(_muxaviones, _muxaviones.Out, _controlador, Controlador.InAviones);
+			this.addCoupling(_muxaviones, _muxaviones.out, _controlador, Controlador.InAviones);
 			this.addCoupling(uav, UAV.OUTcontrolador, _muxcaviones, _muxcaviones.In[i]);
-			this.addCoupling(_muxcaviones, _muxcaviones.Out, _controlador, Controlador.InControladorAviones);
+			this.addCoupling(_muxcaviones, _muxcaviones.out, _controlador, Controlador.InControladorAviones);
 			
 			this.addCoupling(_controlador, Controlador.OutAviones,
 					uav, UAV.IN);
@@ -139,12 +143,12 @@ public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 			_barcos.add(barco);
 			this.addComponent(barco);
 			this.addCoupling(barco, Barco.OUT, _muxbarcos, _muxbarcos.In[i]);
-			this.addCoupling(_muxbarcos,_muxbarcos.Out, _controlador, Controlador.InBarcos);
+			this.addCoupling(_muxbarcos,_muxbarcos.out, _controlador, Controlador.InBarcos);
 			this.addCoupling(_controlador, Controlador.OutBarcos,
 					barco, Barco.IN);
 			
 			this.addCoupling(barco, Barco.Outcontrolador, _muxcbarcos, _muxcbarcos.In[i]);
-			this.addCoupling(_muxcbarcos, _muxcbarcos.Out, _controlador, Controlador.InControladorBarcos);
+			this.addCoupling(_muxcbarcos, _muxcbarcos.out, _controlador, Controlador.InControladorBarcos);
 			this.addCoupling(_controlador, Controlador.OutControladorBarcos,
 					barco, Barco.INcontroladorBarco);
 		}
@@ -159,7 +163,7 @@ public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 			this.addCoupling(_controlador, Controlador.OutNaufragos,naufrago, Naufrago.InSolicitud);
 			
 			this.addCoupling(naufrago, Naufrago.Out, _muxnaufragos, _muxnaufragos.In[i]);
-			this.addCoupling(_muxnaufragos, _muxnaufragos.Out, _controlador, Controlador.InNaufragos);
+			this.addCoupling(_muxnaufragos, _muxnaufragos.out, _controlador, Controlador.InNaufragos);
 		}
 	}
 

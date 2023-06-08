@@ -4,14 +4,15 @@ import java.awt.BorderLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLCanvas;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
-import ssii2007.grafico.estructura.ManejadorRaton2D;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.GLU;
+
+import xdevs.lib.projects.graph.structs.ManejadorRaton2D;
 
 public class ManagerGL2D implements GLEventListener {
 	private float _xLeft;
@@ -38,14 +39,14 @@ public class ManagerGL2D implements GLEventListener {
 	}
 	
 	public void display(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		drawable.swapBuffers();
-        gl.glMatrixMode(GL.GL_PROJECTION);
+        gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
         GLU glu = new GLU();
         glu.gluOrtho2D(_xLeft,_xRight,_yBot,_yTop);
     //    if (_actualizar) {
-        	gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+        	gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
         	_dibujante.repintarTerreno(drawable,_lienzo.getWidth(),_lienzo.getHeight(),_xLeft,_xRight,_yBot,_yTop);
         	_actualizar = false;
    //     }
@@ -56,21 +57,21 @@ public class ManagerGL2D implements GLEventListener {
 	}
 
 	public void init(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		_dibujante.inicializar(gl);
 		gl.glClearColor(0,0,0,0.0f);
-	    gl.glMatrixMode(GL.GL_PROJECTION);
+	    gl.glMatrixMode(GL2.GL_PROJECTION);
 	    gl.glLoadIdentity();
 		GLU glu = new GLU(); 
 	    glu.gluOrtho2D(_xLeft,_xRight,_yBot,_yTop);
-	    gl.glMatrixMode(GL.GL_MODELVIEW);
+	    gl.glMatrixMode(GL2.GL_MODELVIEW);
 	    gl.glLoadIdentity();
-	    gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 	    _actualizar = true;
 	}
 
 	public void reshape(GLAutoDrawable drawable, int x, int y, int ancho, int alto) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 	    float radioVolVista=(_xRight-_xLeft)/(_yTop-_yBot);
 	    float radioViewPort=(float)ancho/(float)alto;
 	    gl.glViewport(0,0,ancho,alto);
@@ -86,11 +87,11 @@ public class ManagerGL2D implements GLEventListener {
 	        _xRight-=(anchura_anterior-((_yTop-_yBot)*radioViewPort))/2.0f;
 	        _xLeft+=(anchura_anterior-((_yTop-_yBot)*radioViewPort))/2.0f;
 	    }
-	    gl.glMatrixMode(GL.GL_PROJECTION);
+	    gl.glMatrixMode(GL2.GL_PROJECTION);
 	    gl.glLoadIdentity();
 		GLU glu = new GLU(); 
 	    glu.gluOrtho2D(_xLeft,_xRight,_yBot,_yTop);
-	    gl.glMatrixMode(GL.GL_MODELVIEW);
+	    gl.glMatrixMode(GL2.GL_MODELVIEW);
 	    gl.glLoadIdentity(); 
 	   // _actualizar = true;
 	    actualizar();
@@ -199,5 +200,11 @@ public class ManagerGL2D implements GLEventListener {
 	public void dibujarTerreno() {
 		_actualizar = true;
 		_lienzo.repaint();
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'dispose'");
 	}
 }

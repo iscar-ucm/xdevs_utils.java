@@ -5,24 +5,18 @@ import java.awt.event.WindowEvent;
 import java.util.Iterator;
 import java.util.Vector;
 
-import ssii2007.grafico.estructura.Camara;
-import ssii2007.grafico.estructura.ManejadorRaton3D;
-import ssii2007.grafico.estructura.PV3D;
-
-import ssii2007.modelo.ControladorAplicacion;
-import ssii2007.modelo.CoupledSimulacion;
-
-import testing.kernel.modeling.AtomicState;
-import testing.kernel.modeling.DevsDessMessage;
-
-
-import ssii2007.grafico.estructura.terreno.Terreno;
-
+import xdevs.core.modeling.AtomicState;
+import xdevs.core.modeling.Port;
+import xdevs.lib.projects.graph.models.ControladorAplicacion;
+import xdevs.lib.projects.graph.models.CoupledSimulacion;
+import xdevs.lib.projects.graph.structs.Camara;
+import xdevs.lib.projects.graph.structs.PV3D;
+import xdevs.lib.projects.graph.structs.terrain.Terreno;
 
 public class ManagerVista extends AtomicState {
-	public static final String InAnimacion = "INAnimacion";
+	public Port<Number> inAnimacion = new Port<>("INAnimacion");
 	
-	public static final String OutAnimador = "OUTAnimador";
+	public Port<Number> outAnimador = new Port<>("OUTAnimador");
 
 	private final String fps = "FPS";
 	
@@ -35,11 +29,11 @@ public class ManagerVista extends AtomicState {
 		
 	public ManagerVista(ControladorAplicacion control, Terreno terreno, CoupledSimulacion simulacion, int numeroAviones, int numeroBarcos) {
 		super("ManagerVista");
-	    addInport(InAnimacion);
-	    addOutport(OutAnimador);
+	    addInPort(inAnimacion);
+	    addOutPort(outAnimador);
 	    addState(fps);
 	    setStateValue(fps,0);
-	    setSigma(INFINITY);	    
+	    super.passivate();
 	    PV3D eye = new PV3D (-100,100,-100,1);
 	    PV3D look = new PV3D (1000.0f,1000.0f,1000.0f,1);
 	    PV3D up = new PV3D (0,1,0,0);
@@ -76,10 +70,9 @@ public class ManagerVista extends AtomicState {
 		setStateValue(this.fps,FPS);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void deltext(double e, DevsDessMessage x) {
-		Iterator iteradorInAnimacion = x.getValuesOnPort(ManagerVista.InAnimacion).iterator();
+	public void deltext(double e) {
+		Iterator iteradorInAnimacion = inAnimacion.getValues().iterator();
 		if (iteradorInAnimacion.hasNext()) {
 			_managerGL3D.actualizar();
 			_managerGL2D.actualizar();
@@ -89,18 +82,15 @@ public class ManagerVista extends AtomicState {
 
 	@Override
 	public void deltint() {
-		setSigma(INFINITY);
+		super.passivate();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public DevsDessMessage lambda() {
-		DevsDessMessage msg = new DevsDessMessage();
+	public void lambda() {
 		if (getStateValue(fps).intValue()!=0) {
-			msg.add(OutAnimador, getStateValue(fps));
+			outAnimador.addValue(getStateValue(fps));
 			setStateValue(fps,0);
 		}
-		return msg;
 	}
 	
 	public void rollTo(float angulo) {

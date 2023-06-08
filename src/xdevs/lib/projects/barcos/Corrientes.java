@@ -1,10 +1,10 @@
-package ssii2007.otrosModelos;
+package xdevs.lib.projects.barcos;
 
 import java.util.Random;
 
-import ssii2007.matematico.IFuncion;
-import ssii2007.matematico.IIntegrador;
-import ssii2007.matematico.RungeKutta;
+import xdevs.lib.projects.math.IFuncion;
+import xdevs.lib.projects.math.IIntegrador;
+import xdevs.lib.projects.math.RungeKutta;
 
 public class Corrientes implements IFuncion{
 

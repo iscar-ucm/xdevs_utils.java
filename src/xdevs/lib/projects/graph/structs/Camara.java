@@ -1,10 +1,9 @@
 package xdevs.lib.projects.graph.structs;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.glu.GLU;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.glu.gl2.GLUgl2;
 
-import ssii2007.grafico.Seguible;
-
+import xdevs.lib.projects.graph.Seguible;
 
 public class Camara {
 	public static final int CENITAL = 0;
@@ -163,7 +162,7 @@ public class Camara {
 		_eye.setZ(z);
 	}
 
-	public void setModelViewMatrix(GL gl) {
+	public void setModelViewMatrix(GL2 gl) {
 	    float[] m = new float[16];
 	    m[0] = _u.getX();
 	    m[1] = _v.getX();
@@ -181,7 +180,7 @@ public class Camara {
 	    m[13]= -_eye.prodEscalar(_v);
 	    m[14]= -_eye.prodEscalar(_n);
 	    m[15]= 1;
-	    gl.glMatrixMode(GL.GL_MODELVIEW);
+	    gl.glMatrixMode(GL2.GL_MODELVIEW);
 	    gl.glLoadMatrixf(m,0);
 	}
 
@@ -197,23 +196,23 @@ public class Camara {
 	    _v.normalizar();
 	}
 
-	public void fijarVistaOrtogonal(float xLeft, float xRight, float yBot, float yTop, float N, float F, GL gl) {
-	    gl.glMatrixMode (GL.GL_PROJECTION);
+	public void fijarVistaOrtogonal(float xLeft, float xRight, float yBot, float yTop, float N, float F, GL2 gl) {
+	    gl.glMatrixMode (GL2.GL_PROJECTION);
 	    gl.glLoadIdentity ();
 	    gl.glOrtho(xLeft,xRight, yBot,yTop, N,F);
 	    setModelViewMatrix(gl);
 	}
 
-	public void fijarVistaPerspectiva(float angulo, float proporcion, float N, float F, GL gl) {
-		GLU glu = new GLU();
-	    gl.glMatrixMode (GL.GL_PROJECTION);
+	public void fijarVistaPerspectiva(float angulo, float proporcion, float N, float F, GL2 gl) {
+		GLUgl2 glu = new GLUgl2();
+	    gl.glMatrixMode (GL2.GL_PROJECTION);
 	    gl.glLoadIdentity ();
 	    glu.gluPerspective(angulo,proporcion,N,F);
 	    setModelViewMatrix(gl);
 	}
 
-	public void fijarVistaOblicua(float xLeft, float xRight, float yBot, float yTop, float N, float F, PV3D d, GL gl) {
-	    gl.glMatrixMode (GL.GL_PROJECTION);
+	public void fijarVistaOblicua(float xLeft, float xRight, float yBot, float yTop, float N, float F, PV3D d, GL2 gl) {
+	    gl.glMatrixMode (GL2.GL_PROJECTION);
 	    gl.glLoadIdentity ();
 	    gl.glOrtho(xLeft,xRight, yBot,yTop, N,F);
 	    if(d.getZ()==0.0) return;
@@ -293,7 +292,7 @@ public class Camara {
 		_anclada = false;
 	}
 	
-	public void actualizar(GL gl) {
+	public void actualizar(GL2 gl) {
 		if (_anclada) {
 			System.out.println("desX "+_desX);
 			System.out.println("desY "+_desY);
@@ -306,10 +305,10 @@ public class Camara {
 		setModelViewMatrix(gl);
 	}
 	
-	public void dibujar2d(GL gl) {
+	public void dibujar2d(GL2 gl) {
 		gl.glPointSize(4);
 		gl.glColor3f(1,0,0);
-		gl.glBegin(GL.GL_POINTS);
+		gl.glBegin(GL2.GL_POINTS);
 			gl.glVertex2f(_eye.getX()/100,_eye.getZ()/100);
 		gl.glEnd();
 	}

@@ -1,4 +1,4 @@
-package ssii2007.Mux;
+package xdevs.lib.projects.barcos;
 
 public class DatoMux {
 	private int Entrada;

@@ -1,4 +1,4 @@
-package ssii2007.simulacion;
+package xdevs.lib.projects.barcos;
 
 public class Rescate {
 	private int barco_rescatador;

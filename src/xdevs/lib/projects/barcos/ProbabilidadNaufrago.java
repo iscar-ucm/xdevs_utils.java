@@ -1,4 +1,4 @@
-package ssii2007.incidencias;
+package xdevs.lib.projects.barcos;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -6,13 +6,11 @@ import java.io.Serializable;
 
 import javax.xml.parsers.*;
 
-
-
-import org.w3c.dom.*;
-
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 public class ProbabilidadNaufrago implements Serializable{
 

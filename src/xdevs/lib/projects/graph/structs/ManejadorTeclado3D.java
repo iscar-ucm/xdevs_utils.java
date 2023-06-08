@@ -3,7 +3,7 @@ package xdevs.lib.projects.graph.structs;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-import ssii2007.grafico.ManagerGL3D;
+import xdevs.lib.projects.graph.ManagerGL3D;
 
 public class ManejadorTeclado3D extends KeyAdapter{
 	private ManagerGL3D _managerGL;

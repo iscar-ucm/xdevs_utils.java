@@ -5,8 +5,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.event.MouseInputAdapter;
 
-import ssii2007.grafico.ManagerGL3D;
-
+import xdevs.lib.projects.graph.ManagerGL3D;
 
 public class ManejadorRaton3D extends MouseInputAdapter {
 	private ManagerGL3D _managerGL;

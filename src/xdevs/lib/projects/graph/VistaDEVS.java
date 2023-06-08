@@ -23,10 +23,10 @@ public class VistaDEVS extends Coupled implements Runnable{
 	    addComponent(_threadAnimacion);
 	    
 	    // Conexiones desde ManagerVista
-	    addCoupling(_managerVista,ManagerVista.OutAnimador,_threadAnimacion,ThreadAnimacion.InFPS);
+	    addCoupling(_managerVista,ManagerVista.outAnimador,_threadAnimacion,ThreadAnimacion.InFPS);
 	    
 	    // Conexiones desde Animador
-	    addCoupling(_threadAnimacion,ThreadAnimacion.OutSeñalAnimacion,_managerVista,ManagerVista.InAnimacion);
+	    addCoupling(_threadAnimacion,ThreadAnimacion.OutSeñalAnimacion,_managerVista,ManagerVista.inAnimacion);
 	}
 
 	@Override

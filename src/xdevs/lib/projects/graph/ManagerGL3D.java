@@ -3,17 +3,17 @@ package xdevs.lib.projects.graph;
 
 import java.awt.BorderLayout;
 
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
-import javax.media.opengl.GLEventListener;
-import javax.media.opengl.glu.GLU;
 import javax.swing.JFrame;
 
-import ssii2007.grafico.estructura.Camara;
-import ssii2007.grafico.estructura.ManejadorRaton3D;
-import ssii2007.grafico.estructura.ManejadorTeclado3D;
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GLAutoDrawable;
+import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.awt.GLCanvas;
+import com.jogamp.opengl.glu.GLU;
 
+import xdevs.lib.projects.graph.structs.Camara;
+import xdevs.lib.projects.graph.structs.ManejadorRaton3D;
+import xdevs.lib.projects.graph.structs.ManejadorTeclado3D;
 
 public class ManagerGL3D implements GLEventListener {
 	private Camara _camara;
@@ -49,29 +49,29 @@ public class ManagerGL3D implements GLEventListener {
 	}
 	
 	public void init(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		_dibujante.inicializar(gl);
 		GLU glu = new GLU();
-	    gl.glMatrixMode(GL.GL_MODELVIEW);
+	    gl.glMatrixMode(GL2.GL_MODELVIEW);
 	    gl.glLoadIdentity();
 	    glu.gluLookAt(1000,1000,1000,0.0f,0.0f,0.0f,0,1,0); 
 		gl.glClearColor(0.6f,0.7f,0.8f,1.0f); 
 	//	_camara.fijarVistaOrtogonal(_xLeft,_xRight,_yBot,_yTop,_N,_F,gl);
 		_camara.fijarVistaPerspectiva(90, 1, _N, _F, gl);
-		gl.glDisable(GL.GL_TEXTURE_2D );								//disable two dimensional texture mapping
-		gl.glDisable(GL.GL_LIGHTING );								//disable lighting
-		gl.glDisable(GL.GL_BLEND );									//disable blending
-		gl.glEnable(GL.GL_DEPTH_TEST );								//Enable depth testing
-		gl.glShadeModel(GL.GL_SMOOTH );								//enable smooth shading
+		gl.glDisable(GL2.GL_TEXTURE_2D );								//disable two dimensional texture mapping
+		gl.glDisable(GL2.GL_LIGHTING );								//disable lighting
+		gl.glDisable(GL2.GL_BLEND );									//disable blending
+		gl.glEnable(GL2.GL_DEPTH_TEST );								//Enable depth testing
+		gl.glShadeModel(GL2.GL_SMOOTH );								//enable smooth shading
 		gl.glClearDepth( 1.0 );									//depth buffer setup
-		gl.glDepthFunc(GL.GL_LEQUAL );								//set the type of depth test
-		gl.glHint(GL.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST );	//the nicest perspective look 
+		gl.glDepthFunc(GL2.GL_LEQUAL );								//set the type of depth test
+		gl.glHint(GL2.GL_PERSPECTIVE_CORRECTION_HINT, GL2.GL_NICEST );	//the nicest perspective look 
 	}
 	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int ancho, int alto) {
 		//se actualiza puerto de vista y el radio
-		GL gl = drawable.getGL();
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		float ratioViewPort=(float)ancho/(float)alto;
 		gl.glViewport(0,0,ancho,alto);
 
@@ -94,15 +94,15 @@ public class ManagerGL3D implements GLEventListener {
 	}
 	
 	public void display(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		GL2 gl = drawable.getGL().getGL2();
+		gl.glMatrixMode(GL2.GL_MODELVIEW);
 		if (_cambio) {
 		//	_camara.fijarVistaOrtogonal(_xLeft, _xRight, _yBot, _yTop, _N, _F, gl);
 			_camara.fijarVistaPerspectiva(90, 1, _N, _F, gl);
 			_cambio = false;
 		}
 	    _camara.setModelViewMatrix(gl);
-	    gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+	    gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
 
 		//gl.glLightfv(GL.GL_LIGHT0,GL.GL_POSITION,PosicionLuz0);
 		
@@ -195,6 +195,12 @@ public class ManagerGL3D implements GLEventListener {
 		float desY = (_yTop-_yBot)*Dibujante.escalado/(alto/y);
 		_camara.desplazar(desX, desY, 0);
 		_manager.movimientoCamara(_camara.get_eye());
+	}
+
+	@Override
+	public void dispose(GLAutoDrawable drawable) {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'dispose'");
 	}
 
 }

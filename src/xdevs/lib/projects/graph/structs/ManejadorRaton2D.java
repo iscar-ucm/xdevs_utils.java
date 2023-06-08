@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.event.MouseInputAdapter;
 
-import ssii2007.grafico.ManagerGL2D;
+import xdevs.lib.projects.graph.ManagerGL2D;
 
 public class ManejadorRaton2D extends MouseInputAdapter {
 	private ManagerGL2D _managerGL;

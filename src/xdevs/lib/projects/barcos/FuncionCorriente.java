@@ -1,4 +1,4 @@
-package ssii2007.otrosModelos;
+package xdevs.lib.projects.barcos;
 
 import java.util.Random;
 

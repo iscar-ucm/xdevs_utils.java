@@ -3,6 +3,7 @@ package xdevs.lib.projects.graph;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 
+import xdevs.lib.projects.graph.models.CoupledSimulacion;
 import xdevs.lib.projects.graph.structs.Camara;
 import xdevs.lib.projects.graph.structs.terrain.Terreno;
 
@@ -28,7 +29,7 @@ public class Dibujante {
 		_simulacion.dibujar3D(gl);
 	}
 	
-	public void inicializar(GL gl) {
+	public void inicializar(GL2 gl) {
 		if (!_inicializado) {
 			_terreno.getTafin().escalar(escalado, 1, escalado, gl);
 			_inicializado = true;
@@ -37,7 +38,7 @@ public class Dibujante {
 	}
 	
 	public void dibujar2D(GLAutoDrawable drawable, float ancho, float alto, float xLeft, float xRight, float yBot, float yTop) {
-		GL gl = drawable.getGL();
+		GL2 gl = drawable.getGL().getGL2();
 		gl.glPointSize(1);
 		_simulacion.dibujar2D(gl);
 		_camara.dibujar2d(gl);
@@ -46,7 +47,7 @@ public class Dibujante {
 	public void repintarTerreno(GLAutoDrawable drawable, float ancho, float alto, float xLeft, float xRight, float yBot, float yTop) {
 		GL2 gl = drawable.getGL().getGL2();
 		gl.glPointSize(1);
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+		gl.glClear(GL2.GL_COLOR_BUFFER_BIT);
 		_terreno.dibujar2D(gl, ancho, alto, xLeft, xRight, yBot, yTop);
 	}
 }
