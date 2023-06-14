@@ -3,7 +3,6 @@ package xdevs.lib.projects.graph;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Iterator;
-import java.util.Vector;
 
 import xdevs.core.modeling.AtomicState;
 import xdevs.core.modeling.Port;
@@ -174,6 +173,15 @@ public class ManagerVista extends AtomicState {
 	
 	public void setVelocidad(int velocidad) {
 		_simulacion.ponVelocidad(velocidad);	
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.passivate();
 	}
 }
 

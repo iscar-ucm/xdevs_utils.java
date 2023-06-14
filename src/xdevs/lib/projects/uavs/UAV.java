@@ -25,11 +25,11 @@ public class UAV extends Coupled {
 	
 	private RutaState _ruta;
 
-	public Port<Object> IN = new Port<>("In");
-	public Port<Object> INcontrolador = new Port<>("Incontrolador");
+	public Port<Object> in = new Port<>("In");
+	public Port<Object> inControlador = new Port<>("Incontrolador");
 	
-	public Port<Object> OUT = new Port<>("Out");
-	public Port<Object> OUTcontrolador = new Port<>("Outcontrolador");
+	public Port<Object> out = new Port<>("Out");
+	public Port<Object> outControlador = new Port<>("Outcontrolador");
 	
 	
 	public UAV(int id,  Terreno terreno) {
@@ -40,10 +40,10 @@ public class UAV extends Coupled {
 		_controlador = new ControladorRumboState(((Integer)id).toString());
 		//_reloj = new RelojState("Reloj",_num_aviones);
 		_ruta= new RutaState("Ruta");
-		addInPort(IN);
-		addInPort(INcontrolador);
-		addOutPort(OUT);
-		addOutPort(OUTcontrolador);
+		addInPort(in);
+		addInPort(inControlador);
+		addOutPort(out);
+		addOutPort(outControlador);
 		
 		addComponent(_avion);
 		addComponent(_peticion);
@@ -52,19 +52,19 @@ public class UAV extends Coupled {
 	//	addComponent(_reloj);
 		addComponent(_ruta);
 	
-		addCoupling(this,UAV.IN,_avion,AvionState.InSolicitud1);
+		addCoupling(this,UAV.in,_avion,AvionState.InSolicitud1);
 		
-		addCoupling(this,UAV.INcontrolador,_controlador,ControladorRumboState.InPosRef);
+		addCoupling(this,UAV.inControlador,_controlador,ControladorRumboState.InPosRef);
 		
 		//addCoupling(this,UAV.OUT,_avion,AvionState.OutTodo);
-		addCoupling(_avion,AvionState.outTodo,this,UAV.OUT);
-		addCoupling(_controlador,ControladorRumboState.PeticionPunto,this,UAV.OUTcontrolador);
+		addCoupling(_avion,AvionState.outTodo,this,UAV.out);
+		addCoupling(_controlador,ControladorRumboState.PeticionPunto,this,UAV.outControlador);
 		
 		//De reloj a peticiones
 	//	addCoupling(_reloj,RelojState.OUT,_peticion,PeticionesState.In);
 		
 		//PETICIONES A RUTA
-		addCoupling(_peticion,PeticionesState.PeticionRuta,_ruta,RutaState.InRuta);
+		addCoupling(_peticion,PeticionesState.peticionRuta,_ruta,RutaState.InRuta);
 		
 		//RUTA A CONTROLADOR DE RUMBO
 		addCoupling(_ruta,RutaState.OutWayPoint,_controlador,ControladorRumboState.InPosRefCon);
@@ -73,18 +73,18 @@ public class UAV extends Coupled {
 		addCoupling(_avion,AvionState.outTodo,_ruta,RutaState.InAvion);		
 		
 		//PeticionesState A AVION
-		addCoupling(_peticion,PeticionesState.PeticionAvion,_avion,AvionState.InSolicitud1);
+		addCoupling(_peticion,PeticionesState.peticionAvion,_avion,AvionState.InSolicitud1);
 		
 		//AVION A RECEPTOR
-		addCoupling(_avion,AvionState.OutPosicion,_receptor,ReceptorState.InPosicion);
-		addCoupling(_avion,AvionState.OutVelocidad,_receptor,ReceptorState.InVelocidad);
-		addCoupling(_avion,AvionState.OutAngulos,_receptor,ReceptorState.InAngulos);
-		addCoupling(_avion,AvionState.OutFuel,_receptor,ReceptorState.InFuel);
-		addCoupling(_avion,AvionState.OutEstado,_receptor,ReceptorState.InEstado);
-		addCoupling(_avion,AvionState.outTodo,_receptor,ReceptorState.InTodo);
+		addCoupling(_avion,AvionState.OutPosicion,_receptor,ReceptorState.inPosicion);
+		addCoupling(_avion,AvionState.OutVelocidad,_receptor,ReceptorState.inVelocidad);
+		addCoupling(_avion,AvionState.OutAngulos,_receptor,ReceptorState.inAngulos);
+		addCoupling(_avion,AvionState.OutFuel,_receptor,ReceptorState.inFuel);
+		addCoupling(_avion,AvionState.OutEstado,_receptor,ReceptorState.inEstado);
+		addCoupling(_avion,AvionState.outTodo,_receptor,ReceptorState.inTodo);
 		
 		//PeticionesState A CONTROLADOR
-		addCoupling(_peticion,PeticionesState.PeticionControladorRumbo,_controlador,ControladorRumboState.InPosRef);
+		addCoupling(_peticion,PeticionesState.peticionControladorRumbo,_controlador,ControladorRumboState.InPosRef);
 		
 		//CONTROLADOR A AVION Y DESDE AVION A CONTROLADOR
 		addCoupling(_controlador,ControladorRumboState.OutPeticion,_avion,AvionState.InSolicitud2);

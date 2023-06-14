@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import com.jogamp.opengl.GL2;
 
 import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
 import xdevs.lib.projects.barcos.Barco;
+import xdevs.lib.projects.barcos.Controlador;
 import xdevs.lib.projects.barcos.Mux;
 import xdevs.lib.projects.barcos.Naufrago;
 import xdevs.lib.projects.graph.Dibujable;
@@ -121,21 +123,21 @@ public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 		this.addComponent(_controlador);
 		this.addComponent(_reloj);
 		this.addComponent(_relojge);
-		this.addCoupling(_reloj, RelojState.OUT, _controlador, Controlador.InReloj);
-		this.addCoupling(_controlador, Controlador.salidaGE, _relojge, RelojGE.IN);
+		this.addCoupling(_reloj.out, _controlador.inReloj);
+		this.addCoupling(_controlador.salidaGE, _relojge.in);
 		for(int i=0;i<numaviones;i++){
 			UAV uav=new UAV(i,_terreno);
 			_aviones.add(uav);
 			this.addComponent(uav);
-			this.addCoupling(uav, UAV.OUT, _muxaviones, _muxaviones.In[i]);
+			this.addCoupling(uav, UAV.out, _muxaviones, _muxaviones.In[i]);
 			this.addCoupling(_muxaviones, _muxaviones.out, _controlador, Controlador.InAviones);
-			this.addCoupling(uav, UAV.OUTcontrolador, _muxcaviones, _muxcaviones.In[i]);
+			this.addCoupling(uav, UAV.outControlador, _muxcaviones, _muxcaviones.In[i]);
 			this.addCoupling(_muxcaviones, _muxcaviones.out, _controlador, Controlador.InControladorAviones);
 			
 			this.addCoupling(_controlador, Controlador.OutAviones,
-					uav, UAV.IN);
+					uav, UAV.in);
 			this.addCoupling(_controlador, Controlador.OutControladorAviones,
-					uav, UAV.INcontrolador);
+					uav, UAV.inControlador);
 		}
 		for(int i=0;i<numbarcos;i++){
 			
@@ -197,7 +199,7 @@ public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 	}
 
 	@Override
-	public void dibujar3D(GL gl) {
+	public void dibujar3D(GL2 gl) {
 		for(int i=0;i<_aviones.size();i++) {
 			_aviones.get(i).getAvion().dibujar3D(gl);
 		}
@@ -210,7 +212,7 @@ public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 	}
 
 	@Override
-	public void inicializar(GL gl) {
+	public void inicializar(GL2 gl) {
 		for(int i=0;i<_aviones.size();i++) {
 			_aviones.get(i).getAvion().inicializar(gl);
 		}

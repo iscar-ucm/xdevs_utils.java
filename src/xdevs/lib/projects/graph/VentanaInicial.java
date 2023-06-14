@@ -14,8 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import ssii2007.modelo.ControladorAplicacion;
-
+import xdevs.lib.projects.graph.models.ControladorAplicacion;
 
 public class VentanaInicial extends JFrame {
 
