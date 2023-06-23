@@ -1,32 +1,35 @@
 package xdevs.lib.projects.graph;
 
 import xdevs.core.modeling.Coupled;
+import xdevs.core.modeling.Port;
+import xdevs.core.simulation.Coordinator;
 import xdevs.lib.projects.graph.models.ControladorAplicacion;
+import xdevs.lib.projects.graph.models.CoupledSimulacion;
 import xdevs.lib.projects.graph.structs.terrain.Terreno;
 
 public class VistaDEVS extends Coupled implements Runnable{
 	private ManagerVista _managerVista;
 	private ThreadAnimacion _threadAnimacion;
 	
-	public static final String In = "IN";
-	public static final String Out = "OUT";
+	public Port<Object> in = new Port<>("IN");
+	public Port<Object> out = new Port<>("OUT");
 
 	public VistaDEVS(ControladorAplicacion control, Terreno terreno, CoupledSimulacion simulacion, int numAviones, int numBarcos) {
 		super("VistaDEVS");
 		_managerVista = new ManagerVista(control, terreno, simulacion, numAviones, numBarcos);
 	    _threadAnimacion = new ThreadAnimacion(30);
 	    
-	    addInport(In);
-	    addOutport(Out);
+	    addInPort(in);
+	    addOutPort(out);
 	    
 	    addComponent(_managerVista);
 	    addComponent(_threadAnimacion);
 	    
 	    // Conexiones desde ManagerVista
-	    addCoupling(_managerVista,ManagerVista.outAnimador,_threadAnimacion,ThreadAnimacion.InFPS);
+	    addCoupling(_managerVista.outAnimador, _threadAnimacion.inFPS);
 	    
 	    // Conexiones desde Animador
-	    addCoupling(_threadAnimacion,ThreadAnimacion.OutSeñalAnimacion,_managerVista,ManagerVista.inAnimacion);
+	    addCoupling(_threadAnimacion.outSeñalAnimacion, _managerVista.inAnimacion);
 	}
 
 	@Override

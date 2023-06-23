@@ -1,81 +1,75 @@
 package xdevs.lib.projects.graph;
 
 import java.util.Iterator;
-import java.util.Vector;
 
-import ssii2007.aviones.AvionState;
-import testing.kernel.modeling.AtomicState;
-import testing.kernel.modeling.DevsDessMessage;
-
+import xdevs.core.modeling.AtomicState;
+import xdevs.core.modeling.Port;
+import xdevs.core.util.Constants;
 
 public class ThreadAnimacion extends AtomicState {
-	public static final String InFPS = "INFPS";
-	public static final String InEspera = "INEspera";
-	
-	public static final String OutSeñalAnimacion = "OUTSeñalAnimacion";
-	
-	private final String FPS = "FPS";
-	private final String espera = "Espera";
+	public Port<Number> inFPS = new Port<>("INFPS");
+	public Port<Number> inEspera = new Port<>("INEspera");
+	public Port<Number> outSeñalAnimacion = new Port<>("OUTSeñalAnimacion");
 	
 	public ThreadAnimacion() {
 		super("ThreadAnimacion");
-		addInport(InFPS);
-		addOutport(OutSeñalAnimacion);
-		addState(this.FPS);
-		setStateValue(this.FPS,0);
-		addState(this.espera);
-		double espera=INFINITY;
-		setStateValue(this.espera,espera);
+		addInPort(inFPS);
+		addOutPort(outSeñalAnimacion);
+		addState("FPS");
+		setStateValue("FPS", 0);
+		addState("ESPERA");
+		double espera = Constants.INFINITY;
+		setStateValue("ESPERA", espera);
 		setSigma(espera);		
 	}
 	
 	public ThreadAnimacion(int FPS) {
 		super("ThreadAnimaci�n");
-		addInport(InFPS);
-		addOutport(OutSeñalAnimacion);
-		addState(this.FPS);
-		setStateValue(this.FPS,FPS);
-		addState(this.espera);
+		addInPort(inFPS);
+		addOutPort(outSeñalAnimacion);
+		addState("FPS");
+		setStateValue("FPS", FPS);
+		addState("ESPERA");
 		double espera=((double)1000)/((double)FPS);
-		setStateValue(this.espera,espera);
+		setStateValue("ESPERA", espera);
 		setSigma(espera);
 	}
 	
 	public void setEspera(double espera) {
-		setStateValue(this.espera,espera);
-		setStateValue(this.FPS,((Double)(1000*espera)).intValue());
+		setStateValue("ESPERA",espera);
+		setStateValue("FPS", ((Double)(1000*espera)).intValue());
 	}
 	
 	public void setFPS(int FPS) {
-		setStateValue(this.FPS,FPS);
-		setStateValue(this.espera,((double)1000)/((double)FPS));
+		setStateValue("FPS", FPS);
+		setStateValue("ESPERA", ((double)1000)/((double)FPS));
 	}
 	
 	public int getFPS() {
-		return getStateValue(FPS).intValue();
+		return getStateValue("FPS").intValue();
 	}
 
 	@Override
-	public void deltext(double e, DevsDessMessage x) {
-		Iterator iteradorFPS = x.getValuesOnPort(ThreadAnimacion.InFPS).iterator();
-		Iterator iteradorEspera = x.getValuesOnPort(ThreadAnimacion.InEspera).iterator();
+	public void deltext(double e) {
+		Iterator<Number> iteradorFPS = this.inFPS.getValues().iterator();
+		Iterator<Number> iteradorEspera = this.inEspera.getValues().iterator();
 		int FPS=0;
 		if (iteradorFPS.hasNext()) {
 			while (iteradorFPS.hasNext()) {
 				FPS = ((Integer)iteradorFPS.next());
 			}
 			double espera=((double)1000)/((double)FPS);
-			setStateValue(this.FPS,FPS);
-			setStateValue(this.espera,espera);
+			setStateValue("FPS",FPS);
+			setStateValue("ESPERA", espera);
 			setSigma(espera);
 		}	
-		double espera=INFINITY;
+		double espera=Constants.INFINITY;
 		if (iteradorEspera.hasNext()) {
 			while (iteradorEspera.hasNext()) {
 				espera = ((Integer)iteradorEspera.next());
 			}
-			setStateValue(this.espera,espera);
-			setStateValue(this.FPS,((Double)(1000*espera)).intValue());
+			setStateValue("ESPERA", espera);
+			setStateValue("FPS",((Double)(1000*espera)).intValue());
 			setSigma(espera);
 		}
 	}
@@ -83,17 +77,24 @@ public class ThreadAnimacion extends AtomicState {
 	@Override
 	public void deltint() {
 		try {
-			Thread.sleep(getStateValue(espera).longValue());
+			Thread.sleep(getStateValue("ESPERA").longValue());
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		setSigma(getStateValue(espera).doubleValue());
+		setSigma(getStateValue("ESPERA").doubleValue());
 	}
 
 	@Override
-	public DevsDessMessage lambda() {
-		DevsDessMessage msg = new DevsDessMessage();
-		msg.add(OutSeñalAnimacion,getStateValue(FPS));			
-		return msg;
+	public void lambda() {
+		outSeñalAnimacion.addValue(getStateValue("FPS"));			
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.passivate();
 	}
 }

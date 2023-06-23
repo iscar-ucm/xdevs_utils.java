@@ -6,8 +6,8 @@ import xdevs.core.modeling.AtomicState;
 import xdevs.core.modeling.Port;
 
 public class Mux extends AtomicState{
-	public Port[] In ;
-	public final Port Out= new Port("OUT");
+	public Port<Object>[] in ;
+	public final Port<Object> out= new Port<>("OUT");
 	public Vector<DatoMux> enviar;
 	
 	@SuppressWarnings("unchecked")
@@ -15,14 +15,14 @@ public class Mux extends AtomicState{
 		super(name);
 		enviar= new Vector<DatoMux>();
 		//A�adimos los puertos de entrada
-		In= new Port[numEntradas];
+		in= new Port[numEntradas];
 		Vector[] enviar= new Vector[numEntradas];
 		for(int cont=0;cont<numEntradas;cont++){
 			if (this.getName().compareTo("muxcaviones")==0){
 				System.out.println("cont"+cont);
 			}
-			In[cont] = new Port("In"+((Integer)cont).toString());
-			this.addInPort(In[cont]);
+			in[cont] = new Port("In"+((Integer)cont).toString());
+			this.addInPort(in[cont]);
 			enviar[cont]=new Vector();
 		}
 		
@@ -30,7 +30,7 @@ public class Mux extends AtomicState{
 		
 		
 		//A�adimos el puerto de salida
-		this.addOutPort(Out);
+		this.addOutPort(out);
 	}
 	
 
@@ -41,8 +41,8 @@ public class Mux extends AtomicState{
 		// TODO Auto-generated method stub
 		//Iterator iterador=null;
 		
-		for(int cont=0;cont<In.length;cont++)
-				enviar.add(new DatoMux(cont,In[cont].getSingleValue()));
+		for(int cont=0;cont<in.length;cont++)
+				enviar.add(new DatoMux(cont,in[cont].getSingleValue()));
 				//System.out.println("siguiente "+iterador.next());
 				//iterador.next();
 				
@@ -72,11 +72,11 @@ public class Mux extends AtomicState{
 		Vector todo= new Vector();
 		todo.add(this.enviar);
 		enviar= new Vector<DatoMux>();
-		Out.addValue(todo);
+		out.addValue(todo);
 	}
 	
 	public int dameTamaño(){
-		return In.length;
+		return in.length;
 	}
 
 

@@ -96,7 +96,6 @@ public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 			Double posicionnavion,Double posicioneavion,Double distanciaavion,
 			Double posicionnbarco,Double posicionebarco,Double distanciabarco,boolean rescatanaviones) {
 		super(name);
-		// TODO Auto-generated constructor stub
 		_aviones=new ArrayList<UAV>();
 		_barcos=new ArrayList<Barco>();
 		_naufragos=new ArrayList<Naufrago>();
@@ -129,30 +128,26 @@ public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 			UAV uav=new UAV(i,_terreno);
 			_aviones.add(uav);
 			this.addComponent(uav);
-			this.addCoupling(uav, UAV.out, _muxaviones, _muxaviones.In[i]);
-			this.addCoupling(_muxaviones, _muxaviones.out, _controlador, Controlador.InAviones);
-			this.addCoupling(uav, UAV.outControlador, _muxcaviones, _muxcaviones.In[i]);
-			this.addCoupling(_muxcaviones, _muxcaviones.out, _controlador, Controlador.InControladorAviones);
+			this.addCoupling(uav.out, _muxaviones.in[i]);
+			this.addCoupling(_muxaviones.out, _controlador.inAviones);
+			this.addCoupling(uav.outControlador, _muxcaviones.in[i]);
+			this.addCoupling(_muxcaviones.out, _controlador.inControladorAviones);
 			
-			this.addCoupling(_controlador, Controlador.OutAviones,
-					uav, UAV.in);
-			this.addCoupling(_controlador, Controlador.OutControladorAviones,
-					uav, UAV.inControlador);
+			this.addCoupling(_controlador.outAviones, uav.in);
+			this.addCoupling(_controlador.outControladorAviones, uav.inControlador);
 		}
 		for(int i=0;i<numbarcos;i++){
 			
 			Barco barco = new Barco(numaviones+i,_terreno);
 			_barcos.add(barco);
 			this.addComponent(barco);
-			this.addCoupling(barco, Barco.OUT, _muxbarcos, _muxbarcos.In[i]);
-			this.addCoupling(_muxbarcos,_muxbarcos.out, _controlador, Controlador.InBarcos);
-			this.addCoupling(_controlador, Controlador.OutBarcos,
-					barco, Barco.IN);
+			this.addCoupling(barco.out, _muxbarcos.in[i]);
+			this.addCoupling(_muxbarcos.out, _controlador.inBarcos);
+			this.addCoupling(_controlador.outBarcos, barco.in);
 			
-			this.addCoupling(barco, Barco.Outcontrolador, _muxcbarcos, _muxcbarcos.In[i]);
-			this.addCoupling(_muxcbarcos, _muxcbarcos.out, _controlador, Controlador.InControladorBarcos);
-			this.addCoupling(_controlador, Controlador.OutControladorBarcos,
-					barco, Barco.INcontroladorBarco);
+			this.addCoupling(barco.outControlador, _muxcbarcos.in[i]);
+			this.addCoupling(_muxcbarcos.out, _controlador.inControladorBarcos);
+			this.addCoupling(_controlador.outControladorBarcos, barco.inControladorBarco);
 		}
 		
 		//System.out.println("creado");
@@ -162,10 +157,10 @@ public class CoupledSimulacion extends Coupled implements Dibujable, Runnable {
 			_naufragos.add(naufrago);
 			this.addComponent(naufrago);
 			//this.addCoupling(naufrago, Naufrago.Out,_algoritmo, AlgoritmoYDetecciones.InNaufragos);
-			this.addCoupling(_controlador, Controlador.OutNaufragos,naufrago, Naufrago.InSolicitud);
+			this.addCoupling(_controlador.outNaufragos, naufrago.inSolicitud);
 			
-			this.addCoupling(naufrago, Naufrago.Out, _muxnaufragos, _muxnaufragos.In[i]);
-			this.addCoupling(_muxnaufragos, _muxnaufragos.out, _controlador, Controlador.InNaufragos);
+			this.addCoupling(naufrago.out, _muxnaufragos.in[i]);
+			this.addCoupling(_muxnaufragos.out, _controlador.inNaufragos);
 		}
 	}
 
