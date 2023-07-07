@@ -1,28 +1,11 @@
 package xdevs.lib.projects.graph.structs;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLCanvas;
+import com.jogamp.opengl.GL2;
 
 public class Satelite extends ObjetoCompuesto3D{
-    private float _longAspas;
-    private float _ancAspas;
-    private float _grAspas;
-    private float _longCuerpo;
-    private float _longDisco;
-    private float _longCono;
-    private float _radMayor;
-    private float _radMenor;
     
     public Satelite(float longAspas, float ancAspas, float grAspas, float longCuerpo, 
-    		 	    float longDisco, float longCono, float radMayor, float radMenor, GL gl) {
-    	this._longAspas=longAspas;
-        this._ancAspas=ancAspas;
-        this._grAspas=grAspas;
-        this._longCuerpo=longCuerpo;
-        this._longDisco=longDisco;
-        this._longCono=longCono;
-        this._radMayor=radMayor;
-        this._radMenor=radMenor;
+    		 	    float longDisco, float longCono, float radMayor, float radMenor, GL2 gl) {
         int nPartes=5;
         Objeto3D[] objetos=new Objeto3D[nPartes];
         objetos[0]=new Tablero(longAspas,ancAspas,grAspas,1,1,1);

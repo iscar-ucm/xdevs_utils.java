@@ -15,9 +15,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
-
 import xdevs.lib.projects.graph.structs.ListaPosicion;
 import xdevs.lib.projects.graph.structs.Punto;
 

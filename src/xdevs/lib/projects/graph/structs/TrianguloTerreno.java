@@ -1,6 +1,6 @@
 package xdevs.lib.projects.graph.structs;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL2;
 
 public class TrianguloTerreno extends ObjetoDegradado {
 	private PV3D _p1;
@@ -104,7 +104,7 @@ public class TrianguloTerreno extends ObjetoDegradado {
 		}
 	} */
 	
-	public void dibujar3D(GL gl) {
+	public void dibujar3D(GL2 gl) {
 		int nCaras = getNCaras();
 		Cara[] caras = getCaras();
 		PV3D[] vertices = getVertices();
@@ -113,7 +113,7 @@ public class TrianguloTerreno extends ObjetoDegradado {
         gl.glPushMatrix();
             gl.glMultMatrixf(getTafin().getMatriz(),0);
             for (int i=0;i<nCaras; i++) {
-                gl.glBegin(GL.GL_POLYGON);
+                gl.glBegin(GL2.GL_POLYGON);
                 for (int j=0; j<caras[i].getNumVertices(); j++){
                     int iV = caras[i].getVerticeNormal()[j].getVertice();
                     int iN = caras[i].getVerticeNormal()[j].getNormal();

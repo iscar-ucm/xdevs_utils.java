@@ -3,13 +3,12 @@ package xdevs.lib.projects.graph;
 import java.util.Iterator;
 import java.util.Vector;
 
-import testing.kernel.modeling.AtomicState;
-import testing.kernel.modeling.DevsDessMessage;
-
+import xdevs.core.modeling.AtomicState;
+import xdevs.core.modeling.Port;
 
 public class ThreadZoom extends AtomicState {
-	public static final String InZoom = "INZoom";
-	public static final String OutZoom = "OUTZoom";
+	public Port<Vector<Number>> InZoom = new Port<>("INZoom");
+	public Port<Vector<Number>> OutZoom = new Port<>("OUTZoom");
 	
 	private final String factor = "Factor";
 	private final String xRight = "XRight";
@@ -22,8 +21,8 @@ public class ThreadZoom extends AtomicState {
 	
 	public ThreadZoom() {
 		super("ThreadZoom");
-		addInport(InZoom);
-		addOutport(OutZoom);
+		addInPort(InZoom);
+		addOutPort(OutZoom);
 		addState(factor);
 		addState(xRight);
 		addState(xLeft);
@@ -35,13 +34,13 @@ public class ThreadZoom extends AtomicState {
 	}
 
 	@Override
-	public void deltext(double e, DevsDessMessage x) {
-		Iterator iteradorIn = x.getValuesOnPort(ThreadZoom.InZoom).iterator();
-		Vector datos;
+	public void deltext(double e) {
+		Iterator<Vector<Number>> iteradorIn = InZoom.getValues().iterator();
+		Vector<Number> datos;
 		if (iteradorIn.hasNext()) {
-			datos=((Vector)iteradorIn.next());
+			datos = iteradorIn.next();
 			while (iteradorIn.hasNext()) {
-				datos = ((Vector)iteradorIn.next());
+				datos = iteradorIn.next();
 			}
 			setStateValue(xLeft,(Float)datos.get(0));
 			setStateValue(xRight,(Float)datos.get(1));
@@ -49,7 +48,7 @@ public class ThreadZoom extends AtomicState {
 			setStateValue(yTop,(Float)datos.get(3));
 			setStateValue(factor,(Float)datos.get(4));
 			setStateValue(pasos,(Integer)datos.get(5));
-			setStateValue(pasoActual,new Integer(1));
+			setStateValue(pasoActual, Integer.valueOf(1));
 			setStateValue(espera,(Integer)datos.get(6));
 			setSigma(getStateValue(espera).doubleValue());
 		}
@@ -62,12 +61,12 @@ public class ThreadZoom extends AtomicState {
 			setSigma(getStateValue(espera).doubleValue());
 		}
 		else {
-			setSigma(INFINITY);
+			super.passivate();
 		}
 	}
 
 	@Override
-	public DevsDessMessage lambda() {
+	public void lambda() {
 		float xRight=getStateValue(this.xRight).floatValue();
 		float xLeft=getStateValue(this.xLeft).floatValue();
 		float yTop=getStateValue(this.yTop).floatValue();
@@ -79,13 +78,20 @@ public class ThreadZoom extends AtomicState {
 		float iyTop=((yTop*factor-yTop)/(float)pasos);
 		float iyBot=((yBot*factor-yBot)/(float)pasos);
 		int pasoActual=getStateValue(this.pasoActual).intValue();
-		Vector<Float> vector= new Vector<Float>();
-		vector.add(new Float(xLeft+ixLeft*pasoActual));
-		vector.add(new Float(xRight+ixRight*pasoActual));
-		vector.add(new Float(yBot+iyBot*pasoActual));
-		vector.add(new Float(yTop+iyTop*pasoActual));
-		DevsDessMessage msg = new DevsDessMessage();
-		msg.add(OutZoom,vector);			
-		return msg;
+		Vector<Number> vector= new Vector<>();
+		vector.add(Float.valueOf(xLeft+ixLeft*pasoActual));
+		vector.add(Float.valueOf(xRight+ixRight*pasoActual));
+		vector.add(Float.valueOf(yBot+iyBot*pasoActual));
+		vector.add(Float.valueOf(yTop+iyTop*pasoActual));
+		OutZoom.addValue(vector);			
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.passivate();
 	}
 }

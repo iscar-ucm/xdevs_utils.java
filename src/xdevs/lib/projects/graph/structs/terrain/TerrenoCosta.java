@@ -1,10 +1,5 @@
 package xdevs.lib.projects.graph.structs.terrain;
 
-import ssii2007.grafico.estructura.Cara;
-import ssii2007.grafico.estructura.Color;
-import ssii2007.grafico.estructura.PV3D;
-import ssii2007.grafico.estructura.VerticeNormal;
-
 public class TerrenoCosta extends Terreno {
 
 	public TerrenoCosta (int lon, int anc, int numIteraciones, int alturaMax, int profundidadMax, float filter, float pCosta) {

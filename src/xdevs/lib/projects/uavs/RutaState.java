@@ -1,23 +1,22 @@
 package xdevs.lib.projects.uavs;
 
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.Vector;
 
-import testing.kernel.modeling.AtomicState;
-import testing.kernel.modeling.DevsDessMessage;
+import xdevs.core.modeling.AtomicState;
+import xdevs.core.modeling.Port;
 
 
 public class RutaState extends AtomicState{
 	
-	public static final String InRuta = "INRuta";
+	public Port<Object> InRuta = new Port<>("INRuta");
 	
-	public static final String OutWayPoint = "OUTWayPoint";
+	public Port<ArrayList<Vector<Number>>> OutWayPoint = new Port<>("OUTWayPoint");
 	
-	public static final String InAvion = "INAvion";
-	
-	private DevsDessMessage _msg;
-	
+	public Port<Object> InAvion = new Port<>("INAvion");
+		
 	private static final String puntoActual = "puntoActual";
 	
 	private static final String turnosAlejandose = "TurnosAlejandose";
@@ -31,13 +30,14 @@ public class RutaState extends AtomicState{
 	 */
 	public static final int NRUTA = 0;
 	
-	private ArrayList _trayectoria;
+	private ArrayList<Vector<Number>> queue = new ArrayList<>();
+	private ArrayList<Object> _trayectoria;
 	
 	public RutaState (String nombre) {
 		super(nombre);
-		addInport(InRuta);
-		addInport(InAvion);
-		addOutport(OutWayPoint);
+		addInPort(InRuta);
+		addInPort(InAvion);
+		addOutPort(OutWayPoint);
 		addState(puntoActual);
 		setStateValue(puntoActual,-1);
 		addState(turnosAlejandose);
@@ -45,28 +45,27 @@ public class RutaState extends AtomicState{
 		addState(distanciaAnterior);
 		addState(turnosMinimosRestantes);
 		setStateValue(turnosMinimosRestantes,-1);
-		_trayectoria = new ArrayList();
-		_msg = new DevsDessMessage();
-		this.setSigma(INFINITY);
+		_trayectoria = new ArrayList<>();
+		super.passivate();
 	}
 
 	@Override
-	public void deltext(double arg0, DevsDessMessage arg1) {
+	public void deltext(double e) {
 		// TODO Auto-generated method stub
-		Iterator iteradorSolicitud = arg1.getValuesOnPort(RutaState.InRuta).iterator();
+		Iterator<Object> iteradorSolicitud = InRuta.getValues().iterator();
 		while (iteradorSolicitud.hasNext()) {
 			//En primer lugar obtenemos el tipo de solicitud
-			Vector solicitud = ((Vector)iteradorSolicitud.next());
+			Vector<Object> solicitud = (Vector<Object>)(iteradorSolicitud.next());
 			//En función del tipo de solicitud, obtenemos los datos y realizamos la operación requerida
 			switch ((Integer)solicitud.get(0)) {
 				case RutaState.NRUTA: {
-					this._trayectoria = (ArrayList)(solicitud.get(1));
+					this._trayectoria = (ArrayList<Object>)(solicitud.get(1));
 					this.pedirPunto();
 				}
 			}
 		}
 		//comunicacion recibida por el avion
-		Iterator iterador = arg1.getValuesOnPort(RutaState.InAvion).iterator();
+		Iterator iterador = InAvion.getValues().iterator();
 		while (iterador.hasNext()) {
 			Vector todo = (Vector) iterador.next();
 			if(_trayectoria.size()>0){
@@ -79,8 +78,8 @@ public class RutaState extends AtomicState{
 	private void controlRuta(Double xi, Vector<Double> p, Vector<Double> v, Double dt) {
 		// TODO Auto-generated method stub
 		if(this._trayectoria.size()>getStateValue(puntoActual).intValue()){
-			double x_obj = new Double(Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(0)))));
-			double y_obj = new Double(Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(1)))));
+			double x_obj = Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(0))));
+			double y_obj = Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(1))));
 			double distancia = Math.sqrt(((p.get(0)-x_obj)*(p.get(0)-x_obj))+((p.get(1)-y_obj)*(p.get(1)-y_obj)));
 			System.out.println("turnos restantes"+getStateValue(turnosMinimosRestantes));
 			System.out.println("turnos alejandose"+getStateValue(turnosAlejandose));
@@ -110,15 +109,13 @@ public class RutaState extends AtomicState{
 
 	@Override
 	public void deltint() {
-		// TODO Auto-generated method stub
-		_msg = new DevsDessMessage();
-		this.setSigma(INFINITY);
+		queue.clear();
+		super.passivate();
 	}
 
 	@Override
-	public DevsDessMessage lambda() {
-		// TODO Auto-generated method stub
-		return (_msg);
+	public void lambda() {
+		this.OutWayPoint.addValue(queue);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -127,14 +124,23 @@ public class RutaState extends AtomicState{
 			setStateValue(puntoActual,getStateValue(puntoActual).intValue()+1);
 		}
 		System.out.println("pedir punto");
-		Vector solicitud= new Vector();
+		Vector<Number> solicitud= new Vector<>();
 		if(_trayectoria.size()>getStateValue(puntoActual).intValue()){
-			solicitud.add(new Integer (ControladorRumboState.CamPosRefRut));
-			solicitud.add(new Double(Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(0))))));
-			solicitud.add(new Double(Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(1))))));
-			solicitud.add(new Double(Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(2))))));
-			_msg.add(RutaState.OutWayPoint,solicitud);
+			solicitud.add(ControladorRumboState.CamPosRefRut);
+			solicitud.add(Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(0)))));
+			solicitud.add(Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(1)))));
+			solicitud.add(Double.valueOf(((String)(((ArrayList)_trayectoria.get(getStateValue(puntoActual).intValue())).get(2)))));
+			queue.add(solicitud);
 		}
 
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.passivate();
 	}
 }

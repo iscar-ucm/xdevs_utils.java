@@ -1,6 +1,6 @@
 package xdevs.lib.projects.graph.structs;
 
-import javax.media.opengl.GL;
+import com.jogamp.opengl.GL2;
 
 public abstract class ObjetoDegradado extends Objeto3D {
     private int _nVertices;
@@ -87,7 +87,7 @@ public abstract class ObjetoDegradado extends Objeto3D {
     }
  
 
-    public abstract void dibujar3D(GL gl); 
+    public abstract void dibujar3D(GL2 gl); 
 
     public void calcularNormalesNewell() {
         float nx,ny,nz;
