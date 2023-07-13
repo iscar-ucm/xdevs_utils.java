@@ -11,6 +11,11 @@ import java.util.zip.ZipOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -59,11 +64,15 @@ public class GoogleEarth {
 			networklink.appendChild(url);
 			document.appendChild(networklink);
 			doc.appendChild(kml);
-	    	OutputFormat format = new OutputFormat("xml","UTF-8",true);
-			XMLSerializer serializer = new XMLSerializer(format);
 			FileWriter xmlFile = new FileWriter(new File(ruta));
-			serializer.setOutputCharStream(xmlFile);
-			serializer.serialize(doc);
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+    		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+    		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+    		DOMSource source = new DOMSource(doc);
+    		StreamResult result = new StreamResult(xmlFile);
+    		transformer.transform(source, result);
 			xmlFile.flush();
 			xmlFile.close();
 		}
@@ -118,11 +127,15 @@ public class GoogleEarth {
 			}
 			
 			doc.appendChild(kml);
-	    	OutputFormat format = new OutputFormat("xml","UTF-8",true);
-			XMLSerializer serializer = new XMLSerializer(format);
 			FileWriter xmlFile = new FileWriter(new File(ruta));
-			serializer.setOutputCharStream(xmlFile);
-			serializer.serialize(doc);
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+    		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+    		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+    		DOMSource source = new DOMSource(doc);
+    		StreamResult result = new StreamResult(xmlFile);
+    		transformer.transform(source, result);
 			xmlFile.flush();
 			xmlFile.close();
 		}

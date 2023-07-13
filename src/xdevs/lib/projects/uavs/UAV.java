@@ -2,6 +2,7 @@ package xdevs.lib.projects.uavs;
 
 import xdevs.core.modeling.Coupled;
 import xdevs.core.modeling.Port;
+import xdevs.core.simulation.Coordinator;
 import xdevs.lib.projects.graph.structs.terrain.Terreno;
 
 //import xdevs.kernel.modeling.Coupled;
@@ -52,45 +53,45 @@ public class UAV extends Coupled {
 	//	addComponent(_reloj);
 		addComponent(_ruta);
 	
-		addCoupling(this,UAV.in,_avion,AvionState.InSolicitud1);
+		addCoupling(this.in,_avion.inSolicitud1);
 		
-		addCoupling(this,UAV.inControlador,_controlador,ControladorRumboState.InPosRef);
+		addCoupling(this.inControlador,_controlador.inPosRef);
 		
 		//addCoupling(this,UAV.OUT,_avion,AvionState.OutTodo);
-		addCoupling(_avion,AvionState.outTodo,this,UAV.out);
-		addCoupling(_controlador,ControladorRumboState.PeticionPunto,this,UAV.outControlador);
+		addCoupling(_avion.outTodo,this.out);
+		addCoupling(_controlador.peticionPunto,this.outControlador);
 		
 		//De reloj a peticiones
 	//	addCoupling(_reloj,RelojState.OUT,_peticion,PeticionesState.In);
 		
 		//PETICIONES A RUTA
-		addCoupling(_peticion,PeticionesState.peticionRuta,_ruta,RutaState.InRuta);
+		addCoupling(_peticion.peticionRuta,_ruta.InRuta);
 		
 		//RUTA A CONTROLADOR DE RUMBO
-		addCoupling(_ruta,RutaState.OutWayPoint,_controlador,ControladorRumboState.InPosRefCon);
+		addCoupling(_ruta.OutWayPoint,_controlador.inPosRefCon);
 		
 		//AVION A RUTA
-		addCoupling(_avion,AvionState.outTodo,_ruta,RutaState.InAvion);		
+		addCoupling(_avion.outTodo,_ruta.InAvion);		
 		
 		//PeticionesState A AVION
-		addCoupling(_peticion,PeticionesState.peticionAvion,_avion,AvionState.InSolicitud1);
+		addCoupling(_peticion.peticionAvion,_avion.inSolicitud1);
 		
 		//AVION A RECEPTOR
-		addCoupling(_avion,AvionState.OutPosicion,_receptor,ReceptorState.inPosicion);
-		addCoupling(_avion,AvionState.OutVelocidad,_receptor,ReceptorState.inVelocidad);
-		addCoupling(_avion,AvionState.OutAngulos,_receptor,ReceptorState.inAngulos);
-		addCoupling(_avion,AvionState.OutFuel,_receptor,ReceptorState.inFuel);
-		addCoupling(_avion,AvionState.OutEstado,_receptor,ReceptorState.inEstado);
-		addCoupling(_avion,AvionState.outTodo,_receptor,ReceptorState.inTodo);
+		addCoupling(_avion.outPosicion,_receptor.inPosicion);
+		addCoupling(_avion.outVelocidad,_receptor.inVelocidad);
+		addCoupling(_avion.outAngulos,_receptor.inAngulos);
+		addCoupling(_avion.outFuel,_receptor.inFuel);
+		addCoupling(_avion.outEstado,_receptor.inEstado);
+		addCoupling(_avion.outTodo,_receptor.inTodo);
 		
 		//PeticionesState A CONTROLADOR
-		addCoupling(_peticion,PeticionesState.peticionControladorRumbo,_controlador,ControladorRumboState.InPosRef);
+		addCoupling(_peticion.peticionControladorRumbo,_controlador.inPosRef);
 		
 		//CONTROLADOR A AVION Y DESDE AVION A CONTROLADOR
-		addCoupling(_controlador,ControladorRumboState.OutPeticion,_avion,AvionState.InSolicitud2);
-		addCoupling(_avion,AvionState.controlador,_controlador,ControladorRumboState.Inicializar);
+		addCoupling(_controlador.outPeticion,_avion.inSolicitud2);
+		addCoupling(_avion.controlador,_controlador.inicializar);
 		
-		addCoupling(_avion,AvionState.outTodo,_controlador,ControladorRumboState.InAvion);
+		addCoupling(_avion.outTodo,_controlador.inAvion);
 		this.
 		_id = id;
 	}

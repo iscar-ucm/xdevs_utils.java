@@ -31,46 +31,46 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 	/**
 	 * Constante para el puerto de entrada de las solicitudes 1
 	 */
-	protected Port<Vector> inSolicitud1 = new Port<Vector>("INsolicitud1");
+	protected Port<Vector<Number>> inSolicitud1 = new Port<>("INsolicitud1");
 	
 	/**
 	 * Constante para el puerto de entrada de las solicitudes 2
 	 */
-	protected Port<Vector> inSolicitud2 = new Port<Vector>("INsolicitud2");
+	protected Port<Vector<Number>> inSolicitud2 = new Port<>("INsolicitud2");
 	
 	
 	//Puertos de salida
 	/**
 	 * Constante para el puerto de salida del vector posicion
 	 */
-	public static final String OutPosicion = "OUTposicion";
+	public Port<Vector<Number>> outPosicion = new Port<>("OUTposicion");
 	
 	/**
 	 * Constante para el puerto de salida del vector velocidad
 	 */
-	public static final String OutVelocidad = "OUTVelocidad";
+	public Port<Vector<Number>> outVelocidad = new Port<>("OUTVelocidad");
 	
 	/**
 	 * Constante para el puerto de salida del vector de angulos
 	 */
-	public static final String OutAngulos = "OUTAngulos";
+	public Port<Vector<Number>> outAngulos = new Port<>("OUTAngulos");
 	
 	/**
 	 * Constante para el puerto de salida del nivel de fuel
 	 */
-	public static final String OutFuel = "OUTFuel";
+	public Port<Vector<Number>> outFuel = new Port<>("OUTFuel");
 	
 	/**
 	 * Constante para el puerto de salida del estado
 	 */
-	public static final String OutEstado = "OUTEstado";
+	public Port<Vector<Number>> outEstado = new Port<>("OUTEstado");
 	
 	/**
 	 * Constante para el puerto de salida para el controlador
 	 */
-	protected Port<Vector> outTodo = new Port<Vector>("OUTTodo");
+	protected Port<Vector<Number>> outTodo = new Port<>("OUTTodo");
 	
-	protected Port<Vector> controlador = new Port<Vector>("controlador");
+	protected Port<Vector<Number>> controlador = new Port<>("controlador");
 	
 	/**
 	 * Constante para el puerto de salida para los valores precisos en ese instante
@@ -312,12 +312,12 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 		integrador=new RungeKutta();
 		addInPort(inSolicitud1);			//Establecemos los puertos de entrada
 		addInPort(inSolicitud2);			//Establecemos los puertos de entrada
-//		addOutport(AvionState.OutPosicion); 			//Establecemos los puertos de salida
+		addOutPort(outPosicion); 			//Establecemos los puertos de salida
 		addOutPort(controlador); 
-		//addOutport(AvionState.OutVelocidad);
-		//addOutport(AvionState.OutAngulos);
-		//addOutport(AvionState.OutFuel);
-		//addOutport(AvionState.OutEstado);
+		addOutPort(outVelocidad);
+		addOutPort(outAngulos);
+		addOutPort(outFuel);
+		addOutPort(outEstado);
 		addOutPort(outTodo);
 		//addOutport(AvionState.OutActualizados);
 		addState(phase);						//A�adimos los estados

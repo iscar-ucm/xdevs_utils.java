@@ -111,21 +111,21 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 	
 	//COMUNICACION CON LA VISTA
 	
-	protected Port<Vector> Inicializar = new Port<Vector>("Inicializar");
+	protected Port<Vector> inicializar = new Port<Vector>("Inicializar");
 	
-	protected Port<Vector> InPosRef = new Port<Vector>("INPosRef");
+	protected Port<Vector> inPosRef = new Port<Vector>("INPosRef");
 
-	protected Port<Vector> InPosRefCon = new Port<Vector>("INPosRefCon");
+	protected Port<Vector> inPosRefCon = new Port<Vector>("INPosRefCon");
 	
-	protected Port<Vector> InAvion = new Port<Vector>("INAvion");
+	protected Port<Vector> inAvion = new Port<Vector>("INAvion");
 	
 	//PUERTOS DE SALIDA
 	/**
 	 * Constante para el puerto de salida para realizar las peticiones al avion
 	 */
-	protected Port<Vector> OutPeticion = new Port<Vector>("OUTPeticion");
+	protected Port<Vector> outPeticion = new Port<Vector>("OUTPeticion");
 	
-	protected Port<Vector> PeticionPunto = new Port<Vector>("PeticionPunto");
+	protected Port<Vector> peticionPunto = new Port<Vector>("PeticionPunto");
 
 	
 	
@@ -147,12 +147,12 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 	
 	public ControladorRumboState (String nombre){
 		super(nombre);
-		addInPort(InAvion);
-		addInPort(Inicializar);
-		addInPort(InPosRef);
-		addInPort(InPosRefCon);
-		addOutPort(OutPeticion);
-		addOutPort(PeticionPunto);
+		addInPort(inAvion);
+		addInPort(inicializar);
+		addInPort(inPosRef);
+		addInPort(inPosRefCon);
+		addOutPort(outPeticion);
+		addOutPort(peticionPunto);
 		addState(pon);
 		addState(poe);
 		addState(poh);
@@ -193,17 +193,17 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 		 * 
 		 */
 		
-		if(!Inicializar.isEmpty()){
-			Vector desechar=Inicializar.getSingleValue();
+		if(!inicializar.isEmpty()){
+			Vector desechar=inicializar.getSingleValue();
 			this.setStateValue("phase", ControladorRumboState.INICIADO);
 			this.setStateValue("racha", -100);
 			this.setStateValue("temporizador", -100);
 			super.holdIn("active",0);
 		}
 		// TODO Auto-generated method stub
-		if (!InPosRef.isEmpty()) {
+		if (!inPosRef.isEmpty()) {
 			//En primer lugar obtenemos el tipo de solicitud
-			Vector solicitud = InPosRef.getSingleValue();
+			Vector solicitud = inPosRef.getSingleValue();
 			if(((solicitud!=null)&&(solicitud.size()<5))||((solicitud.size()==5)&&((Integer)solicitud.get(4)==Integer.parseInt(this.getName())))){
 
 			//En funci�n del tipo de solicitud, obtenemos los datos y realizamos la operaci�n requerida
@@ -283,7 +283,7 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 					double altura = getStateValue("poh").doubleValue();
 					a.add(new Integer (AvionState.CambiarAltura));
 					a.add(altura);
-					OutPeticion.addValue(a);
+					outPeticion.addValue(a);
 	//			 fijarPos(pos);
 				}; break;
 			}
@@ -294,7 +294,7 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 			
 		}
 
-		Iterator iterador = InPosRefCon.getValues().iterator();
+		Iterator iterador = inPosRefCon.getValues().iterator();
 		while (iterador.hasNext()) {
 			//En primer lugar obtenemos el tipo de solicitud
 			Vector solicitud = ((Vector)iterador.next());
@@ -338,7 +338,7 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 					double altura = getStateValue(poh).doubleValue();
 					a.add(new Integer (AvionState.CambiarAltura));
 					a.add(altura);
-					OutPeticion.addValue(a);
+					outPeticion.addValue(a);
 	//			 fijarPos(pos);
 				}; break;
 			}
@@ -348,7 +348,7 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 		
 		
 		//comunicacion recibida por el avion
-		iterador = InAvion.getValues().iterator();
+		iterador = inAvion.getValues().iterator();
 		boolean llega_avion=false;
 		while (iterador.hasNext()) {
 			llega_avion=true;
@@ -427,7 +427,7 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 			Vector solicitud = new Vector();
 			solicitud.add(new Integer(Controlador.ActualizaPosicion));
 			solicitud.add(new Integer(Integer.parseInt(this.getName())));
-			PeticionPunto.addValue(solicitud);
+			peticionPunto.addValue(solicitud);
 			this.setStateValue("racha", 10);
 			//this.setStateValue(temporizador, 10);
 		}
@@ -496,7 +496,7 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 			Vector solicitud = new Vector(2,0);
 			solicitud.add(new Integer(AvionState.CambiarAnguloPhi));
 			solicitud.add(new Double (phiValue));
-			OutPeticion.addValue(solicitud);
+			outPeticion.addValue(solicitud);
 			}
 		}
 	}

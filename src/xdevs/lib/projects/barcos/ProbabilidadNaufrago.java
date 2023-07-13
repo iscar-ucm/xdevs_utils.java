@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.Serializable;
 
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -276,11 +280,15 @@ public class ProbabilidadNaufrago implements Serializable{
 	//estructura xml en el archivo dado.
 	public void writeFile(Document doc, String filename) {
 	    try {
-	    	OutputFormat format = new OutputFormat("xml","UTF-8",true);
-			XMLSerializer serializer = new XMLSerializer(format);
 			FileWriter xmlFile = new FileWriter(new File(filename));
-			serializer.setOutputCharStream(xmlFile);
-			serializer.serialize(doc);
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+    		transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+    		transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+    		DOMSource source = new DOMSource(doc);
+    		StreamResult result = new StreamResult(xmlFile);
+    		transformer.transform(source, result);
 			xmlFile.flush();
 			xmlFile.close();
 	    } catch (java.lang.Exception e) {

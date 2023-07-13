@@ -1,7 +1,5 @@
 package xdevs.lib.examples.efp;
 
-import java.util.logging.Level;
-
 import xdevs.core.examples.efp.Gpt;
 import xdevs.core.modeling.CoupledView;
 import xdevs.core.simulation.CoordinatorView;
