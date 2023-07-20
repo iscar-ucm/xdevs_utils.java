@@ -76,19 +76,19 @@ public class Controller extends Thread {
         super.interrupt();
     }
 
-    public void simInject(double e, Port port, Collection<Object> values) {
+    public void simInject(double e, Port<Object> port, Collection<Object> values) {
         coordinator.simInject(e, port, values);
     }
 
-    public void simInject(Port port, Collection<Object> values) {
+    public void simInject(Port<Object> port, Collection<Object> values) {
         coordinator.simInject(port, values);
     }
 
-    public void simInject(double e, Port port, Object value) {
+    public void simInject(double e, Port<Object> port, Object value) {
         coordinator.simInject(e, port, value);
     }
 
-    public void simInject(Port port, Object value) {
+    public void simInject(Port<Object> port, Object value) {
         coordinator.simInject(port, value);
     }
 

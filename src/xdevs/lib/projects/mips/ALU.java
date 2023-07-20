@@ -19,6 +19,12 @@ public class ALU extends Atomic {
     public static final String outZeroName = "outZero";
     public static final String outLessThanName = "outLessThan";
     public static final String outOutName = "outOut";
+    public static final Integer ALU_AND = 0;
+    public static final Integer ALU_OR = 1;
+    public static final Integer ALU_ADD = 2;
+    public static final Integer ALU_SLL = 3;
+    public static final Integer ALU_SUB = 6;
+    public static final Integer ALU_SLT = 7;
     protected Port<Integer> inPortCtrl = new Port<>(inCtrlName);
     protected Port<Integer> inPortOpA = new Port<>(inOpAName);
     protected Port<Integer> inPortOpB = new Port<>(inOpBName);

@@ -2,36 +2,39 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package xdevs.lib.projects.mips;
 
 import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Port;
+
+
 
 /**
  *
  * @author Jose Roldan Ramirez
  * @author José L. Risco Martín
  */
-public class Register<T> extends Atomic {
-
+public class RegisterMdr extends Atomic {
+    
     public static final String inClkName = "clk";
     public static final String inRegWriteName = "RegWrite";
     public static final String inInName = "in";
     public static final String outOutName = "out";
 
-    protected Port<Integer> clk = new Port<Integer>(Register.inClkName);
-    protected Port<Integer> regWrite = new Port<Integer>(Register.inRegWriteName);
-    protected Port<T> in = new Port<T>(Register.inInName);
-    protected Port<T> out = new Port<T>(Register.outOutName);
+    protected Port<Integer> clk = new Port<Integer>(RegisterMdr.inClkName);
+    protected Port<Integer> regWrite = new Port<Integer>(RegisterMdr.inRegWriteName);
+    protected Port<Object> in = new Port<Object>(RegisterMdr.inInName);
+    protected Port<Integer> out = new Port<Integer>(RegisterMdr.outOutName);
 
     protected Double delayRead;
     protected Double delayWrite;
     protected Integer valueAtClk;
     protected Integer valueAtRegWrite;
-    protected T valueAtIn;
-    protected T valueAtOut;
+    protected Object valueAtIn;
+    protected Integer valueAtOut;
 
-    public Register(String name, T initialOutput, Double delayRead, Double delayWrite) {
+    public RegisterMdr(String name, Double delayRead, Double delayWrite) {
         super(name);
         super.addInPort(clk);
         super.addInPort(regWrite);
@@ -41,20 +44,12 @@ public class Register<T> extends Atomic {
         this.delayWrite = delayWrite;
         valueAtClk = null;
         valueAtIn = null;
-        valueAtOut = initialOutput;
-        super.holdIn("Read", delayRead);
+        valueAtOut = 0;
+        super.holdIn("Read",delayRead);
     }
 
-    public Register(String name, T initialOutput) {
-        this(name, initialOutput, 0.0, 0.0);
-    }
-
-    @Override
-    public void initialize() {
-    }
-
-    @Override
-    public void exit() {
+    public RegisterMdr(String name) {
+        this(name, 0.0, 0.0);
     }
 
     @Override
@@ -64,22 +59,25 @@ public class Register<T> extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         // Primero procesamos los valores de la entrada
 
-        if (!in.isEmpty()) {
+        if(!in.isEmpty()) {
             valueAtIn = in.getSingleValue();
         }
 
-        if (!regWrite.isEmpty()) {
-            valueAtRegWrite = regWrite.getSingleValue();
+        Integer tempValueAtRegWrite = regWrite.getSingleValue();
+        if(tempValueAtRegWrite!=null) {
+            valueAtRegWrite = tempValueAtRegWrite;
         }
 
         // Ahora el reloj, que gobierna la escritura:
-        if (!clk.isEmpty()) {
-            Integer tempValueAtClk = clk.getSingleValue();
+
+        Integer tempValueAtClk = clk.getSingleValue();
+        if(tempValueAtClk!=null) {
             if (valueAtRegWrite != null && valueAtRegWrite == 1 && valueAtClk != null && valueAtClk == 1 && tempValueAtClk == 0) {
                 if (valueAtIn != null) {
-                    valueAtOut = valueAtIn;
+                    valueAtOut = (Integer)valueAtIn;
                 }
                 super.holdIn("Write", delayWrite);
             }
@@ -89,8 +87,17 @@ public class Register<T> extends Atomic {
 
     @Override
     public void lambda() {
-        if (valueAtOut != null) {
+        if(valueAtOut!=null) {
             out.addValue(valueAtOut);
         }
+    }
+
+    @Override
+    public void exit() {
+    }
+
+    @Override
+    public void initialize() {
+        super.passivate();
     }
 }
