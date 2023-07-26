@@ -28,14 +28,14 @@ public class Registers extends Atomic {
     public static final String outBusAName = "busA";
     public static final String outBusBName = "busB";
 
-    protected Port<Integer> CLK = new Port<Integer>(inCLKName);
-    protected Port<Integer> RegWrite = new Port<Integer>(inRegWriteName);
-    protected Port<Integer> RA = new Port<Integer>(inRAName);
-    protected Port<Integer> RB = new Port<Integer>(inRBName);
-    protected Port<Integer> RW = new Port<Integer>(inRWName);
-    protected Port<Integer> busW = new Port<Integer>(inBusWName);
-    protected Port<Integer> busA = new Port<Integer>(outBusAName);
-    protected Port<Integer> busB = new Port<Integer>(outBusBName);
+    public Port<Integer> CLK = new Port<Integer>(inCLKName);
+    public Port<Integer> RegWrite = new Port<Integer>(inRegWriteName);
+    public Port<Integer> RA = new Port<Integer>(inRAName);
+    public Port<Integer> RB = new Port<Integer>(inRBName);
+    public Port<Integer> RW = new Port<Integer>(inRWName);
+    public Port<Integer> busW = new Port<Integer>(inBusWName);
+    public Port<Integer> busA = new Port<Integer>(outBusAName);
+    public Port<Integer> busB = new Port<Integer>(outBusBName);
 
     protected WRITE_MODE writeMode;
     protected Double delayRead;
@@ -169,6 +169,10 @@ public class Registers extends Atomic {
         if (valueAtRB != null) {
             busB.addValue(data[valueAtRB]);
         }
+    }
+
+    public void setRegisterValue(int idx, Integer value) {
+        data[idx] = value;
     }
 
 }

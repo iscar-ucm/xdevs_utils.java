@@ -16,7 +16,7 @@ import xdevs.core.simulation.Coordinator;
  */
 public class MipsMonocycle extends MipsAbstract {
     protected Clock clock;
-        protected Register pc;
+        protected Register<Integer> pc;
         protected ConstantAdder pcAdder;
         protected InstructionsMemory insMem;
         protected InsNode insNode;
@@ -55,7 +55,7 @@ public class MipsMonocycle extends MipsAbstract {
         //clock.setLoggerActive(true);
         super.addComponent(clock);
 
-        pc = new Register("PC");
+        pc = new Register<Integer>("PC", 0);
         super.addComponent(pc);
 
         pcAdder = new ConstantAdder("PCAdder", 4, 100.0);

@@ -26,14 +26,14 @@ public class InsNode extends Atomic {
     public static final String outOut0500Name = "out0500";
     public static final String outOut2500Name = "out2500";
 
-    protected Port<String> in = new Port<String>(InsNode.inInName);
-    protected Port<Integer> out3126 = new Port<Integer>(InsNode.outOut3126Name);
-    protected Port<Integer> out2521 = new Port<Integer>(InsNode.outOut2521Name);
-    protected Port<Integer> out2016 = new Port<Integer>(InsNode.outOut2016Name);
-    protected Port<Integer> out1511 = new Port<Integer>(InsNode.outOut1511Name);
-    protected Port<Integer> out1500 = new Port<Integer>(InsNode.outOut1500Name);
-    protected Port<Integer> out0500 = new Port<Integer>(InsNode.outOut0500Name);
-    protected Port<Integer> out2500 = new Port<Integer>(InsNode.outOut2500Name);
+    public Port<String> in = new Port<String>(InsNode.inInName);
+    public Port<Integer> out3126 = new Port<Integer>(InsNode.outOut3126Name);
+    public Port<Integer> out2521 = new Port<Integer>(InsNode.outOut2521Name);
+    public Port<Integer> out2016 = new Port<Integer>(InsNode.outOut2016Name);
+    public Port<Integer> out1511 = new Port<Integer>(InsNode.outOut1511Name);
+    public Port<Integer> out1500 = new Port<Integer>(InsNode.outOut1500Name);
+    public Port<Integer> out0500 = new Port<Integer>(InsNode.outOut0500Name);
+    public Port<Integer> out2500 = new Port<Integer>(InsNode.outOut2500Name);
 
     protected String valueAtIn = null;
     

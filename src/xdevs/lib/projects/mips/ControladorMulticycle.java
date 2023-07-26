@@ -32,30 +32,30 @@ public class ControladorMulticycle extends Atomic {
     public static final String outALUSrcBName = "ALUSrcB";
 
     public static final String inClkName = "clk";
-    protected Port<Integer> clk = new Port<Integer>(ControladorMulticycle.inClkName);
+    public Port<Integer> clk = new Port<Integer>(ControladorMulticycle.inClkName);
     protected Integer valueAtClk = null;
     
-    protected Port<Integer> portOp;
-    protected Port<Integer> portFunct;
-    protected Port<Integer> portZero;
-    protected Port<Integer> inLessThan = new Port<Integer>(ControladorMulticycle.inLessThanName);
+    public Port<Integer> portOp;
+    public Port<Integer> portFunct;
+    public Port<Integer> portZero;
+    public Port<Integer> inLessThan = new Port<Integer>(ControladorMulticycle.inLessThanName);
 
-    protected Port<Integer> portMemRead;
-    protected Port<Integer> portMemWrite;
-    protected Port<Integer> portMDRWrite;
-    protected Port<Integer> portIRWrite;
-    protected Port<Integer> portRegDst;
-    protected Port<Integer> portRegWrite;
-    protected Port<Integer> portAWrite;
-    protected Port<Integer> portBWrite;
-    protected Port<Integer> portPCWrite;
-    protected Port<Integer> outAluCtrl;
-    protected Port<Integer> outPcSrc = new Port<Integer>(ControladorMulticycle.outPcSrcName);
-    protected Port<Integer> portOutWrite;
-    protected Port<Integer> portIorD;
-    protected Port<Integer> portMemtoReg;
-    protected Port<Integer> portALUSrcA;
-    protected Port<Integer> portALUSrcB;
+    public Port<Integer> portMemRead;
+    public Port<Integer> portMemWrite;
+    public Port<Integer> portMDRWrite;
+    public Port<Integer> portIRWrite;
+    public Port<Integer> portRegDst;
+    public Port<Integer> portRegWrite;
+    public Port<Integer> portAWrite;
+    public Port<Integer> portBWrite;
+    public Port<Integer> portPCWrite;
+    public Port<Integer> outAluCtrl;
+    public Port<Integer> outPcSrc = new Port<Integer>(ControladorMulticycle.outPcSrcName);
+    public Port<Integer> portOutWrite;
+    public Port<Integer> portIorD;
+    public Port<Integer> portMemtoReg;
+    public Port<Integer> portALUSrcA;
+    public Port<Integer> portALUSrcB;
 
     protected Integer currentState = 0;
     protected Double delay;

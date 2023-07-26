@@ -9,7 +9,8 @@ public class Clock extends Atomic {
     private static final Logger LOGGER = Logger.getLogger(Clock.class.getName());
     // Nombres de los puertos de entrada/salida. En este caso, al tratarse de
     // un reloj, sólo tenemos un puerto de salida.
-    protected Port<Integer> out = new Port<>("out");
+    public Port<Integer> in = new Port<>("in");
+    public Port<Integer> out = new Port<>("out");
     // Estado. El único estado que tiene un reloj es el periodo del mismo,
     // así como el valor actual a lanzar (0 ó 1).
     // El periodo lo damos en unidades de tiempo, da igual si la escala es
@@ -27,6 +28,7 @@ public class Clock extends Atomic {
      */
     public Clock(String name, Double period, Integer initialValue) {
         super(name);
+        super.addInPort(in);
         super.addOutPort(out);
         this.period = period;
         this.value = 0;
@@ -70,10 +72,9 @@ public class Clock extends Atomic {
         out.addValue(value);
     }
 
-    // La función deltext no es necesaria porque este elemento no tiene
-    // puertos de entrada.
     @Override
     public void deltext(double e) {
+        super.passivate();
     }
 }
 

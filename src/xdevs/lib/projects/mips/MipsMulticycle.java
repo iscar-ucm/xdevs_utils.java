@@ -2,27 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ssii2009.mips.architectures;
+package xdevs.lib.projects.mips;
 
 import java.io.File;
 import java.util.ArrayList;
-import ssii2009.examples.general.Clock;
-import ssii2009.examples.general.GND;
-import ssii2009.examples.general.VCC;
-import ssii2009.mips.lib.Constant;
-import ssii2009.mips.lib.ControladorMulticycle;
-import ssii2009.mips.lib.Mux2to1;
-import ssii2009.mips.lib.Mux4to1;
-import ssii2009.mips.lib.ALU;
-import ssii2009.mips.lib.InsNode;
-import ssii2009.mips.lib.Memory;
-import ssii2009.mips.lib.Shift2;
-import ssii2009.mips.lib.Registers;
-import ssii2009.mips.lib.Register;
-import ssii2009.mips.lib.RegisterMdr;
-import ssii2009.mips.lib.SignExtender;
-import ssii2009.mips.lib.Transducer;
-import xdevs.kernel.simulation.CoordinatorLogger;
+
+import xdevs.core.simulation.Coordinator;
+import xdevs.lib.general.sources.Constant;
 
 /**
  *
@@ -145,8 +131,6 @@ public class MipsMulticycle extends MipsAbstract {
         super.addComponent(pcSrc);
 
         alu = new ALU("ALU", 100.0); // creation of the ALU
-        //alu.setLoggerOutputActive(true);
-        alu.setLoggerActive(true);
         super.addComponent(alu);
 
         aluOut = new Register<Integer>("ALUOut",0);
@@ -157,98 +141,99 @@ public class MipsMulticycle extends MipsAbstract {
 
         // COUPLINGS
         // Salidas del PC
-        super.addCoupling(pc, Register.outOutName, iorD, Mux2to1.inIn0Name);
-        super.addCoupling(pc, Register.outOutName, aluSrcA, Mux2to1.inIn0Name);
+        super.addCoupling(pc.out, iorD.inPortIn0);
+        super.addCoupling(pc.out, aluSrcA.inPortIn0);
         // Salidas de IorD
-        super.addCoupling(iorD, Mux2to1.outOutName, memory, Memory.inAddrName);
+        super.addCoupling(iorD.outPortOut, memory.inAddr);
         // Salidas de la memoria
-        super.addCoupling(memory, Memory.outDrName, ir, Register.inInName);
-        super.addCoupling(memory, Memory.outDrName, mdr, Register.inInName);
-        super.addCoupling(memory, Memory.outStopName, clock, Clock.inName);
-        super.addCoupling(memory, Memory.outStopName, transducer, Transducer.inStopName);
+        super.addCoupling(memory.outDr, ir.in);
+        super.addCoupling(memory.outDr, mdr.in);
+        super.addCoupling(memory.outStop, clock.in);
+        super.addCoupling(memory.outStop, transducer.inStop);
         // Salidas del IR
-        super.addCoupling(ir, Register.outOutName, insNode, InsNode.inInName);
+        super.addCoupling(ir.out, insNode.in);
         // Salidas del MDR
-        super.addCoupling(mdr, Register.outOutName, memToReg, Mux4to1.inIn1Name);
+        super.addCoupling(mdr.out, memToReg.inPortIn1);
         // Salidas del GND
-        super.addCoupling(gnd, GND.outName, memToReg, Mux4to1.inIn2Name);
+        super.addCoupling(gnd.out, memToReg.inPortIn2);
         // Salidas del VCC
-        super.addCoupling(vcc, VCC.outName, memToReg, Mux4to1.inIn3Name);
+        super.addCoupling(vcc.out, memToReg.inPortIn3);
         // Salidas del InsNode
-        super.addCoupling(insNode, InsNode.outOut3126Name, transducer, Transducer.inCodOpName);
-        super.addCoupling(insNode, InsNode.outOut2500Name, shift2j, Shift2.inPortInName);
-        super.addCoupling(insNode, InsNode.outOut2521Name, registers, Registers.inRAName);
-        super.addCoupling(insNode, InsNode.outOut2016Name, registers, Registers.inRBName);
-        super.addCoupling(insNode, InsNode.outOut2016Name, regDst, Mux2to1.inIn0Name);
-        super.addCoupling(insNode, InsNode.outOut1511Name, regDst, Mux2to1.inIn1Name);
-        super.addCoupling(insNode, InsNode.outOut1500Name, signExt, SignExtender.inPortInName);
-        super.addCoupling(insNode, InsNode.outOut3126Name, ctrl, ControladorMulticycle.inOpName);
-        super.addCoupling(insNode, InsNode.outOut0500Name, ctrl, ControladorMulticycle.inFunctName);
-        super.addCoupling(insNode, InsNode.outOut1006Name, alu, ALU.inShamtName);
+        super.addCoupling(insNode.out3126, transducer.inCodOp);
+        super.addCoupling(insNode.out2500, shift2j.inPortIn);
+        super.addCoupling(insNode.out2521, registers.RA);
+        super.addCoupling(insNode.out2016, registers.RB);
+        super.addCoupling(insNode.out2016, regDst.inPortIn0);
+        super.addCoupling(insNode.out1511, regDst.inPortIn1);
+        super.addCoupling(insNode.out1500, signExt.inPortIn);
+        super.addCoupling(insNode.out3126, ctrl.portOp);
+        super.addCoupling(insNode.out0500, ctrl.portFunct);
+        // TODO: Error de conexión en el diagrama de bloques:
+        // super.addCoupling(insNode.out1006, InsNode.outOut1006Name, alu, ALU.inShamtName);
         // Salidas del registro de desplazamiento para j
-        super.addCoupling(shift2j, Shift2.outPortOutName, pcSrc, Mux4to1.inIn2Name);
+        super.addCoupling(shift2j.outPortOut, pcSrc.inPortIn2);
         // Salidas de RegDst
-        super.addCoupling(regDst, Mux2to1.outOutName, registers, Registers.inRWName);
+        super.addCoupling(regDst.outPortOut, registers.RW);
         // Salidas de MemToReg
-        super.addCoupling(memToReg, Mux4to1.outOutName, registers, Registers.inBusWName);
+        super.addCoupling(memToReg.outPortOut, registers.busW);
         // Salidas del banco de registros
-        super.addCoupling(registers, Registers.outBusAName, regA, Register.inInName);
-        super.addCoupling(registers, Registers.outBusBName, regB, Register.inInName);
+        super.addCoupling(registers.busA, regA.in);
+        super.addCoupling(registers.busB, regB.in);
         // Salidas del extensor de signo
-        super.addCoupling(signExt, SignExtender.outPortOutName, aluSrcB, Mux4to1.inIn2Name);
-        super.addCoupling(signExt, SignExtender.outPortOutName, shifter, Shift2.inPortInName);
+        super.addCoupling(signExt.outPortOut, aluSrcB.inPortIn2);
+        super.addCoupling(signExt.outPortOut, shifter.inPortIn);
         // Salidas del registro A
-        super.addCoupling(regA, Register.outOutName, aluSrcA, Mux2to1.inIn1Name);
-        super.addCoupling(regA, Register.outOutName, pcSrc, Mux4to1.inIn1Name);
+        super.addCoupling(regA.out, aluSrcA.inPortIn1);
+        super.addCoupling(regA.out, pcSrc.inPortIn1);
         // Salidas del registro B
-        super.addCoupling(regB, Register.outOutName, memory, Memory.inDwName);
-        super.addCoupling(regB, Register.outOutName, aluSrcB, Mux4to1.inIn0Name);
+        super.addCoupling(regB.out, memory.inDw);
+        super.addCoupling(regB.out, aluSrcB.inPortIn0);
         // Salidas de la constante 4:
-        super.addCoupling(constant, Constant.outOutName, aluSrcB, Mux4to1.inIn1Name);
+        super.addCoupling(constant.oOut, aluSrcB.inPortIn1);
         // Salidas del registro de desplazamiento 1
-        super.addCoupling(shifter, Shift2.outPortOutName, aluSrcB, Mux4to1.inIn3Name);
+        super.addCoupling(shifter.outPortOut, aluSrcB.inPortIn3);
         // Salidas de ALUSrcA
-        super.addCoupling(aluSrcA, Mux2to1.outOutName, alu, ALU.inOpAName);
+        super.addCoupling(aluSrcA.outPortOut, alu.inPortOpA);
         // Salidas de ALUSrcB
-        super.addCoupling(aluSrcB, Mux4to1.outOutName, alu, ALU.inOpBName);
+        super.addCoupling(aluSrcB.outPortOut, alu.inPortOpB);
         // Salidas del PCSrc
-        super.addCoupling(pcSrc, Mux4to1.outOutName, pc, Register.inInName);
+        super.addCoupling(pcSrc.outPortOut, pc.in);
         // Salidas de la ALU
-        super.addCoupling(alu, ALU.outAluOutName, pcSrc, Mux4to1.inIn0Name);
-        super.addCoupling(alu, ALU.outAluOutName, aluOut, Register.inInName);
-        super.addCoupling(alu, ALU.outZeroName, ctrl, ControladorMulticycle.inZeroName);
-        super.addCoupling(alu, ALU.outLessThanName, ctrl, ControladorMulticycle.inLessThanName);
+        super.addCoupling(alu.outPortOut, pcSrc.inPortIn0);
+        super.addCoupling(alu.outPortOut, aluOut.in);
+        super.addCoupling(alu.outPortZero, ctrl.portZero);
+        super.addCoupling(alu.outLessThan, ctrl.inLessThan);
         // Salidas de ALUOut
-        super.addCoupling(aluOut, Register.outOutName, iorD, Mux2to1.inIn1Name);
-        super.addCoupling(aluOut, Register.outOutName, memToReg, Mux4to1.inIn0Name);
+        super.addCoupling(aluOut.out, iorD.inPortIn1);
+        super.addCoupling(aluOut.out, memToReg.inPortIn0);
         // Salidas del reloj
-        super.addCoupling(clock, Clock.outName, transducer, Transducer.inClkName);
-        super.addCoupling(clock, Clock.outName, pc, Register.inClkName);
-        super.addCoupling(clock, Clock.outName, memory, Memory.inClkName);
-        super.addCoupling(clock, Clock.outName, ir, Register.inClkName);
-        super.addCoupling(clock, Clock.outName, mdr, Register.inClkName);
-        super.addCoupling(clock, Clock.outName, registers, Registers.inCLKName);
-        super.addCoupling(clock, Clock.outName, regA, Register.inClkName);
-        super.addCoupling(clock, Clock.outName, regB, Register.inClkName);
-        super.addCoupling(clock, Clock.outName, aluOut, Register.inClkName);
-        super.addCoupling(clock, Clock.outName, ctrl, ControladorMulticycle.inClkName);
+        super.addCoupling(clock.out, transducer.inClk);
+        super.addCoupling(clock.out, pc.clk);
+        super.addCoupling(clock.out, memory.inClk);
+        super.addCoupling(clock.out, ir.clk);
+        super.addCoupling(clock.out, mdr.clk);
+        super.addCoupling(clock.out, registers.CLK);
+        super.addCoupling(clock.out, regA.clk);
+        super.addCoupling(clock.out, regB.clk);
+        super.addCoupling(clock.out, aluOut.clk);
+        super.addCoupling(clock.out, ctrl.clk);
         // Salidas del controlador:
-        super.addCoupling(ctrl, ControladorMulticycle.outPCWriteName, pc, Register.inRegWriteName);
-        super.addCoupling(ctrl, ControladorMulticycle.outIorDName, iorD, Mux2to1.inCtrlName);
-        super.addCoupling(ctrl, ControladorMulticycle.outMemWriteName, memory, Memory.inMemWriteName);
-        super.addCoupling(ctrl, ControladorMulticycle.outMemReadName, memory, Memory.inMemReadName);
-        super.addCoupling(ctrl, ControladorMulticycle.outIRWriteName, ir, Register.inRegWriteName);
-        super.addCoupling(ctrl, ControladorMulticycle.outMDRWriteName, mdr, Register.inRegWriteName);
-        super.addCoupling(ctrl, ControladorMulticycle.outRegDstName, regDst, Mux2to1.inCtrlName);
-        super.addCoupling(ctrl, ControladorMulticycle.outMemtoRegName, memToReg, Mux4to1.inCtrlName);
-        super.addCoupling(ctrl, ControladorMulticycle.outRegWriteName, registers, Registers.inRegWriteName);
-        super.addCoupling(ctrl, ControladorMulticycle.outAWriteName, regA, Register.inRegWriteName);
-        super.addCoupling(ctrl, ControladorMulticycle.outBWriteName, regB, Register.inRegWriteName);
-        super.addCoupling(ctrl, ControladorMulticycle.outALUSrcAName, aluSrcA, Mux2to1.inCtrlName);
-        super.addCoupling(ctrl, ControladorMulticycle.outALUSrcBName, aluSrcB, Mux2to1.inCtrlName);
-        super.addCoupling(ctrl, ControladorMulticycle.outPcSrcName, pcSrc, Mux4to1.inCtrlName);
-        super.addCoupling(ctrl, ControladorMulticycle.outAluCtrlName, alu, ALU.inCtrlName);
-        super.addCoupling(ctrl, ControladorMulticycle.outOutWriteName, aluOut, Register.inRegWriteName);
+        super.addCoupling(ctrl.portPCWrite, pc.regWrite);
+        super.addCoupling(ctrl.portIorD, iorD.inPortCtrl);
+        super.addCoupling(ctrl.portMemWrite, memory.inMemWrite);
+        super.addCoupling(ctrl.portMemRead, memory.inMemRead);
+        super.addCoupling(ctrl.portIRWrite, ir.regWrite);
+        super.addCoupling(ctrl.portMDRWrite, mdr.regWrite);
+        super.addCoupling(ctrl.portRegDst, regDst.inPortCtrl);
+        super.addCoupling(ctrl.portMemtoReg, memToReg.inPortCtrl);
+        super.addCoupling(ctrl.portRegWrite, registers.RegWrite);
+        super.addCoupling(ctrl.portAWrite, regA.regWrite);
+        super.addCoupling(ctrl.portBWrite, regB.regWrite);
+        super.addCoupling(ctrl.portALUSrcA, aluSrcA.inPortCtrl);
+        super.addCoupling(ctrl.portALUSrcB, aluSrcB.inPortCtrl);
+        super.addCoupling(ctrl.outPcSrc, pcSrc.inPortCtrl);
+        super.addCoupling(ctrl.outAluCtrl, alu.inPortCtrl);
+        super.addCoupling(ctrl.portOutWrite, aluOut.regWrite);
     }
 
     public static void main(String[] args) {
@@ -262,7 +247,7 @@ public class MipsMulticycle extends MipsAbstract {
         // Primer test. c = a + b, con a = 3, b = 4
         // Examinando el ensamblado, el resultado lo almacena en MEM[8-24]
         MipsMulticycle mips = new MipsMulticycle("MIPS", "test" + File.separator + "foo.dis");
-        CoordinatorLogger coordinator = new CoordinatorLogger(mips);
+        Coordinator coordinator = new Coordinator(mips);
         coordinator.simulate(1800);
         System.out.println("Resultado: " + mips.memory.getData().get(8 - 24));
     }
@@ -274,7 +259,7 @@ public class MipsMulticycle extends MipsAbstract {
         Solución: f2 = 3524578, que está en MEM[-20]
          */
         MipsMulticycle mips = new MipsMulticycle("MIPS", "test" + File.separator + "bench1_fibonacci.dis");
-        CoordinatorLogger coordinator = new CoordinatorLogger(mips);
+        Coordinator coordinator = new Coordinator(mips);
         coordinator.simulate(180000);
         System.out.println("Resultado: " + mips.memory.getData().get(-20));
     }
@@ -286,7 +271,7 @@ public class MipsMulticycle extends MipsAbstract {
 	Solución: result = 120
 */
         MipsMulticycle mips = new MipsMulticycle("MIPS", "test" + File.separator + "bench2_prodesc.dis");
-        CoordinatorLogger coordinator = new CoordinatorLogger(mips);
+        Coordinator coordinator = new Coordinator(mips);
         coordinator.simulate(180000);
         System.out.println("Resultado: " + mips.memory.getData().get(-24));
     }
@@ -297,7 +282,7 @@ public class MipsMulticycle extends MipsAbstract {
 	Solución: result = 256
 */
         MipsMulticycle mips = new MipsMulticycle("MIPS", "test" + File.separator + "bench3_mcd.dis");
-        CoordinatorLogger coordinator = new CoordinatorLogger(mips);
+        Coordinator coordinator = new Coordinator(mips);
         coordinator.simulate(180000);
         System.out.println("Resultado: " + mips.memory.getData().get(-24));
     }
