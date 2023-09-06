@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package ssii2009.mips.architectures;
+package xdevs.lib.projects.mips;
 
 import java.io.File;
-import xdevs.kernel.modeling.view.CoordinatorView;
-import xdevs.kernel.modeling.view.CoupledView;
+
+import xdevs.core.modeling.CoupledView;
+import xdevs.core.simulation.CoordinatorView;
 
 /**
  * 

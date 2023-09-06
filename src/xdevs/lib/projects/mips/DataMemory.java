@@ -75,6 +75,10 @@ public class DataMemory extends Atomic {
         this(name, data, 0.0, 0.0);
     }
 
+    public DataMemory(String name, Double delayRead, Double delayWrite) {
+        this(name, new HashMap<Integer, Integer>(), delayRead, delayWrite);
+    }
+
     public DataMemory(String name) {
         this(name, new HashMap<Integer, Integer>());
     }

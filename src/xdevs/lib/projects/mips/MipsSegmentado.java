@@ -3,31 +3,12 @@
  * and open the template in the editor.
  */
 
-package ssii2009.mips.architectures;
+package xdevs.lib.projects.mips;
 
 import java.io.File;
 import java.util.ArrayList;
-import ssii2009.examples.general.And2;
-import ssii2009.examples.general.Clock;
-import ssii2009.mips.lib.Adder;
-import ssii2009.mips.lib.InstructionsMemory;
-import ssii2009.mips.lib.Mux2to1;
-import ssii2009.mips.lib.ALU;
-import ssii2009.mips.lib.ConstantAdder;
-import ssii2009.mips.lib.Shift2;
-import ssii2009.mips.lib.DataMemory;
-import ssii2009.mips.lib.InsNode;
-import ssii2009.mips.lib.Registers;
-import ssii2009.mips.lib.Register;
-import ssii2009.mips.lib.SignExtender;
-import ssii2009.examples.general.GND;
-import ssii2009.examples.general.VCC;
-import ssii2009.mips.lib.ControladorSegmentado;
-import ssii2009.mips.lib.RegisterEXMEM;
-import ssii2009.mips.lib.RegisterIDEX;
-import ssii2009.mips.lib.RegisterIFID;
-import ssii2009.mips.lib.RegisterMEMWB;
-import xdevs.kernel.simulation.CoordinatorLogger;
+
+import xdevs.core.simulation.Coordinator;
 
 /**
  *
@@ -85,7 +66,6 @@ public class MipsSegmentado extends MipsAbstract {
         super.addComponent(clock);
 
         pc = new Register<Integer>("PC", 0);
-        pc.setLoggerActive(true);
         super.addComponent(pc);
 
         pcAdder = new ConstantAdder("PCAdder", 4, 100.0);
@@ -118,7 +98,6 @@ public class MipsSegmentado extends MipsAbstract {
         super.addComponent(muxRegDst);
 
         registers = new Registers ("Registers", Registers.WRITE_MODE.PERIOD, 50.0, 50.0);// Register Bank creation
-        registers.setLoggerActive(true);
         super.addComponent(registers);
 
         signExt = new SignExtender("SignExt");
@@ -131,7 +110,6 @@ public class MipsSegmentado extends MipsAbstract {
         super.addComponent(muxALUSrc);
 
         alu = new ALU("ALU", 100.0); // creation of the ALU
-        alu.setLoggerActive(true);
         super.addComponent(alu);
 
         shif2 = new Shift2("ShiftLeft2");
@@ -151,7 +129,6 @@ public class MipsSegmentado extends MipsAbstract {
         super.addComponent(muxPCSrc);
 
         dataMemory = new DataMemory("DataMem", 200.0, 200.0);
-        dataMemory.setLoggerActive(true);
         super.addComponent(dataMemory);
 
         muxMemToReg = new Mux2to1("MuxMemToReg");
@@ -178,19 +155,15 @@ public class MipsSegmentado extends MipsAbstract {
         super.addComponent(muxSlt);*/
 
         registerIFID = new RegisterIFID("IFID");
-        registerIFID.setLoggerActive(true);
         super.addComponent(registerIFID);
 
         registerIDEX = new RegisterIDEX("IDEX");
-        registerIDEX.setLoggerActive(true);
         super.addComponent(registerIDEX);
 
         registerEXMEM = new RegisterEXMEM("EXMEM");
-        registerEXMEM.setLoggerActive(true);
         super.addComponent(registerEXMEM);
 
         registerMEMWB = new RegisterMEMWB("MEMWB");
-        registerMEMWB.setLoggerActive(true);
         super.addComponent(registerMEMWB);
 
         gnd = new GND("Gnd");
@@ -202,113 +175,113 @@ public class MipsSegmentado extends MipsAbstract {
         // Couplings
 
         // Salidas del reloj:
-        super.addCoupling(clock, Clock.outName, pc, Register.inClkName);
-        super.addCoupling(clock, Clock.outName, registers, Registers.inCLKName);
-        super.addCoupling(clock, Clock.outName, dataMemory, DataMemory.CLKName);
-        super.addCoupling(clock, Clock.outName, registerIFID, RegisterIFID.inCLKName);
-        super.addCoupling(clock, Clock.outName, registerIDEX, RegisterIDEX.inCLKName);
-        super.addCoupling(clock, Clock.outName, registerEXMEM, RegisterEXMEM.inCLKName);
-        super.addCoupling(clock, Clock.outName, registerMEMWB, RegisterMEMWB.inCLKName);
+        super.addCoupling(clock.out, pc.clk);
+        super.addCoupling(clock.out, registers.CLK);
+        super.addCoupling(clock.out, dataMemory.CLK);
+        super.addCoupling(clock.out, registerIFID.CLK);
+        super.addCoupling(clock.out, registerIDEX.CLK);
+        super.addCoupling(clock.out, registerEXMEM.CLK);
+        super.addCoupling(clock.out, registerMEMWB.CLK);
 
         // Salidas del PC:
-        super.addCoupling(pc, Register.outOutName, insMem, InstructionsMemory.inADDRName);
-        super.addCoupling(pc, Register.outOutName, pcAdder, ConstantAdder.inOpAName);
+        super.addCoupling(pc.out, insMem.ADDR);
+        super.addCoupling(pc.out, pcAdder.opA);
 
         // Salidas del sumador del PC
-        super.addCoupling(pcAdder, ConstantAdder.outOutName, muxPCSrc, Mux2to1.inIn0Name);
-        super.addCoupling(pcAdder, ConstantAdder.outOutName, registerIFID, RegisterIFID.inADDRCP);
+        super.addCoupling(pcAdder.out, muxPCSrc.inPortIn0);
+        super.addCoupling(pcAdder.out, registerIFID.IDADDRCP);
 
         // Salidas de la memoria de instrucciones
-        super.addCoupling(insMem, InstructionsMemory.outDRName, registerIFID, RegisterIFID.inDR);
-        super.addCoupling(insMem, InstructionsMemory.outStopName, clock, Clock.inName);
+        super.addCoupling(insMem.DR, registerIFID.IDDR);
+        super.addCoupling(insMem.stop, clock.in);
 
         // Salidas del nodo de instrucción:
-        super.addCoupling(insNode, InsNode.outOut3126Name, ctrl, ControladorSegmentado.inOpName);
-        super.addCoupling(insNode, InsNode.outOut0500Name, ctrl, ControladorSegmentado.inFunctName);
-        super.addCoupling(insNode, InsNode.outOut2016Name, registerIDEX , RegisterIDEX.inRT);
-        super.addCoupling(insNode, InsNode.outOut1511Name, registerIDEX , RegisterIDEX.inRD);
-        super.addCoupling(insNode, InsNode.outOut2521Name, registerIDEX , RegisterIDEX.inRS);
-        super.addCoupling(insNode, InsNode.outOut2521Name, registers , Registers.inRAName);
-        super.addCoupling(insNode, InsNode.outOut2016Name, registers , Registers.inRBName);
-        super.addCoupling(insNode, InsNode.outOut1500Name, signExt , SignExtender.inPortInName);
-        super.addCoupling(insNode, InsNode.outOut0500Name, registerIDEX, RegisterIDEX.inALUFunct);
+        super.addCoupling(insNode.out3126, ctrl.portOp);
+        super.addCoupling(insNode.out0500, ctrl.portFunct);
+        super.addCoupling(insNode.out2016, registerIDEX.EXRT);
+        super.addCoupling(insNode.out1511, registerIDEX.IDRD);
+        super.addCoupling(insNode.out2521, registerIDEX.IDRS);
+        super.addCoupling(insNode.out2521, registers.RA);
+        super.addCoupling(insNode.out2016, registers.RB);
+        super.addCoupling(insNode.out1500, signExt.inPortIn);
+        super.addCoupling(insNode.out0500, registerIDEX.EXALUFunct);
         //super.addCoupling(insNode, InsNode.outOut2500Name, shif2j , Shift2.inPortInName);
 
         // Salidas del controlador
-        super.addCoupling(ctrl, ControladorSegmentado.outPCWriteName, pc, Register.inRegWriteName);
-        super.addCoupling(ctrl, ControladorSegmentado.outMemReadName, registerIDEX, RegisterIDEX.inMemRead);
-        super.addCoupling(ctrl, ControladorSegmentado.outMemWriteName, registerIDEX, RegisterIDEX.inMemWrite);
-        super.addCoupling(ctrl, ControladorSegmentado.outBranchName, registerIDEX, RegisterIDEX.inBranch);
-        super.addCoupling(ctrl, ControladorSegmentado.outRegWriteName, registerIDEX, RegisterIDEX.inRegWrite);
-        super.addCoupling(ctrl, ControladorSegmentado.outMemtoRegName, registerIDEX, RegisterIDEX.inMemToReg);
-        super.addCoupling(ctrl, ControladorSegmentado.outALUSrcName, registerIDEX, RegisterIDEX.inALUSrc);
-        super.addCoupling(ctrl, ControladorSegmentado.outRegDstName, registerIDEX, RegisterIDEX.inRegDst);
-        super.addCoupling(ctrl, ControladorSegmentado.outALUOpName, registerIDEX, RegisterIDEX.inALUOp);
+        super.addCoupling(ctrl.portPcWrite, pc.regWrite);
+        super.addCoupling(ctrl.portMemRead, registerIDEX.EXMemRead);
+        super.addCoupling(ctrl.portMemWrite, registerIDEX.EXMemWrite);
+        super.addCoupling(ctrl.portBranch, registerIDEX.EXBranch);
+        super.addCoupling(ctrl.portRegWrite, registerIDEX.EXRegWrite);
+        super.addCoupling(ctrl.portMemtoReg, registerIDEX.EXMemToReg);
+        super.addCoupling(ctrl.portALUSrc, registerIDEX.EXALUSrc);
+        super.addCoupling(ctrl.portRegDst, registerIDEX.EXRegDst);
+        super.addCoupling(ctrl.portALUOp, registerIDEX.EXALUOp);
         //super.addCoupling(ctrl, ControladorSegmentado.outJumpReg, muxjr, Mux4to1.inCtrlName);
         //super.addCoupling(ctrl, ControladorSegmentado.outRegData, muxRegData, Mux2to1.inCtrlName);
 
         // Salidas de los multiplexores de control / otros
-        super.addCoupling(signExt , SignExtender.outPortOutName, registerIDEX, RegisterIDEX.inExtSig);
-        super.addCoupling(muxRegDst, Mux2to1.outOutName, registerEXMEM , RegisterEXMEM.inRD);
-        super.addCoupling(muxALUSrc,Mux2to1.outOutName, alu, ALU.inOpBName);
-        super.addCoupling(shif2, Shift2.outPortOutName, branchAdder, Adder.inOpBName);
-        super.addCoupling(branchAdder, Adder.outOutName, registerEXMEM, RegisterEXMEM.inADDRCP);
+        super.addCoupling(signExt.outPortOut, registerIDEX.EXExtSig);
+        super.addCoupling(muxRegDst.outPortOut, registerEXMEM.MEMRD);
+        super.addCoupling(muxALUSrc.outPortOut, alu.inPortOpB);
+        super.addCoupling(shif2.outPortOut, branchAdder.opB);
+        super.addCoupling(branchAdder.out, registerEXMEM.EXADDRCP);
         //super.addCoupling(muxPCSrc ,Mux2to1.outOutName ,muxjr, Mux4to1.inIn0Name);
         //super.addCoupling(muxjr, Mux4to1.outOutName,pc ,Register.inInName);
         //super.addCoupling(registers, Registers.outBusAName ,muxjr, Mux4to1.inIn1Name);
         //super.addCoupling(muxMemToReg, Mux2to1.outOutName, muxRegData, Mux2to1.inIn0Name);
-        super.addCoupling(and2, And2.outName, muxPCSrc, Mux2to1.inCtrlName);
+        super.addCoupling(and2.out, muxPCSrc.inPortCtrl);
         //super.addCoupling(muxRegData, Mux2to1.outOutName, registers, Registers.inBusWName);
         //super.addCoupling(muxSlt, Mux2to1.outOutName, muxRegData, Mux2to1.inIn1Name);
 
         // Salidas del banco de registros
-        super.addCoupling(registers, Registers.outBusAName, registerIDEX, RegisterIDEX.inbusA);
-        super.addCoupling(registers, Registers.outBusBName, registerIDEX , RegisterIDEX.inbusB);
+        super.addCoupling(registers.busA, registerIDEX.EXBusA);
+        super.addCoupling(registers.busB, registerIDEX.EXBusB);
 
         // Salidas de la ALU
-        super.addCoupling(alu, ALU.outZeroName, registerEXMEM, RegisterEXMEM.inAluZero);
-        super.addCoupling(alu, ALU.outAluOutName, registerEXMEM, RegisterEXMEM.inAluRes);
+        super.addCoupling(alu.outPortZero, registerEXMEM.EXAluZero);
+        super.addCoupling(alu.outPortOut, registerEXMEM.EXAluRes);
         //super.addCoupling(alu, ALU.outLessThanName, muxSlt, Mux2to1.inCtrlName);
 
         // Salidas de la memoria de datos
-        super.addCoupling(dataMemory, DataMemory.DRName, registerMEMWB, RegisterMEMWB.inDRMemDat);
+        super.addCoupling(dataMemory.DR, registerMEMWB.MEMDRMemDat);
 
         // Salidas del Registro IFID
-        super.addCoupling(registerIFID, RegisterIFID.outDR, insNode, InsNode.inInName);
-        super.addCoupling(registerIFID, RegisterIFID.outADDRCP, registerIDEX, RegisterIDEX.inADDRCP);
+        super.addCoupling(registerIFID.IDDR, insNode.in);
+        super.addCoupling(registerIFID.IDADDRCP, registerIDEX.IDADDRCP);
 
         // Salidas del Registro IDEX
-        super.addCoupling(registerIDEX, RegisterIDEX.outADDRCP, branchAdder, Adder.inOpAName);
-        super.addCoupling(registerIDEX, RegisterIDEX.outbusA, alu, ALU.inOpAName);
-        super.addCoupling(registerIDEX, RegisterIDEX.outbusB, muxALUSrc, Mux2to1.inIn0Name);
-        super.addCoupling(registerIDEX, RegisterIDEX.outbusB, registerEXMEM, RegisterEXMEM.inBusB);
-        super.addCoupling(registerIDEX, RegisterIDEX.outExtSig, shif2, Shift2.inPortInName);
-        super.addCoupling(registerIDEX, RegisterIDEX.outMemRead, registerEXMEM, RegisterEXMEM.inMemRead);
-        super.addCoupling(registerIDEX, RegisterIDEX.outMemWrite, registerEXMEM, RegisterEXMEM.inMemWrite);
-        super.addCoupling(registerIDEX, RegisterIDEX.outBranch, registerEXMEM, RegisterEXMEM.inBranch);
-        super.addCoupling(registerIDEX, RegisterIDEX.outRegDst, muxRegDst, Mux2to1.inCtrlName);
-        super.addCoupling(registerIDEX, RegisterIDEX.outALUSrc, muxALUSrc, Mux2to1.inCtrlName);
+        super.addCoupling(registerIDEX.EXADDRCP, branchAdder.opA);
+        super.addCoupling(registerIDEX.EXBusA, alu.inPortOpA);
+        super.addCoupling(registerIDEX.EXBusB, muxALUSrc.inPortIn0);
+        super.addCoupling(registerIDEX.EXBusB, registerEXMEM.EXBusB);
+        super.addCoupling(registerIDEX.EXExtSig, shif2.inPortIn);
+        super.addCoupling(registerIDEX.EXMemRead, registerEXMEM.EXMemRead);
+        super.addCoupling(registerIDEX.EXMemWrite, registerEXMEM.EXMemWrite);
+        super.addCoupling(registerIDEX.EXBranch, registerEXMEM.EXBranch);
+        super.addCoupling(registerIDEX.EXRegDst, muxRegDst.inPortCtrl);
+        super.addCoupling(registerIDEX.EXALUSrc, muxALUSrc.inPortCtrl);
         //falta el coupling del RD y para salto retardado y deteccion de operandos
 
         // Salidas del Registro EXMEM
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outADDRCP, muxPCSrc, Mux2to1.inIn1Name);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outAluRes, dataMemory, DataMemory.ADDRName);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outAluRes, registerMEMWB, RegisterMEMWB.inAluRes);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outBusB, dataMemory, DataMemory.DWName);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outRegWrite, registerMEMWB, RegisterMEMWB.inRegWrite);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outMemToReg, registerMEMWB, RegisterMEMWB.inMemToReg);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outMemRead, dataMemory, DataMemory.MemReadName);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outMemWrite, dataMemory, DataMemory.MemWriteName);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outBranch, and2, And2.in0Name);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outAluZero, and2, And2.in1Name);
-        super.addCoupling(registerEXMEM, RegisterEXMEM.outRD, registerMEMWB, RegisterMEMWB.inRD);
+        super.addCoupling(registerEXMEM.MEMADDRCP, muxPCSrc.inPortIn1);
+        super.addCoupling(registerEXMEM.MEMAluRes, dataMemory.ADDR);
+        super.addCoupling(registerEXMEM.MEMAluRes, registerMEMWB.MEMAluRes);
+        super.addCoupling(registerEXMEM.MEMBusB, dataMemory.DW);
+        super.addCoupling(registerEXMEM.MEMRegWrite, registerMEMWB.MEMRegWrite);
+        super.addCoupling(registerEXMEM.MEMMemToReg, registerMEMWB.MEMMemToReg);
+        super.addCoupling(registerEXMEM.MEMMemRead, dataMemory.MemRead);
+        super.addCoupling(registerEXMEM.MEMMemWrite, dataMemory.MemWrite);
+        super.addCoupling(registerEXMEM.MEMBranch, and2.in0);
+        super.addCoupling(registerEXMEM.MEMAluZero, and2.in1);
+        super.addCoupling(registerEXMEM.MEMRD, registerMEMWB.MEMRD);
 
         // Salidas del Registro MEMWB
-        super.addCoupling(registerMEMWB, RegisterMEMWB.outDRMemDat, muxMemToReg, Mux2to1.inIn1Name);
-        super.addCoupling(registerMEMWB, RegisterMEMWB.outAluRes, muxMemToReg, Mux2to1.inIn0Name);
-        super.addCoupling(registerMEMWB, RegisterMEMWB.outMemToReg, muxMemToReg, Mux2to1.inCtrlName);
-        super.addCoupling(registerMEMWB, RegisterMEMWB.outRD, registers, Registers.inRWName);
-        super.addCoupling(registerMEMWB, RegisterMEMWB.outRegWrite, registers, Registers.inRegWriteName );
+        super.addCoupling(registerMEMWB.WBDRMemDat, muxMemToReg.inPortIn1);
+        super.addCoupling(registerMEMWB.WBAluRes, muxMemToReg.inPortIn0);
+        super.addCoupling(registerMEMWB.WBMemToReg, muxMemToReg.inPortCtrl);
+        super.addCoupling(registerMEMWB.WBRD, registers.RW);
+        super.addCoupling(registerMEMWB.WBRegWrite, registers.RegWrite);
 
         // NodeJ
         //super.addCoupling(shif2j, Shift2.outPortOutName, nodej, NodeJ.inPortIn1Name);
@@ -329,7 +302,7 @@ public class MipsSegmentado extends MipsAbstract {
         // Primer test. c = a + b, con a = 3, b = 4
         // Examinando el ensamblado, el resultado lo almacena en MEM[8-24]
         MipsMonocycle mips = new MipsMonocycle("MIPS", "test" + File.separator + "foo.dis");
-        CoordinatorLogger coordinator = new CoordinatorLogger(mips);
+        Coordinator coordinator = new Coordinator(mips);
         coordinator.simulate(580);
         System.out.println("Resultado: " + mips.dataMemory.getData().get(8 - 24));
     }
@@ -341,7 +314,7 @@ public class MipsSegmentado extends MipsAbstract {
 	Solución: f2 = 3524578, que está en MEM[-12]
         */
         MipsMonocycle mips = new MipsMonocycle("MIPS", "test" + File.separator + "bench1_fibonacci.dis");
-        CoordinatorLogger coordinator = new CoordinatorLogger(mips);
+        Coordinator coordinator = new Coordinator(mips);
         coordinator.simulate(580);
         System.out.println("Resultado: " + mips.dataMemory.getData().get(-12));
     }

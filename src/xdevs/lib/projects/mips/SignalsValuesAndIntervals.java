@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package ssii2009.mips.architectures;
+package xdevs.lib.projects.mips;
 
 /**
  *
