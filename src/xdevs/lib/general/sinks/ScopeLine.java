@@ -1,24 +1,23 @@
-package testing.lib.atomic.sinks;
+package xdevs.lib.general.sinks;
 
-import testing.nondevs.views.ScopeView;
-import xdevs.kernel.modeling.Atomic;
-
-import xdevs.kernel.modeling.Port;
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
+import xdevs.lib.util.ScopeSeriesView;
 
 public class ScopeLine extends Atomic {
 
     protected double time;
-    protected ScopeView chart;
+    protected ScopeSeriesView chart;
     protected String topTitle;
     protected Port<Object>[] input;
 
     public ScopeLine(String name, String[] portNames) {
         super(name);
-        chart = new ScopeView(name, "title", "xTitle", "yTitle");
+        chart = new ScopeSeriesView(name, "title", "xTitle", "yTitle");
         input = new Port[portNames.length];
         for (int i = 0; i < input.length; ++i) {
             input[i] = new Port<Object>(portNames[i]);
-            super.addInport(input[i]);
+            super.addInPort(input[i]);
             chart.addSerie(portNames[i]);
         }
         this.time = 0;
@@ -33,7 +32,7 @@ public class ScopeLine extends Atomic {
         super.resume(e);
         time += e;
         for (int i = 0; i < input.length; ++i) {
-            Object value = input[i].getValue();
+            Object value = input[i].getSingleValue();
             if (value != null) {
                 if (value.getClass().isArray()) {
                     Double[] inputAsArray = (Double[]) value;
@@ -59,5 +58,14 @@ public class ScopeLine extends Atomic {
 
     public void setYTitle(String title) {
         chart.setYTitle(title);
+    }
+
+    @Override
+    public void exit() {
+    }
+
+    @Override
+    public void initialize() {
+        super.passivate();
     }
 }

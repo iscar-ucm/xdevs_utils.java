@@ -21,13 +21,13 @@ public class MEALY_SSdsys extends Atomic {
 //	 Ports
 
     public static final String outName = "out";		// Output of the system
-    protected Port<Double[]> out = new Port<Double[]>(outName);
+    public Port<Double[]> out = new Port<Double[]>(outName);
     public static final String outxName = "outx"; 	// Output of the state. May not be used
     protected Port<Double[]> outx = new Port<Double[]>(outxName);
     public static final String inName = "in";		// Input signal
-    protected Port<Object> in = new Port<Object>(inName);
+    public Port<Object> in = new Port<Object>(inName);
     public static final String clockName = "clock";	// Clock signal input
-    protected Port<Object> clock = new Port<Object>(clockName);
+    public Port<Object> clock = new Port<Object>(clockName);
     /** Parameters that characterizes the model */
     private IDynSys mymodel;			// Discrete dynamic model
     private Double[] x;					// State vector

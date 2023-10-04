@@ -3,7 +3,10 @@ package xdevs.lib.dynamic.continuous;
 import java.util.ArrayList;
 
 import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
 import xdevs.lib.dynamic.discrete.MEALY_SSdsys;
+import xdevs.lib.dynamic.discrete.SSdlsys;
+import xdevs.lib.general.sinks.ScopeStep;
 import xdevs.lib.general.sources.PiecewiseStepFunctionGenerator;
 import xdevs.lib.logic.sequential.Clock;
 import xdevs.lib.numdevs.math.WeightedSum;
@@ -46,14 +49,14 @@ public class Test_Control_Cont_Disc extends Coupled  {
 		super.addComponent(scope);
 		
 		// Link:
-		super.addCoupling(pwsf, "out", suma, "in0");
-		super.addCoupling(sys,"out",suma,"in1");
-		super.addCoupling(suma,"out",ctr,"in");
-		super.addCoupling(clk,"out", ctr, "clock");
-		super.addCoupling(ctr, "out", sys, "in");
-		super.addCoupling(sys,"out",scope,"y");
-		super.addCoupling(sys,"outx",scope,"x");
-		super.addCoupling(ctr, "out", scope,"u");
+		super.addCoupling(pwsf.out, suma.getInputPort(0));
+		super.addCoupling(sys.out,suma.getInputPort(1));
+		super.addCoupling(suma.yPort ,ctr.in);
+		super.addCoupling(clk.oClk, ctr.clock);
+		super.addCoupling(ctr.out, sys.in);
+		super.addCoupling(sys.out,scope.getInPort("y"));
+		super.addCoupling(sys.outx,scope.getInPort("x"));
+		super.addCoupling(ctr.out, scope.getInPort("u"));
 	}
 	
 	public static void main(String args[]) {
@@ -78,6 +81,8 @@ public class Test_Control_Cont_Disc extends Coupled  {
 				
 		Test_Control_Cont_Disc ModeloM = new Test_Control_Cont_Disc("Modelo",modelo,control);
 		Coordinator coordinator = new Coordinator(ModeloM);
+		coordinator.initialize();
 		coordinator.simulate(0.4);
+		coordinator.exit();
 	}
 }

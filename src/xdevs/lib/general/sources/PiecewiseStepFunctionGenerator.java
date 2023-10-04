@@ -18,8 +18,8 @@ public class PiecewiseStepFunctionGenerator extends Atomic {
 	// Ports
 	public static final String inName = "in";
 	public static final String outName = "out";
-    protected Port<Double> in = new Port<Double>(inName);
-    protected Port<Double> out = new Port<Double>(outName);
+    public Port<Double> in = new Port<Double>(inName);
+    public Port<Double> out = new Port<Double>(outName);
 	/** Parameters that characterizes the model */
 	/** Array with pairs <value, time> 
 	 *  with first element: <initial value, *>

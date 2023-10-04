@@ -1,13 +1,12 @@
-package testing.lib.atomic.sinks;
+package xdevs.lib.general.sinks;
 
-import testing.nondevs.views.ScopeView;
-
+import xdevs.lib.util.ScopeSeriesView;
 
 public class ScopeStep extends ScopeLine {
 
 	public ScopeStep(String name, String[] portNames) {
 		super(name, portNames);
-		chart.setMode(ScopeView.MODE.XYStep);
+		chart.setMode(ScopeSeriesView.MODE.XYStep);
 	}
 	
 }

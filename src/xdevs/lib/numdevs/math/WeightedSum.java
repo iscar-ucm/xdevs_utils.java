@@ -87,6 +87,10 @@ public class WeightedSum extends Atomic {
     public void lambda() {
         yPort.addValue(y);
     }
+
+    public Port<Number> getInputPort(int idx) {
+        return uPorts.get(idx);
+    }
 	
     public void exit() { }
     //	 ---------------------------------------------------------------

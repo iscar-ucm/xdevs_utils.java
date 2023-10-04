@@ -1,8 +1,4 @@
-package testing.lib.atomic.sinks;
-
-import testing.nondevs.views.ScopeViewXY;
-
-
+package xdevs.lib.general.sinks;
 
 /**
  * ScopeLineXY

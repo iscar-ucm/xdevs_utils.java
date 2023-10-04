@@ -1,4 +1,14 @@
-package testing.lib.atomic.dynamic.continuous;
+package xdevs.lib.dynamic.continuous;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
+import xdevs.lib.general.sinks.ScopeStep;
+import xdevs.lib.general.sources.PiecewiseStepFunctionGenerator;
+import xdevs.lib.numdevs.math.WeightedSum;
+
 /**
  * Test of a system with feedback
  * The system is a double integrator
@@ -6,11 +16,6 @@ package testing.lib.atomic.dynamic.continuous;
  * @version 1.0, 16th May 2008
  *
  */
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.Coordinator;
-import testing.lib.atomic.sinks.ScopeStep;
-import testing.lib.atomic.sources.PiecewiseStepFunctionGenerator;
-import testing.lib.atomic.math.WeightedSum;
 
 public class Test_Feedback_v1 extends Coupled  {
 
@@ -18,8 +23,9 @@ public class Test_Feedback_v1 extends Coupled  {
 		super(name);
 		double[][] Steps = {{0.0,0.0},{1.0,1.0},{-1.0,15.0},{0.0,30.0}};
 		PiecewiseStepFunctionGenerator pwsf = new PiecewiseStepFunctionGenerator("pwsf", Steps);
-		Double[] pesossuma = {1.0, -1.0};
-		WeightedSum suma = new WeightedSum("suma",pesossuma);
+		Double[] pesosTmp = {1.0, -1.0};
+		ArrayList<Number> pesos = new ArrayList<Number>(Arrays.asList(pesosTmp));
+		WeightedSum suma = new WeightedSum(pesos, 0.0);
 		MOORE_SScsys sys = new MOORE_SScsys("sys",modelo);
                 String[] portNames = {"y", "x", "u"};
 		ScopeStep scope = new ScopeStep("scope", portNames); // 1 puerto de entrada = 1 serie de datos
@@ -31,12 +37,12 @@ public class Test_Feedback_v1 extends Coupled  {
 		super.addComponent(scope);
 		
 		// Link:
-		super.addCoupling(pwsf, "out", suma, "in0");
-		super.addCoupling(sys,"out",suma,"in1");
-		super.addCoupling(suma,"out",sys,"in");
-		super.addCoupling(sys,"out",scope,"y");
-		super.addCoupling(sys,"outx",scope,"x");
-		super.addCoupling(pwsf, "out", scope,"u");
+		super.addCoupling(pwsf.out, suma.getInputPort(0));
+		super.addCoupling(sys.out,suma.getInputPort(1));
+		super.addCoupling(suma.yPort,sys.in);
+		super.addCoupling(sys.out,scope.getInPort("y"));
+		super.addCoupling(sys.outx,scope.getInPort("x"));
+		super.addCoupling(pwsf.out, scope.getInPort("u"));
 		
 	}
 	
@@ -53,6 +59,8 @@ public class Test_Feedback_v1 extends Coupled  {
 				
 		Test_Feedback_v1 ModeloM = new Test_Feedback_v1("Modelo",modelo);
 		Coordinator coordinator = new Coordinator(ModeloM);
+		coordinator.initialize();
 		coordinator.simulate(30.0);
+		coordinator.exit();
 	}
 }
