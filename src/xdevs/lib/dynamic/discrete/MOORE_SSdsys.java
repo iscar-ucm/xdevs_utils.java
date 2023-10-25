@@ -1,4 +1,9 @@
-package testing.lib.atomic.dynamic.discrete;
+package xdevs.lib.dynamic.discrete;
+
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
+import xdevs.core.util.Constants;
+import xdevs.lib.dynamic.IDynSys;
 
 /**
  *  MOORE_SSdsys: Atomic Moore State Space Discrete 
@@ -12,25 +17,12 @@ package testing.lib.atomic.dynamic.discrete;
  *  @author J.M. de la Cruz, May 14th, 2008
  *  @version 1.0
  */
-import xdevs.kernel.modeling.Atomic;
-import testing.kernel.modeling.DevsDessMessage;
-
-import testing.lib.atomic.dynamic.*;
-import xdevs.kernel.modeling.Port;
-
-/**
- * @author J.M. de la Cruz, May 8th, 2008 
- *
- */
 public class MOORE_SSdsys extends Atomic {
 //	 Ports
 
-    public static final String outName = "out";		// Output of the system
-    protected Port<Double[]> out = new Port<Double[]>(outName);
-    public static final String outxName = "outx"; 	// Output of the state. May not be used
-    protected Port<Double[]> outx = new Port<Double[]>(outxName);
-    public static final String inName = "in";
-    protected Port<Object> in = new Port<Object>(inName);
+    public Port<Double[]> out = new Port<Double[]>("out");
+    public Port<Double[]> outx = new Port<Double[]>("outx");
+    public Port<Object> in = new Port<Object>("in");
     /** Parameters that characterizes the model */
     private IDynSys mymodel;	// Discrete dynamic model
     private Double[] x;			// State vector
@@ -49,20 +41,10 @@ public class MOORE_SSdsys extends Atomic {
      */
     public MOORE_SSdsys(String name, IDynSys model) {
         super(name);
-        addInport(in);
-        addOutport(out);
-        addOutport(outx);
+        addInPort(in);
+        addOutPort(out);
+        addOutPort(outx);
         mymodel = model;
-        x = new Double[mymodel.getNx()];
-        x = mymodel.getState();
-        if (mymodel.getNu() == 0) {		// autonomous system
-            super.holdIn("initial", 0);
-            u = new Double[1];
-            u[0] = 0.0;
-        } else {
-            super.holdIn("initial", INFINITY);  // Waiting for the first input
-            u = new Double[mymodel.getNu()];
-        }
     }
 
     public double ta(double t) {
@@ -71,7 +53,7 @@ public class MOORE_SSdsys extends Atomic {
 
     public void deltext(double e) {
         super.resume(e);
-        Object uu = in.getValue();
+        Object uu = in.getSingleValue();
         if (super.phaseIs("initial")) {
             super.holdIn("initial", 0.0);
             utype = getTypeUu(uu); // If Phase == initial we see the kind of input
@@ -107,9 +89,8 @@ public class MOORE_SSdsys extends Atomic {
     public void lambda() {
         double tk = mymodel.getTime();
         y = mymodel.gxut(tk, x, u);
-        DevsDessMessage msg = new DevsDessMessage();
-        out.setValue(y);
-        outx.setValue(x);
+        out.addValue(y);
+        outx.addValue(x);
         if (debug == YES) {
             //System.out.println("MOORE_SSdsys lambda t: "+tiempo + ", "+super.getPhase()+" s: "+ta());
             for (int i = 0; i < y.length; i++) {
@@ -148,6 +129,24 @@ public class MOORE_SSdsys extends Atomic {
             System.arraycopy(uu, 0, u, 0, u.length);
         } else if (utype == "Double") {
             u[0] = (Double) uu;
+        }
+    }
+
+    @Override
+    public void exit() {
+    }
+
+    @Override
+    public void initialize() {
+        x = new Double[mymodel.getNx()];
+        x = mymodel.getState();
+        if (mymodel.getNu() == 0) {		// autonomous system
+            super.holdIn("initial", 0);
+            u = new Double[1];
+            u[0] = 0.0;
+        } else {
+            super.holdIn("initial", Constants.INFINITY);  // Waiting for the first input
+            u = new Double[mymodel.getNu()];
         }
     }
 }

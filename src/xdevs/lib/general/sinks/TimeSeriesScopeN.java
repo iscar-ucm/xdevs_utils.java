@@ -1,11 +1,10 @@
-package testing.lib.atomic.sinks;
+package xdevs.lib.general.sinks;
 
 import java.util.Collection;
-import testing.nondevs.views.TimeSeriesView;
 
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
+import xdevs.lib.util.TimeSeriesView;
 
 public class TimeSeriesScopeN extends Atomic {
 	public static final String inName = "in";
@@ -17,7 +16,7 @@ public class TimeSeriesScopeN extends Atomic {
 
 	public TimeSeriesScopeN(String name, String topTitle, String title, String xTitle, String yTitle, Collection<String> seriesName) {
 		super(name);
-		super.addInport(in);
+		super.addInPort(in);
 		this.time = 0.0;
 		chart = new TimeSeriesView(topTitle, title, xTitle, yTitle, seriesName);
 	}
@@ -31,10 +30,19 @@ public class TimeSeriesScopeN extends Atomic {
         super.resume(e);
 		time += e;
 		if(!in.isEmpty()) {
-			chart.add(time, in.getValue());
+			chart.add(time, in.getSingleValue());
 		}
 	}
 
 	public void lambda() { }
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.passivate();
+	}
 	
 }

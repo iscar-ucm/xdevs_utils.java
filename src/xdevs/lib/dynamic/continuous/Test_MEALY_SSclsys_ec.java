@@ -1,4 +1,11 @@
-package testing.lib.atomic.dynamic.continuous;
+package xdevs.lib.dynamic.continuous;
+
+import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
+import xdevs.lib.general.sinks.ScopeStep;
+import xdevs.lib.general.sources.Clock;
+import xdevs.lib.general.sources.PiecewiseStepFunctionGenerator;
+
 /** 
  *  Test de la función MEALYE_SSclsys
  *  usando un sistema de 1er orden continuo
@@ -7,12 +14,6 @@ package testing.lib.atomic.dynamic.continuous;
  * @author J.M. de la Cruz  May 18th, 2008
  *
  */
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.Coordinator;
-import testing.lib.atomic.sinks.ScopeStep;
-import testing.lib.atomic.sources.PiecewiseStepFunctionGenerator;
-import testing.lib.atomic.sources.Clock;
-
 public class Test_MEALY_SSclsys_ec extends Coupled {
 	public Test_MEALY_SSclsys_ec(String name, SSclsys modelo) {
 		super(name);
@@ -30,11 +31,11 @@ public class Test_MEALY_SSclsys_ec extends Coupled {
 		
 	
 		// Link:
-		super.addCoupling(pwsf, "out", sys, "in");
-		super.addCoupling(clk,"out", sys, "clock");
-		super.addCoupling(sys,"out",scope,"y");
-		super.addCoupling(sys,"outx",scope,"x");
-		super.addCoupling(pwsf, "out", scope,"u");
+		super.addCoupling(pwsf.out, sys.in);
+		super.addCoupling(clk.out, sys.clock);
+		super.addCoupling(sys.out,scope.getInPort("y"));
+		super.addCoupling(sys.outx,scope.getInPort("x"));
+		super.addCoupling(pwsf.out, scope.getInPort("u"));
 		
 	}
 	
@@ -51,6 +52,8 @@ public class Test_MEALY_SSclsys_ec extends Coupled {
 				
 		Test_MEALY_SSclsys_ec ModeloM = new Test_MEALY_SSclsys_ec("Modelo",modelo);
 		Coordinator coordinator = new Coordinator(ModeloM);
+		coordinator.initialize();
 		coordinator.simulate(31.0);
+		coordinator.exit();
 	}
 }

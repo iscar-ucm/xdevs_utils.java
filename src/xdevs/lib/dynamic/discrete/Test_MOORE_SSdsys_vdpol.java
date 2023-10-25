@@ -1,4 +1,10 @@
-package testing.lib.atomic.dynamic.discrete;
+package xdevs.lib.dynamic.discrete;
+
+import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
+import xdevs.lib.dynamic.IDynSys;
+import xdevs.lib.general.sinks.ScopeStep;
+import xdevs.lib.general.sources.Constant;
 
 /** 
  *  Test de la función MOORE_SSdsys
@@ -8,17 +14,11 @@ package testing.lib.atomic.dynamic.discrete;
  * @author J.M. de la Cruz  May 14th, 2008
  *
  */
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.Coordinator;
-import testing.lib.atomic.sinks.ScopeStep;
-import testing.lib.atomic.sources.Constant;
-import testing.lib.atomic.dynamic.*;
-
 public class Test_MOORE_SSdsys_vdpol extends Coupled {
 
 	public Test_MOORE_SSdsys_vdpol(String name, IDynSys modelo) {
 		super(name);
-		Constant cts = new Constant("cts", 0.0, 0.0);
+		Constant<Double> cts = new Constant<>("cts", 0.0, 0.0);
 		MOORE_SSdsys sys = new MOORE_SSdsys("sys",modelo);
                 String[] portNames = {"y", "x"};
 		ScopeStep scope = new ScopeStep("scope", portNames); // 1 puerto de entrada = 1 serie de datos
@@ -29,10 +29,9 @@ public class Test_MOORE_SSdsys_vdpol extends Coupled {
 		super.addComponent(cts);
 	
 		// Link:
-		super.addCoupling(cts, "out", sys, "in");
-		super.addCoupling(sys,"out",scope,"y");
-		super.addCoupling(sys,"outx",scope,"x");
-		
+		super.addCoupling(cts.oOut, sys.in);
+		super.addCoupling(sys.out,scope.getInPort("y"));
+		super.addCoupling(sys.outx,scope.getInPort("x"));
 	}
 	
 	public static void main(String args[]) {
@@ -44,6 +43,8 @@ public class Test_MOORE_SSdsys_vdpol extends Coupled {
 				
 		Test_MOORE_SSdsys_vdpol ModeloM = new Test_MOORE_SSdsys_vdpol("Modelo",modelo);
 		Coordinator coordinator = new Coordinator(ModeloM);
+		coordinator.initialize();
 		coordinator.simulate(20.0);
+		coordinator.exit();
 	}
 }

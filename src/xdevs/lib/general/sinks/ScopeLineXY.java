@@ -1,5 +1,7 @@
 package xdevs.lib.general.sinks;
 
+import xdevs.lib.util.ScopeSeriesViewXY;
+
 /**
  * ScopeLineXY
  * 
@@ -17,6 +19,6 @@ package xdevs.lib.general.sinks;
 public class ScopeLineXY extends ScopeXY {
 
     public ScopeLineXY(String name) {
-		super(name, ScopeViewXY.MODE.XYLine);
+		super(name, ScopeSeriesViewXY.MODE.XYLine);
 	}
 }

@@ -1,7 +1,6 @@
-package testing.lib.atomic.sinks;
+package xdevs.lib.general.sinks;
 
-import testing.nondevs.views.ScopeViewXY;
-
+import xdevs.lib.util.ScopeSeriesViewXY;
 
 /**
 
@@ -11,7 +10,7 @@ import testing.nondevs.views.ScopeViewXY;
 public class ScopeScatterXY extends ScopeXY {
 
 	public ScopeScatterXY(String name) {
-		super(name, ScopeViewXY.MODE.XYScatter);
+		super(name, ScopeSeriesViewXY.MODE.XYScatter);
 	}
 	
 }

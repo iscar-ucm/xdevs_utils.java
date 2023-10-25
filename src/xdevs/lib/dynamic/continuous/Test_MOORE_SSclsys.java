@@ -1,4 +1,9 @@
-package testing.lib.atomic.dynamic.continuous;
+package xdevs.lib.dynamic.continuous;
+
+import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
+import xdevs.lib.general.sinks.ScopeStep;
+import xdevs.lib.general.sources.PiecewiseStepFunctionGenerator;
 
 /** 
  *  Test de la función MOORE_SSclsys
@@ -8,10 +13,6 @@ package testing.lib.atomic.dynamic.continuous;
  * @author J.M. de la Cruz 
  * @version 1.0,  May 16th 2008 
  */
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.Coordinator;
-import testing.lib.atomic.sinks.ScopeStep;
-import testing.lib.atomic.sources.PiecewiseStepFunctionGenerator;
 
 public class Test_MOORE_SSclsys extends Coupled {
 	public Test_MOORE_SSclsys(String name, SSclsys modelo) {
@@ -28,10 +29,10 @@ public class Test_MOORE_SSclsys extends Coupled {
 		
 	
 		// Link:
-		super.addCoupling(pwsf, "out", sys, "in");
-		super.addCoupling(sys,"out",scope,"y");
-		super.addCoupling(sys,"outx",scope,"x");
-		super.addCoupling(pwsf, "out", scope,"u");
+		super.addCoupling(pwsf.out, sys.in);
+		super.addCoupling(sys.out,scope.getInPort("y"));
+		super.addCoupling(sys.outx,scope.getInPort("x"));
+		super.addCoupling(pwsf.out, scope.getInPort("u"));
 		
 	}
 	
@@ -48,6 +49,8 @@ public class Test_MOORE_SSclsys extends Coupled {
 				
 		Test_MOORE_SSclsys ModeloM = new Test_MOORE_SSclsys("Modelo",modelo);
 		Coordinator coordinator = new Coordinator(ModeloM);
+		coordinator.initialize();
 		coordinator.simulate(31.0);
+		coordinator.exit();
 	}
 }

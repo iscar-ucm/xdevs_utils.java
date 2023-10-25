@@ -1,12 +1,11 @@
-package testing.lib.atomic.sinks;
+package xdevs.lib.general.sinks;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import testing.nondevs.views.TimeSeriesView;
 
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
+import xdevs.lib.util.TimeSeriesView;
 
 public class TimeSeriesScope extends Atomic {
 
@@ -22,7 +21,7 @@ public class TimeSeriesScope extends Atomic {
         int i = 0;
 		for(String serieName : seriesName) {
             input[i] = new Port<Double>(serieName);
-			super.addInport(input[i++]);
+			super.addInPort(input[i++]);
         }
 		this.time = 0.0;
 		chart = new TimeSeriesView(topTitle, title, xTitle, yTitle, seriesName);
@@ -35,7 +34,7 @@ public class TimeSeriesScope extends Atomic {
 		seriesNameAux.add(serieName);
         input = new Port[1];
         input[0] = new Port<Double>(serieName);
-		super.addInport(input[0]);
+		super.addInPort(input[0]);
 		this.time = 0.0;
 		chart = new TimeSeriesView(topTitle, title, xTitle, yTitle, seriesNameAux);
 		this.seriesName = seriesNameAux;
@@ -51,11 +50,20 @@ public class TimeSeriesScope extends Atomic {
 		time += e;
 		for(int i=0; i<input.length; ++i) {
 			if(!input[i].isEmpty()) {
-				chart.add(time, input[i].getValue(), input[i].getName());
+				chart.add(time, input[i].getSingleValue(), input[i].getName());
 			}
 		}
 	}
 
 	public void lambda() { }
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.passivate();
+	}
 	
 }

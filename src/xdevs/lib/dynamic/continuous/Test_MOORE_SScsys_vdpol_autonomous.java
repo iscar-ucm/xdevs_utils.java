@@ -1,4 +1,9 @@
-package testing.lib.atomic.dynamic.continuous;
+package xdevs.lib.dynamic.continuous;
+
+import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
+import xdevs.lib.dynamic.IDynSys;
+import xdevs.lib.general.sinks.ScopeLine;
 
 /** 
  *  Test de la función MOORE_SScsys
@@ -8,11 +13,6 @@ package testing.lib.atomic.dynamic.continuous;
  * @author J.M. de la Cruz,  May 20th 2008
  *
  */
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.Coordinator;
-import testing.lib.atomic.dynamic.*;
-import testing.lib.atomic.sinks.ScopeLine;
-
 public class Test_MOORE_SScsys_vdpol_autonomous extends Coupled {
 
 	public Test_MOORE_SScsys_vdpol_autonomous(String name, IDynSys modelo) {
@@ -26,9 +26,8 @@ public class Test_MOORE_SScsys_vdpol_autonomous extends Coupled {
 		super.addComponent(sys);
 	
 		// Link:
-		super.addCoupling(sys,"out",scope,"y");
-		super.addCoupling(sys,"outx",scope,"x");
-		
+		super.addCoupling(sys.out,scope.getInPort("y"));
+		super.addCoupling(sys.outx,scope.getInPort("x"));
 	}
 	
 	public static void main(String args[]) {
@@ -40,6 +39,8 @@ public class Test_MOORE_SScsys_vdpol_autonomous extends Coupled {
 				
 		Test_MOORE_SScsys_vdpol_autonomous ModeloM = new Test_MOORE_SScsys_vdpol_autonomous("Modelo",modelo);
 		Coordinator coordinator = new Coordinator(ModeloM);
+		coordinator.initialize();
 		coordinator.simulate(20.0);
+		coordinator.exit();
 	}
 }

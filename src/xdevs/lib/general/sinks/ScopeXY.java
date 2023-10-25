@@ -1,11 +1,11 @@
-package testing.lib.atomic.sinks;
-
-import xdevs.kernel.modeling.Atomic;
+package xdevs.lib.general.sinks;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import testing.nondevs.views.ScopeViewXY;
-import xdevs.kernel.modeling.Port;
+
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
+import xdevs.lib.util.ScopeSeriesViewXY;
 
 /**
  * 
@@ -16,11 +16,11 @@ public class ScopeXY extends Atomic {
 
     protected HashMap<String, Port<Double>> xPorts = new HashMap<String, Port<Double>>();
     protected HashMap<String, Port<Double>> yPorts = new HashMap<String, Port<Double>>();
-    protected ScopeViewXY chart;
+    protected ScopeSeriesViewXY chart;
 
-    public ScopeXY(String name, ScopeViewXY.MODE mode) {
+    public ScopeXY(String name, ScopeSeriesViewXY.MODE mode) {
         super(name);
-        chart = new ScopeViewXY(name, mode);
+        chart = new ScopeSeriesViewXY(name, mode);
         super.holdIn("configure", 0.0);
     }
 
@@ -29,8 +29,8 @@ public class ScopeXY extends Atomic {
         Port<Double> yPort = new Port<Double>(serieName + "Y");
         xPorts.put(serieName, xPort);
         yPorts.put(serieName, yPort);
-        super.addInport(xPort);
-        super.addInport(yPort);
+        super.addInPort(xPort);
+        super.addInPort(yPort);
         chart.addSerie(serieName);
     }
 
@@ -45,7 +45,7 @@ public class ScopeXY extends Atomic {
         while (itr.hasNext()) {
             String serieName = itr.next();
             if (!xPorts.get(serieName).isEmpty() && !yPorts.get(serieName).isEmpty()) {
-                chart.add(serieName, xPorts.get(serieName).getValue(), yPorts.get(serieName).getValue());
+                chart.add(serieName, xPorts.get(serieName).getSingleValue(), yPorts.get(serieName).getSingleValue());
             }
         }
     }
@@ -63,5 +63,14 @@ public class ScopeXY extends Atomic {
 
     public void setYTitle(String title) {
         chart.setYTitle(title);
+    }
+
+    @Override
+    public void exit() {
+    }
+
+    @Override
+    public void initialize() {
+        super.holdIn("configure", 0.0);
     }
 }

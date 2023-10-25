@@ -1,6 +1,7 @@
-package testing.lib.atomic.dynamic.discrete;
+package xdevs.lib.dynamic.discrete;
 
-import testing.lib.atomic.dynamic.*;
+import xdevs.lib.dynamic.IDynSys;
+import xdevs.lib.dynamic.Sizes;
 
 /**
  * Template of State Space Disctete Non Linear Model

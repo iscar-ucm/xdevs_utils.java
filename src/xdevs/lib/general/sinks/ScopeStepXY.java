@@ -1,6 +1,6 @@
-package testing.lib.atomic.sinks;
+package xdevs.lib.general.sinks;
 
-import testing.nondevs.views.ScopeViewXY;
+import xdevs.lib.util.ScopeSeriesViewXY;
 
 /**
  * ScopeLineXY
@@ -19,7 +19,7 @@ import testing.nondevs.views.ScopeViewXY;
 public class ScopeStepXY extends ScopeXY {
 
 	public ScopeStepXY(String name) {
-		super(name, ScopeViewXY.MODE.XYStep);
+		super(name, ScopeSeriesViewXY.MODE.XYStep);
 	}
 	
 }

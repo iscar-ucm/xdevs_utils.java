@@ -1,9 +1,10 @@
-package testing.lib.atomic.sources;
+package xdevs.lib.general.sources;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
+
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 
 /**
@@ -16,8 +17,7 @@ import xdevs.kernel.modeling.Port;
 public class Clock extends Atomic {
     private static Logger logger = Logger.getLogger(Clock.class.getName());
 	// Ports
-	public static final String outName = "out";
-    protected Port<Double> out = new Port<Double>(outName);
+    public Port<Double> out = new Port<Double>("out");
 	
 	/** Parameters that characterizes the model */
 	private double dt;	// Tick clock in seconds
@@ -32,7 +32,7 @@ public class Clock extends Atomic {
 	public Clock(String name, double dt){
 		super(name);
 		this.dt = dt;
-		addOutport(out);
+		addOutPort(out);
 		super.holdIn("initial", 0);
 	}
 		
@@ -46,13 +46,20 @@ public class Clock extends Atomic {
 	}
 	
 	public void lambda(){
-		out.setValue(tiempo);
+		out.addValue(tiempo);
 		if (logger.isLoggable(Level.INFO)){
 			logger.info("t: " + tiempo + " fase: "+ super.getPhase());
 		}
 	}
-	
 
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.holdIn("initial", 0);
+	}
 }
 
 	
