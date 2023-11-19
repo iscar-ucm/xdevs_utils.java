@@ -1,18 +1,12 @@
-package testing.lib.atomic.continuous;
+package xdevs.lib.numdevs.integrator;
 
-
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 public class IntegratorEuler extends Atomic {
-	public static final String inName = "in";
-    public static final String resetName = "reset";
-	public static final String outName = "out";
-
-    protected Port<Double> in = new Port<Double>(inName);
-    protected Port<Object> reset = new Port<Object>(resetName);
-    protected Port<Double> out = new Port<Double>(outName);
+    public Port<Double> in = new Port<Double>("in");
+    public Port<Object> reset = new Port<Object>("reset");
+    public Port<Double> out = new Port<Double>("out");
 
 	protected double dx;	// Entrada
 	protected double x;	// Estado en el instante t
@@ -20,12 +14,12 @@ public class IntegratorEuler extends Atomic {
 	// Constructor 
 	public IntegratorEuler(String name, double x0) {
 		super(name);
-		super.addInport(in);
-		super.addInport(reset);
-		super.addOutport(out);
+		super.addInPort(in);
+		super.addInPort(reset);
+		super.addOutPort(out);
 		this.dx = 0.0;
 		this.x = x0;
-		super.holdIn("initial",0.0);
+		super.activate();
 	}
 
     public IntegratorEuler(String name) {
@@ -44,18 +38,27 @@ public class IntegratorEuler extends Atomic {
             return;
         }
         if(!in.isEmpty()) {
-            dx = in.getValue();
+            dx = in.getSingleValue();
             EulerStep(e);
             super.holdIn("active", 0.0);
         }
 	}
 	
 	public void lambda() {
-        out.setValue(x);
+        out.addValue(x);
 	}
 	
 	public void EulerStep(double h) {
         x += h*dx;
     }
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.activate();
+	}
 
 }

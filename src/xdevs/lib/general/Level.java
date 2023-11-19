@@ -1,17 +1,11 @@
-package testing.lib.atomic.general;
+package xdevs.lib.general;
 
-
-import xdevs.kernel.modeling.Atomic;
-import testing.kernel.modeling.DevsDessMessage;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 public class Level extends Atomic {
-
-	public static final String inName = "in";
-	public static final String outName = "out";
-    protected Port<Double> in;
-    protected Port<Boolean> out;
+    public Port<Double> in;
+    public Port<Boolean> out;
 
 	
 	protected double threshold;
@@ -19,10 +13,10 @@ public class Level extends Atomic {
 	
 	public Level(String name, double threshold){
 		super(name);
-        in = new Port<Double>(inName);
-        out = new Port<Boolean>(outName);
-		super.addInport(in);
-		super.addOutport(out);
+        in = new Port<Double>("in");
+        out = new Port<Boolean>("out");
+		super.addInPort(in);
+		super.addOutPort(out);
 		
 		this.threshold = threshold;
 		level_crossing = false;
@@ -31,7 +25,7 @@ public class Level extends Atomic {
 	
 	public void deltext(double e) {
         super.resume(e);
-		if(!in.isEmpty() && in.getValue()>threshold)
+		if(!in.isEmpty() && in.getSingleValue()>threshold)
 			super.holdIn("active", 0);
 	}
 
@@ -41,9 +35,17 @@ public class Level extends Atomic {
 	}
 
 	public void lambda() {
-		DevsDessMessage msg = new DevsDessMessage();
 		if(level_crossing) 
-            out.setValue(level_crossing);
+            out.addValue(level_crossing);
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.passivate();
 	}
 
 }

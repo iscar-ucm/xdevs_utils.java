@@ -1,13 +1,13 @@
-package testing.lib.atomic.general;
+package xdevs.lib.general;
 
 
 //import java.util.Iterator;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
 
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 /**
  *  Clocked Single Input Sampler Atomic Model
@@ -46,9 +46,9 @@ public class ClockSISampler extends Atomic {
         signal = new Port<Double>(signalName);
         clock = new Port<Object>(clockName);
         out = new Port<Double>(outName);
-		addInport(signal);
-		addInport(clock);
-		addOutport(out);
+		addInPort(signal);
+		addInPort(clock);
+		addOutPort(out);
 		super.passivate();
 	}
 	
@@ -57,7 +57,7 @@ public class ClockSISampler extends Atomic {
         super.resume(e);
 		// Get a value every time the signal changes	
 		if(!signal.isEmpty()) {
-				output = signal.getValue();
+				output = signal.getSingleValue();
 		}
 		//	 Output a value every tick of the clock 
 		if(!clock.isEmpty()) {
@@ -79,10 +79,21 @@ public class ClockSISampler extends Atomic {
 	}
 	
 	public void lambda(){
-		out.setValue(output);
+		out.addValue(output);
 		if (logger.isLoggable(Level.INFO)){
 			logger.info("CSIS lambda t: "+tiempo + " y: "+output+" "+super.getPhase()+" s: "+ta());
 		}
+	}
+
+
+	@Override
+	public void exit() {
+	}
+
+
+	@Override
+	public void initialize() {
+		super.passivate();
 	}
 	
 }

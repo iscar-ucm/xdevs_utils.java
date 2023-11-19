@@ -1,8 +1,8 @@
-package testing.lib.atomic.general;
+package xdevs.lib.general;
 
-import testing.lib.atomic.continuous.IntegratorEuler;
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.modeling.Port;
+import xdevs.core.modeling.Coupled;
+import xdevs.core.modeling.Port;
+import xdevs.lib.numdevs.integrator.IntegratorEuler;
 
 public class DevsDess extends Coupled {
 
@@ -16,9 +16,9 @@ public class DevsDess extends Coupled {
 	public DevsDess(String name, IntegratorEuler integrator, double threshold){
 		
 		super(name);
-        super.addInport(in);
-        super.addOutport(out);
-        super.addOutport(state);
+        super.addInPort(in);
+        super.addOutPort(out);
+        super.addOutPort(state);
 		
 		Level level = new Level("Level",threshold);
 		
@@ -26,13 +26,13 @@ public class DevsDess extends Coupled {
 		addComponent(level);
 
         // EIC
-        super.addCoupling(this, inName, integrator, IntegratorEuler.inName);
+        super.addCoupling(in, integrator.in);
         // IC
-        super.addCoupling(level, Level.outName, integrator, IntegratorEuler.resetName);
-        super.addCoupling(integrator, IntegratorEuler.outName, level, Level.inName);
+        super.addCoupling(level.out, integrator.reset);
+        super.addCoupling(integrator.out, level.in);
         // EOC
-        super.addCoupling(integrator, IntegratorEuler.outName, this, outName);
-        super.addCoupling(level, Level.outName, this, stateName);
+        super.addCoupling(integrator.out, out);
+        super.addCoupling(level.out, state);
 	}
 	
 }
