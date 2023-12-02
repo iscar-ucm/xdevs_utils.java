@@ -1,9 +1,7 @@
-package testing.lib.atomic.sources;
+package xdevs.lib.general.sources;
 
-import java.util.logging.Logger;
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 /**
  *  Quantified Sine Generator Atomic Model
@@ -13,14 +11,11 @@ import xdevs.kernel.modeling.Port;
  *
  */
 public class QSine extends Atomic {
-    private static Logger logger = Logger.getLogger(QSine.class.getName());
+    // private static Logger logger = Logger.getLogger(QSine.class.getName());
 	// Ports
 	public static final String outName = "out";
     protected Port<Double> out = new Port<Double>(outName);
 	
-	/** Parameters that characterizes the model */
-	private double w;		// Frequency: rad/seg
-	private double fi = 0;	// Initial phase: rad
 	private double A = 1.0; // Amplitude of the signal
 	private double of = 0;  // Offset of the signal
 	
@@ -44,8 +39,7 @@ public class QSine extends Atomic {
 	 */
 	public QSine(String name, double w){
 		super(name);
-		this.w = w;
-		addOutport(out);
+		addOutPort(out);
 		super.holdIn("initial",0);
 		output = fun(super.getPhase());
 	}
@@ -61,7 +55,6 @@ public class QSine extends Atomic {
 	 */
 	public QSine(String name, double w, double fi){
 		this(name, w);
-		this.fi = fi;
 	}
 	
 	/** Generates a Quantified Sine Signal.
@@ -118,7 +111,7 @@ public class QSine extends Atomic {
 	
 	public void lambda(){
 		double value = A * output + of;
-		out.setValue(value);
+		out.addValue(value);
 	}
 	
 	protected double fun(String phase){
@@ -157,4 +150,13 @@ public class QSine extends Atomic {
          */
          return 0;
          }
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.holdIn("initial",0);
+	}
 }

@@ -1,10 +1,10 @@
-package testing.lib.atomic.general;
+package xdevs.lib.general;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
 
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
+import xdevs.core.util.Constants;
 
 /**
  *  Single Input Sampler Atomic Model
@@ -41,9 +41,9 @@ public class SingleInputSampler extends Atomic {
 		super(name);
 		this.h = h;
 		//super.setMealyModel(true);
-		addInport(in);
-		addOutport(out);
-        super.holdIn("initial", INFINITY);
+		addInPort(in);
+		addOutPort(out);
+        super.holdIn("initial", Constants.INFINITY);
 	}
 	
 	public double ta(double t){
@@ -52,38 +52,39 @@ public class SingleInputSampler extends Atomic {
 	
 	public void deltext(double e) {
         super.resume(e);
-		output = in.getValue();
+		output = in.getSingleValue();
 		if (super.phaseIs("initial")){
 			super.holdIn("transitory", 0);
 			return;
 		}
 		super.holdIn("new", super.getSigma());
-		
-		if (logger.isLoggable(Level.INFO)){
-			logger.info("SAMPLER deltext t: "+tiempo + " y: "+output + " s: "+ta()+" "+super.getPhase());
-		}
+		logger.info("SAMPLER deltext t: "+tiempo + " y: "+output + " s: "+ta()+" "+super.getPhase());
 	}
 	
 	public void deltint() {
 		super.holdIn("old", h);
-		
-		if (logger.isLoggable(Level.INFO)){
-			tiempo = tiempo + h;
-			logger.info("SAMPLER deltin  tnext: " + tiempo + " output: "+output+" "+super.getPhase());
-		}
+		tiempo = tiempo + h;
+		logger.info("SAMPLER deltin  tnext: " + tiempo + " output: "+output+" "+super.getPhase());
 	}
 	
 	public void lambda(){
-		out.setValue(output);
-		if (logger.isLoggable(Level.INFO)){
-			logger.info("SAMPLER lambda t: "+tiempo + " y: "+output+" "+super.getPhase()+" s: "+ta());
-		}
+		out.addValue(output);
+		logger.info("SAMPLER lambda t: "+tiempo + " y: "+output+" "+super.getPhase()+" s: "+ta());
 	}
 	
     @Override
 	public void deltcon(double e){
 		deltext(e);
 		deltint();
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.holdIn("initial", Constants.INFINITY);
 	}
 }
 	

@@ -1,8 +1,7 @@
-package testing.lib.atomic.sources;
+package xdevs.lib.general.sources;
 
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 /**
  * Modelo atómico que retiene la entrada una determinada cantidad de tiempo
@@ -25,8 +24,8 @@ public class Timer extends Atomic {
 	 */
 	public Timer(String name, Double sT){
 		super(name);
-		addInport(in);
-		addOutport(out);
+		addInPort(in);
+		addOutPort(out);
 		super.holdIn("initial",0);
 		_sampleTime = sT;
 	}
@@ -41,7 +40,16 @@ public class Timer extends Atomic {
     }
 
 	public void lambda() {
-		out.setValue(1.0);
+		out.addValue(1.0);
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.holdIn("initial",0);
 	}
 	
 }

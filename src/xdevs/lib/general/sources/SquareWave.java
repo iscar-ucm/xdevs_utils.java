@@ -1,8 +1,7 @@
-package testing.lib.atomic.sources;
+package xdevs.lib.general.sources;
 
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 public class SquareWave extends Atomic {
 	// Ports
@@ -24,7 +23,7 @@ public class SquareWave extends Atomic {
 	 */
 	public SquareWave(String name, Double amplitude, Double period, Double pulseWidth, Double delay){
 		super(name);
-		addOutport(out);
+		addOutPort(out);
 		this.amplitude = amplitude;
 		this.period = period;
 		this.pulseWidth = pulseWidth;
@@ -50,11 +49,20 @@ public class SquareWave extends Atomic {
 
 	public void lambda() {
 		if(super.getPhase().equals("initial"))
-			out.setValue(0.0);
+			out.addValue(0.0);
 		else if(super.getPhase().equals("high"))
-			out.setValue(amplitude);
+			out.addValue(amplitude);
 		else if(super.getPhase().equals("low"))
-			out.setValue(0.0);
+			out.addValue(0.0);
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.holdIn("initial",0);
 	}
 
 }

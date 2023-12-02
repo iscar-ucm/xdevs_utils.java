@@ -1,9 +1,7 @@
-package testing.lib.atomic.general;
+package xdevs.lib.general;
 
-
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 public class FlowGenerator extends Atomic {
 
@@ -32,8 +30,8 @@ public class FlowGenerator extends Atomic {
 		super(name);
         stop = new Port<Object>(stopName);
         out = new Port<Double>(outName);
-		addInport(stop);
-		addOutport(out);
+		addInPort(stop);
+		addOutPort(out);
 		this.period = period;
 		this.holdIn("active",period);
 		this.time = time;
@@ -46,7 +44,7 @@ public class FlowGenerator extends Atomic {
 
 	public void deltint() {
 		time+=period;
-		flow = new Double((_amplitude*Math.sin(_frecuency*time+_phase))+_bias);
+		flow = _amplitude*Math.sin(_frecuency*time+_phase)+_bias;
 		this.holdIn("active",period);
 	}
 
@@ -57,7 +55,16 @@ public class FlowGenerator extends Atomic {
 	}
 
 	public void lambda() {
-		out.setValue(flow);
+		out.addValue(flow);
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.holdIn("active", this.period);
 	}
 
 }

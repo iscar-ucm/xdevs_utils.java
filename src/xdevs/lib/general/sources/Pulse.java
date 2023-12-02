@@ -1,9 +1,7 @@
-package testing.lib.atomic.sources;
+package xdevs.lib.general.sources;
 
-import xdevs.kernel.modeling.Atomic;
-import testing.kernel.modeling.DevsDessMessage;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 /**
  * Pulse generator
@@ -23,7 +21,7 @@ public class Pulse extends Atomic {
 
 	public Pulse(String name, Double baseValue, Double pulseAmplitude, Double initialStepTime, Double finalPulseTime) {
 		super(name);
-		addOutport(out);
+		addOutPort(out);
 		this.baseValue = baseValue;
 		this.pulseAmplitude = pulseAmplitude;
 		this.initialStepTime = initialStepTime;
@@ -54,6 +52,15 @@ public class Pulse extends Atomic {
     }
 
 	public void lambda() {
-		out.setValue(outValue);
+		out.addValue(outValue);
+	}
+
+	@Override
+	public void exit() {
+	}
+
+	@Override
+	public void initialize() {
+		super.holdIn("zone0",0);
 	}
 }

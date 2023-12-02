@@ -1,9 +1,7 @@
-package testing.lib.atomic.continuous;
+package xdevs.lib.numdevs.integrator;
 
-
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 public class IntegratorEulerN extends Atomic {
 	public static final String inIn = "in";
@@ -55,6 +53,18 @@ public class IntegratorEulerN extends Atomic {
 		for(int i=0;i<x.length;i++) {
 			x[i] += dx[i]*h;
 		}
+	}
+
+	@Override
+	public void exit() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'exit'");
+	}
+
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'initialize'");
 	}
 
 }
