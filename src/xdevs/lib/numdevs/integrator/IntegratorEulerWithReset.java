@@ -1,18 +1,13 @@
-package testing.lib.atomic.continuous;
+package xdevs.lib.numdevs.integrator;
 
-import xdevs.kernel.modeling.Port;
-
-
+import xdevs.core.modeling.Port;
 
 public class IntegratorEulerWithReset extends IntegratorEuler {
-
-	public static final String inReset = "reset";
-    protected Port<Object> reset;
+    protected Port<Object> reset = new Port<Object>("reset");
 	
-	public IntegratorEulerWithReset(String name, double x0) {
+	public IntegratorEulerWithReset(String name, Double x0) {
 		super(name, x0);
-        reset = new Port<Object>(inReset);
-		super.addInport(reset);
+		super.addInPort(reset);
 	}
 	
     @Override

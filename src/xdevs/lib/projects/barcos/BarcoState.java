@@ -534,7 +534,6 @@ public class BarcoState extends AtomicState implements IFuncion, Dibujable, Segu
 		}
 
 		public double[] dameControlActual() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
@@ -563,7 +562,6 @@ public class BarcoState extends AtomicState implements IFuncion, Dibujable, Segu
 		/** funcion que da las derivadas */
 		public double[] dameDerivadas(double tiempo, double[] estados,
 				double[] control) {
-			// TODO Auto-generated method stub
 			double[] derivadas= new double[6];
 
 			//derivadas[0]=this.ecuacionDif.update(this.getStateValue("x4").doubleValue())[0][0];
@@ -614,7 +612,6 @@ public class BarcoState extends AtomicState implements IFuncion, Dibujable, Segu
 
 		/** funcion que da el estado actual del barco*/
 		public double[] dameEstadoActual() {
-			// TODO Auto-generated method stub
 			double[] estado=new double[6];
 			estado[0]=this.getStateValue("x1").doubleValue();
 			estado[1]=this.getStateValue("x2").doubleValue();
@@ -641,11 +638,7 @@ public class BarcoState extends AtomicState implements IFuncion, Dibujable, Segu
 				Vector<Double> velocidadActualizada = new Vector<Double>(3,0);
 				Vector<Double> angulosActualizados = new Vector<Double>(3,0);
 				posicionActualizada.add(this.getStateValue("y").doubleValue());
-				posicionActualizada.add(this.getStateValue("x").doubleValue());
-				
-				
-				//TODO PROVISIONAL HAY QUE CALCULAR COSAS?
-				
+				posicionActualizada.add(this.getStateValue("x").doubleValue());				
 				todoActualizado.add(posicionActualizada);
 				outActualizados.addValue(todoActualizado);
 			}
@@ -667,7 +660,6 @@ public class BarcoState extends AtomicState implements IFuncion, Dibujable, Segu
 
 
 		public void avanzaTiempo() {
-			// TODO Auto-generated method stub
 			double tiempo = 1;
 			this.setStateValue("x2",ecuacionDif.update(this.getStateValue("x4").doubleValue())[0][0] *tiempo);
 			this.actualizaEstados(integrador.integra(this, tiempo,this.getStateValue("tactual").doubleValue()));
@@ -710,7 +702,6 @@ public class BarcoState extends AtomicState implements IFuncion, Dibujable, Segu
 
 		@Override
 		public float obtenerRumbo() {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 		

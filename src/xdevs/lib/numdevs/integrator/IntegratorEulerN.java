@@ -4,31 +4,22 @@ import xdevs.core.modeling.Atomic;
 import xdevs.core.modeling.Port;
 
 public class IntegratorEulerN extends Atomic {
-	public static final String inIn = "in";
-	public static final String outOut = "out";
-
-    protected Port<Double[]> in;
-    protected Port<Double[]> out;
+    public Port<Double[]> in = new Port<Double[]>("in");
+    public Port<Double[]> out = new Port<Double[]>("out");
 	
 	private Double[] dx;		// Entrada
 	private Double[] x;			// Estado en el instante t
+	private Double[] x0;			// Estado inicial
 	
 	// Constructor 
-	public IntegratorEulerN(String name, double[] x0) {
-		super(name);
-        in = new Port<Double[]>(IntegratorEuler.inName);
-        out = new Port<Double[]>(IntegratorEuler.outName);
-		super.addInport(in);
-		super.addOutport(out);
+	public IntegratorEulerN(String name, Double[] x0) {
+		super(name);                
+		super.addInPort(in);
+		super.addOutPort(out);
 		
 		this.dx = new Double[x0.length];
 		this.x = new Double[x0.length];
-		for(int i=0;i<x0.length;i++) {
-			this.x[i] = x0[i];
-			this.dx[i] = 0.0;
-		}
-
-		super.holdIn("active",0.0);
+		this.x0 = x0;
 	}
 
 	public void deltint() {
@@ -37,7 +28,7 @@ public class IntegratorEulerN extends Atomic {
 
 	public void deltext(double e) {
         super.resume(e);
-        Double[] tempValueAtIn = in.getValue();
+        Double[] tempValueAtIn = in.getSingleValue();
         if(tempValueAtIn!=null) {
             dx = tempValueAtIn;
             EulerStep(e);
@@ -46,7 +37,7 @@ public class IntegratorEulerN extends Atomic {
     }
 	
 	public void lambda() {
-		out.setValue(x);
+		out.addValue(x);
 	}
 	
 	public void EulerStep(double h) {
@@ -57,14 +48,15 @@ public class IntegratorEulerN extends Atomic {
 
 	@Override
 	public void exit() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'exit'");
 	}
 
 	@Override
 	public void initialize() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'initialize'");
+		for(int i=0;i<x0.length;i++) {
+			this.x[i] = x0[i];
+			this.dx[i] = 0.0;
+		}
+		super.holdIn("active",0.0);
 	}
 
 }

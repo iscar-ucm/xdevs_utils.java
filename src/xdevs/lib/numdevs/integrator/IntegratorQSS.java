@@ -9,8 +9,8 @@ import xdevs.core.modeling.Port;
  * @author José Luis Risco Martín.
  */
 public class IntegratorQSS extends Atomic {
-    public Port<Double> uPort = new Port<>("u");
-    public Port<Double> yPort = new Port<>("y");
+    public Port<Double> in = new Port<>("u");
+    public Port<Double> out = new Port<>("y");
     
     protected Double epsilon;	// Quantum size
     protected Double x0, x;		// State
@@ -45,7 +45,7 @@ public class IntegratorQSS extends Atomic {
 	
     public void deltext(double e) {
         x = x + u*e;
-        u = uPort.getSingleValue();
+        u = in.getSingleValue();
         if (super.getSigma()==0) return;
         if (u==0) super.passivate();
         else super.holdIn("active", (q-x + Math.signum(u)*epsilon)/u);
@@ -53,7 +53,7 @@ public class IntegratorQSS extends Atomic {
 	
     public void lambda() {
         y = q + epsilon*Math.signum(u);
-        yPort.addValue(y);
+        out.addValue(y);
     }
 	
     public void exit() { }

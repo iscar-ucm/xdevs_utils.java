@@ -31,14 +31,14 @@ import xdevs.core.simulation.Coordinator;
  */
 public class Step extends Atomic {
 
-    public Port<Double> portOut = new Port<>("portOut");
+    public Port<Double> out = new Port<>("portOut");
     protected double initialValue;
     protected double stepTime;
     protected double finalValue;
 
     public Step(String name, double initialValue, double stepTime, double finalValue) {
     	super(name);
-        super.addOutPort(portOut);
+        super.addOutPort(out);
         this.initialValue = initialValue;
         this.stepTime = stepTime;
         this.finalValue = finalValue;
@@ -69,9 +69,9 @@ public class Step extends Atomic {
     @Override
     public void lambda() {
         if (super.phaseIs("initialValue")) {
-            portOut.addValue(initialValue);
+            out.addValue(initialValue);
         } else if (super.phaseIs("finalValue")) {
-            portOut.addValue(finalValue);
+            out.addValue(finalValue);
         }
     }
 
@@ -81,7 +81,7 @@ public class Step extends Atomic {
         stepExample.addComponent(step);
         Console console = new Console("console");
         stepExample.addComponent(console);
-        stepExample.addCoupling(step.portOut, console.iIn);
+        stepExample.addCoupling(step.out, console.iIn);
         Coordinator coordinator = new Coordinator(stepExample);
         coordinator.initialize();
         coordinator.simulate(30.0);
