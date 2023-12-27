@@ -3,11 +3,10 @@
  * and open the template in the editor.
  */
 
-package ssii2009.examples.flipflop;
+package xdevs.lib.logic.sequential;
 
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
-
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 /**
  * Primitive D flip-flop (Taken from Xilinx 11)
@@ -22,14 +21,11 @@ import xdevs.kernel.modeling.Port;
  */
 public class FD extends Atomic {
     // Inputs:
-    public static final String inD = "D";
-    protected Port<Integer> D = new Port<Integer>(inD);
-    public static final String inC = "C";
-    protected Port<Integer> C = new Port<Integer>(inC);
+    public Port<Integer> D = new Port<Integer>("D");
+    public Port<Integer> C = new Port<Integer>("C");
 
     // Outputs:
-    public static final String outQ = "Q";
-    protected Port<Integer> Q = new Port<Integer>(outQ);
+    public Port<Integer> Q = new Port<Integer>("Q");
 
     // State:
     protected Integer valueAtD;
@@ -45,15 +41,10 @@ public class FD extends Atomic {
      */
     public FD(String name, Double delay) {
         super(name);
-        super.addInport(C);
-        super.addInport(D);
-        super.addOutport(Q);
+        super.addInPort(C);
+        super.addInPort(D);
+        super.addOutPort(Q);
         this.delay = delay;
-        this.valueAtC = null;
-        this.valueAtD = null;
-        this.valueAtQ = 0;
-        // Lo primero en salir por lambda es (valueAtQ)
-        super.holdIn("active", delay);
     }
 
     /**
@@ -75,11 +66,11 @@ public class FD extends Atomic {
     public void deltext(double e) {
         super.resume(e);
         // Primero miramos si hay algo en D:
-        Integer comingByD = D.getValue();
+        Integer comingByD = D.getSingleValue();
         if(comingByD!=null)
             valueAtD = comingByD;
         // Luego miramos si hay flanco de reloj
-        Integer comingByC = C.getValue();
+        Integer comingByC = C.getSingleValue();
         if(comingByC!=null) {
             if(comingByC==1 && (valueAtC==null || valueAtC==0)) {
                 valueAtQ = valueAtD;
@@ -92,7 +83,19 @@ public class FD extends Atomic {
 
     @Override
     public void lambda() {
-        Q.setValue(valueAtQ);
+        Q.addValue(valueAtQ);
+    }
+
+    @Override
+    public void exit() { }
+
+    @Override
+    public void initialize() {
+        this.valueAtC = null;
+        this.valueAtD = null;
+        this.valueAtQ = 0;
+        // Lo primero en salir por lambda es (valueAtQ)
+        super.holdIn("active", delay);
     }
 
 }

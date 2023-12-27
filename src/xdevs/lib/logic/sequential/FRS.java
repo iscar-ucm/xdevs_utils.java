@@ -3,10 +3,10 @@
  * and open the template in the editor.
  */
 
-package ssii2009.examples.flipflop;
+package xdevs.lib.logic.sequential;
 
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 /**
  *
@@ -15,16 +15,12 @@ import xdevs.kernel.modeling.Port;
 public class FRS extends Atomic {
 
     // Inputs:
-    public static final String inR = "R";
-    protected Port<Integer> R = new Port<Integer>(inR);
-    public static final String inS = "S";
-    protected Port<Integer> S = new Port<Integer>(inS);
-    public static final String inC = "C";
-    protected Port<Integer> C = new Port<Integer>(inC);
+    public Port<Integer> R = new Port<Integer>("R");
+    public Port<Integer> S = new Port<Integer>("S");
+    public Port<Integer> C = new Port<Integer>("C");
 
     // Outputs:
-    public static final String outQ = "Q";
-    protected Port<Integer> Q = new Port<Integer>(outQ);
+    public Port<Integer> Q = new Port<Integer>("Q");
 
     // State:
     protected Integer valueAtR;
@@ -41,17 +37,11 @@ public class FRS extends Atomic {
      */
     public FRS(String name, Double delay) {
         super(name);
-        super.addInport(C);
-        super.addInport(S);
-        super.addInport(R);
-        super.addOutport(Q);
+        super.addInPort(C);
+        super.addInPort(S);
+        super.addInPort(R);
+        super.addOutPort(Q);
         this.delay = delay;
-        this.valueAtC = null;
-        this.valueAtR = null;
-        this.valueAtS = null;
-        this.valueAtQ = 0;
-        // Lo primero en salir por lambda es (valueAtQ)
-        super.holdIn("active", delay);
     }
 
     /**
@@ -73,13 +63,13 @@ public class FRS extends Atomic {
     public void deltext(double e) {
         super.resume(e);
         // Primero miramos si hay algo en D:
-        Integer comingByR = R.getValue();
-        Integer comingByS = S.getValue();
+        Integer comingByR = R.getSingleValue();
+        Integer comingByS = S.getSingleValue();
         if(comingByR!=null)
             valueAtR = comingByR;
         if(comingByS!=null)
             valueAtS = comingByS;
-        Integer comingByC = C.getValue();
+        Integer comingByC = C.getSingleValue();
         if(comingByC!=null) {
             if(comingByC==1 && (valueAtC==null || valueAtC==0)) {
                 valueAtQ = ((1-valueAtC)*valueAtQ) + valueAtC*(1-valueAtR)*((1-valueAtS)*valueAtQ + valueAtS) > 0 ? 1 : 0;
@@ -92,7 +82,19 @@ public class FRS extends Atomic {
 
     @Override
     public void lambda() {
-		Q.setValue(valueAtQ);
+		Q.addValue(valueAtQ);
     }
 
+    @Override
+    public void exit() { }
+
+    @Override
+    public void initialize() {
+        this.valueAtC = null;
+        this.valueAtR = null;
+        this.valueAtS = null;
+        this.valueAtQ = 0;
+        // Lo primero en salir por lambda es (valueAtQ)
+        super.holdIn("active", delay);
+    }
 }

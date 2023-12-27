@@ -3,10 +3,10 @@
  * and open the template in the editor.
  */
 
-package ssii2009.examples.flipflop;
+package xdevs.lib.logic.sequential;
 
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 /**
  * FJKC is a single J-K-type flip-flop with J, K, and asynchronous clear (CLR)
@@ -21,16 +21,12 @@ import xdevs.kernel.modeling.Port;
 public class FJK extends Atomic {
 
      // Inputs:
-    public static final String inJ = "J";
-    protected Port<Integer> J = new Port<Integer>(inJ);
-    public static final String inK = "K";
-    protected Port<Integer> K = new Port<Integer>(inK);
-    public static final String inC = "C";
-    protected Port<Integer> C = new Port<Integer>(inC);
+    public Port<Integer> J = new Port<Integer>("J");
+    public Port<Integer> K = new Port<Integer>("K");
+    public Port<Integer> C = new Port<Integer>("C");
 
     // Outputs:
-    public static final String outQ = "Q";
-    protected Port<Integer> Q = new Port<Integer>(outQ);
+    public Port<Integer> Q = new Port<Integer>("Q");
 
     // State:
     protected Integer valueAtJ;
@@ -47,17 +43,11 @@ public class FJK extends Atomic {
      */
     public FJK(String name, Double delay) {
         super(name);
-        super.addInport(C);
-        super.addInport(K);
-        super.addInport(J);
-        super.addOutport(Q);
+        super.addInPort(K);
+        super.addInPort(C);
+        super.addInPort(J);
+        super.addOutPort(Q);
         this.delay = delay;
-        this.valueAtC = null;
-        this.valueAtJ = null;
-        this.valueAtK = null;
-        this.valueAtQ = 0;
-        // Lo primero en salir por lambda es (valueAtQ)
-        super.holdIn("active", delay);
     }
 
     /**
@@ -79,14 +69,14 @@ public class FJK extends Atomic {
     public void deltext(double e) {
         super.resume(e);
         // Primero miramos si hay algo en J y K:
-        Integer comingByJ = J.getValue();
-        Integer comingByK = K.getValue();
+        Integer comingByJ = J.getSingleValue();
+        Integer comingByK = K.getSingleValue();
         if(comingByJ!=null)
             valueAtJ = comingByJ;
         if(comingByK!=null)
             valueAtK = comingByK;
         // Luego miramos si hay flanco de reloj
-        Integer comingByC = C.getValue();
+        Integer comingByC = C.getSingleValue();
         if(comingByC!=null) {
             if(comingByC==1 && (valueAtC==null || valueAtC==0)) {
                 valueAtQ  = (valueAtJ * (1-valueAtQ) + (1-valueAtK) * valueAtQ) > 0 ? 1 : 0;
@@ -99,6 +89,19 @@ public class FJK extends Atomic {
 
     @Override
     public void lambda() {
-		Q.setValue(valueAtQ);
+		Q.addValue(valueAtQ);
+    }
+
+    @Override
+    public void exit() { }
+
+    @Override
+    public void initialize() {
+        this.valueAtC = null;
+        this.valueAtJ = null;
+        this.valueAtK = null;
+        this.valueAtQ = 0;
+        // Lo primero en salir por lambda es (valueAtQ)
+        super.holdIn("active", delay);
     }
 }

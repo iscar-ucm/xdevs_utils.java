@@ -1,11 +1,11 @@
-package ssii2009.examples.models;
+package xdevs.lib.examples.sequential;
 
-import ssii2009.examples.flipflop.FT;
-import ssii2009.examples.general.Clock;
-import ssii2009.examples.general.VCC;
-import ssii2009.examples.general.GND;
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.CoordinatorLogger;
+import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
+import xdevs.lib.logic.GND;
+import xdevs.lib.logic.VCC;
+import xdevs.lib.logic.sequential.Clock;
+import xdevs.lib.logic.sequential.FT;
 
 /**
  *
@@ -20,7 +20,6 @@ public class AlfonsoExample extends Coupled {
         VCC vcc = new VCC("VCC");
         GND gnd = new GND("GND");
         FT biestableT = new FT("T");
-        biestableT.setLoggerActive(true);
 
         super.addComponent(clock);
         super.addComponent(vcc);
@@ -28,14 +27,15 @@ public class AlfonsoExample extends Coupled {
         super.addComponent(biestableT);
 
         // Ahoro conecto los modelos atómicos entre sí:
-        super.addCoupling(clock, Clock.outName, biestableT, FT.inC);
-        super.addCoupling(gnd, GND.outName, biestableT, FT.inT);
+        super.addCoupling(clock.oClk, biestableT.C);
+        super.addCoupling(gnd.out, biestableT.T);
     }
 
     public static void main(String[] args) {
         AlfonsoExample example = new AlfonsoExample();
-		CoordinatorLogger coordinator = new CoordinatorLogger(example);
+		Coordinator coordinator = new Coordinator(example);
+        coordinator.initialize();
 		coordinator.simulate(4);
-        
+        coordinator.exit();
     }
 }

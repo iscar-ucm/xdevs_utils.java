@@ -3,14 +3,14 @@
  * and open the template in the editor.
  */
 
-package ssii2009.examples.models;
+package xdevs.lib.examples.sequential;
 
-import ssii2009.examples.flipflop.FRS;
-import ssii2009.examples.general.Clock;
-import ssii2009.examples.general.VCC;
-import ssii2009.examples.general.GND;
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.Coordinator;
+import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
+import xdevs.lib.logic.GND;
+import xdevs.lib.logic.VCC;
+import xdevs.lib.logic.sequential.Clock;
+import xdevs.lib.logic.sequential.FRS;
 
 /**
  *
@@ -32,14 +32,16 @@ public class JoseExample extends Coupled {
         addComponent(biestableRS);
 
         // Ahoro conecto los modelos atómicos entre sí:
-        super.addCoupling(clock, Clock.outName, biestableRS, FRS.inC);
-        super.addCoupling(gnd, GND.outName, biestableRS, FRS.inR);
-        super.addCoupling(gnd, GND.outName, biestableRS, FRS.inS);
+        super.addCoupling(clock.oClk, biestableRS.C);
+        super.addCoupling(gnd.out, biestableRS.R);
+        super.addCoupling(gnd.out, biestableRS.S);
     }
 
     public static void main(String[] args) {
         JoseExample example = new JoseExample();
 		Coordinator coordinator = new Coordinator(example);
+        coordinator.initialize();
 		coordinator.simulate(40);
+        coordinator.exit();
     }
 }

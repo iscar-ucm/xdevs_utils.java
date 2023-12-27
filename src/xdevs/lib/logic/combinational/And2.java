@@ -1,10 +1,10 @@
 /*
  * And gate for the PCsource
  */
-package ssii2009.examples.general;
+package xdevs.lib.logic.combinational;
 
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 /**
  *
@@ -12,12 +12,9 @@ import xdevs.kernel.modeling.Port;
  */
 public class And2 extends Atomic {
 
-    public static final String in0Name = "in0";
-    public static final String in1Name = "in1";
-    public static final String outName = "out";
-    protected Port<Integer> in0 = new Port<Integer>(in0Name);
-    protected Port<Integer> in1 = new Port<Integer>(in1Name);
-    protected Port<Integer> out = new Port<Integer>(outName);
+    public Port<Integer> in0 = new Port<Integer>("in0");
+    public Port<Integer> in1 = new Port<Integer>("in1");
+    public Port<Integer> out = new Port<Integer>("out");
     protected Double delay;
     protected Integer valueAtIn0;
     protected Integer valueAtIn1;
@@ -25,14 +22,10 @@ public class And2 extends Atomic {
 
     public And2(String name, Double delay) {
         super(name);
-        super.addInport(in0);
-        super.addInport(in1);
-        super.addOutport(out);
+        super.addInPort(in0);
+        super.addInPort(in1);
+        super.addOutPort(out);
         this.delay = delay;
-        valueAtIn0 = null;
-        valueAtIn1 = null;
-        valueToOut = null;
-        super.passivate();
     }
 
     public And2(String name) {
@@ -48,12 +41,12 @@ public class And2 extends Atomic {
     public void deltext(double e) {
         super.resume(e);
         // Primero procesamos los valores de las entradas.
-        Integer tempValueAtIn0 = in0.getValue();
+        Integer tempValueAtIn0 = in0.getSingleValue();
         if (tempValueAtIn0 != null && tempValueAtIn0 != valueAtIn0) {
             valueAtIn0 = tempValueAtIn0;
             super.holdIn("active", delay);
         }
-        Integer tempValueAtIn1 = in1.getValue();
+        Integer tempValueAtIn1 = in1.getSingleValue();
         if (tempValueAtIn1 != null && tempValueAtIn1 != valueAtIn1) {
             valueAtIn1 = tempValueAtIn1;
             super.holdIn("active", delay);
@@ -67,6 +60,17 @@ public class And2 extends Atomic {
 
     @Override
     public void lambda() {
-        out.setValue(valueToOut);
+        out.addValue(valueToOut);
+    }
+
+    @Override
+    public void exit() { }
+
+    @Override
+    public void initialize() {
+        valueAtIn0 = null;
+        valueAtIn1 = null;
+        valueToOut = null;
+        super.passivate();
     }
 }

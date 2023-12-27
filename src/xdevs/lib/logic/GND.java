@@ -1,19 +1,19 @@
-package ssii2009.examples.general;
+package xdevs.lib.logic;
 
-import xdevs.kernel.modeling.Atomic;
-import xdevs.kernel.modeling.Port;
+import xdevs.core.modeling.Atomic;
+import xdevs.core.modeling.Port;
 
 public class GND extends Atomic {
     // Nombres de los puertos de entrada/salida. En este caso, al tratarse de
     // un GND, sólo tenemos un puerto de salida.
 
-    public static final String outName = "out";
-    protected Port<Integer> out = new Port<Integer>(outName);
+    public Port<Integer> out = new Port<Integer>("out");
+    protected Double delay;
 
     public GND(String name, double delay) {
         super(name);
-        super.addOutport(out);
-        super.holdIn("active", delay);
+        super.addOutPort(out);
+        this.delay = delay;
     }
 
     public GND(String name) {
@@ -25,7 +25,7 @@ public class GND extends Atomic {
     }
 
     public void lambda() {
-        out.setValue(0);
+        out.addValue(0);
     }
 
     // La función deltext no es necesaria porque este elemento no tiene
@@ -34,6 +34,14 @@ public class GND extends Atomic {
     public void deltext(double e) {
         super.resume(e);
         super.passivate();
+    }
+
+    @Override
+    public void exit() { }
+
+    @Override
+    public void initialize() {
+        super.holdIn("active", delay);
     }
 }
 

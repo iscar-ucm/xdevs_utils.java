@@ -3,14 +3,13 @@
  * and open the template in the editor.
  */
 
-package ssii2009.examples.models;
+package xdevs.lib.examples.sequential;
 
-import ssii2009.examples.flipflop.FD;
-import ssii2009.examples.general.Clock;
-import ssii2009.examples.general.VCC;
-import xdevs.kernel.modeling.Coupled;
-import xdevs.kernel.simulation.Coordinator;
-import xdevs.kernel.util.AtomicLogger;
+import xdevs.core.modeling.Coupled;
+import xdevs.core.simulation.Coordinator;
+import xdevs.lib.logic.VCC;
+import xdevs.lib.logic.sequential.Clock;
+import xdevs.lib.logic.sequential.FD;
 
 /**
  *
@@ -23,20 +22,22 @@ public class RiscoExample extends Coupled {
         // Primero instancio los modelos atómicos
         Clock clock = new Clock("CLK", 2.0);
         VCC vcc = new VCC("VCC");
-        AtomicLogger biestableD = new AtomicLogger(new FD("D"));
+        FD fd = new FD("D");
         
         super.addComponent(clock);
         super.addComponent(vcc);
-        super.addComponent(biestableD);
+        super.addComponent(fd);
 
         // Ahoro conecto los modelos atómicos entre sí:
-        super.addCoupling(clock, Clock.outName, biestableD, FD.inC);
-        super.addCoupling(vcc, VCC.outName, biestableD, FD.inD);
+        super.addCoupling(clock.oClk, fd.C);
+        super.addCoupling(vcc.out, fd.D);
     }
 
     public static void main(String[] args) {
         RiscoExample example = new RiscoExample();
 		Coordinator coordinator = new Coordinator(example);
+        coordinator.initialize();
 		coordinator.simulate(30);
+        coordinator.exit();
     }
 }
