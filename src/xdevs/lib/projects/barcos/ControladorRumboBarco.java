@@ -88,6 +88,7 @@ public class ControladorRumboBarco extends AtomicState implements IFuncion{
 
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		
 		//si llega de avion, almacenar
 		//se llega de modelo referencia, enviar a avion, poner sigma a cero

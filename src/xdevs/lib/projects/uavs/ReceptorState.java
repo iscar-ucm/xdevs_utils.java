@@ -30,6 +30,7 @@ public class ReceptorState extends AtomicState {
 	
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		if(!inPosicion.isEmpty()) {
 			Vector<Number> posicion = inPosicion.getSingleValue();
 		}

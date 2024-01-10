@@ -46,7 +46,7 @@ public class ALUControl extends Atomic {
 
     @Override
     public void deltext(double e) {
-
+        super.resume(e);
         // Primero procesamos los valores de las entradas.
         if (!Funct.isEmpty()) {
             valueAtFunct = Funct.getSingleValue();

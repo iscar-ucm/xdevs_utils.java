@@ -12,8 +12,8 @@ public class IntegratorEulerWithReset extends IntegratorEuler {
 	
     @Override
 	public void deltext(double e) {
-        super.resume(e);
 		if(!reset.isEmpty()) {
+	        super.resume(e);
             x = 0.0;
         }
 		else

@@ -70,6 +70,7 @@ public class Mux4to1 extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         // Primero procesamos los valores de las entradas.
         if (!inPortCtrl.isEmpty()) {
             Integer tempValueAtCtrl = inPortCtrl.getSingleValue();

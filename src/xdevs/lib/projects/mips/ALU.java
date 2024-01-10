@@ -63,6 +63,7 @@ public class ALU extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         // Primero procesamos los valores de las entradas.
         if (!inPortCtrl.isEmpty()) {
             valueAtCtrl = inPortCtrl.getSingleValue();

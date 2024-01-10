@@ -67,6 +67,7 @@ public class Ramp extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
     }
 
     @Override

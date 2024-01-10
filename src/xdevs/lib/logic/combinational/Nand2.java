@@ -69,6 +69,7 @@ public class Nand2 extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         boolean activate = false;
         
         Integer tempValueAtIn0 = (iIn0.isEmpty())? null : iIn0.getSingleValue();

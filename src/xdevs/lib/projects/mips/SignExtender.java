@@ -52,6 +52,7 @@ public class SignExtender extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         // Primero procesamos los valores de las entradas.
         if(inPortIn.getSingleValue()!=null) {
             valueAtIn = inPortIn.getSingleValue();

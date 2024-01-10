@@ -42,6 +42,7 @@ public class DataBuffer extends Atomic {
 
     @Override
     public void deltext(double d) {
+        super.resume(d);
         Boolean tempValuaeAtIn = iIn.getSingleValue();
         if (tempValuaeAtIn != null) {
             valueToOut = (tempValuaeAtIn) ? 1.0 : 0.0;

@@ -62,6 +62,7 @@ public class Adder extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         // Primero procesamos los valores de las entradas.
 
         if(!opA.isEmpty()) {

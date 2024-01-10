@@ -60,6 +60,7 @@ public class Scope extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         time += e;
         if (!iIn.isEmpty()) {
             chart.addPoint(time, iIn.getSingleValue().doubleValue());

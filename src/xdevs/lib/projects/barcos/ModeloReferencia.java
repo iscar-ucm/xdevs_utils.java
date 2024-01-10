@@ -81,6 +81,7 @@ public class ModeloReferencia extends AtomicState implements IFuncion {
 	
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		// TODO Auto-generated method stub
 	//	System.out.println("llegada mensaje modelo referencia");
 		Iterator<Vector<Number>> iteradorSolicitud = puertoIn.getValues().iterator();

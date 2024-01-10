@@ -63,6 +63,7 @@ public class Console extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         time += e;
         if (iIn.isEmpty()) {
             return;

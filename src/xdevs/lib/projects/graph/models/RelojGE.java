@@ -30,6 +30,7 @@ public class RelojGE extends AtomicState implements Runnable{
 	
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		//llega lista posicion
 		lista_posicion = in.getSingleValue();
 		super.passivate();

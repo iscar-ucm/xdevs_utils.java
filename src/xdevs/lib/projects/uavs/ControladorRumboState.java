@@ -398,7 +398,7 @@ public class ControladorRumboState extends AtomicState implements IFuncion{
 		//realizaremos en primer lugar la función de transición externa, puesto que tras la funci�n de transici�n
 		//interna tendremos calculados los valores de los datos del avión para el instante k+1
 		deltint();
-		deltext(e);
+		deltext(0);
 		
 			
 	}

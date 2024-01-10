@@ -51,6 +51,7 @@ public class And2 extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         // Primero procesamos los valores de las entradas.
         if (!in0.isEmpty()) {
             Integer tempValueAtIn0 = in0.getSingleValue();

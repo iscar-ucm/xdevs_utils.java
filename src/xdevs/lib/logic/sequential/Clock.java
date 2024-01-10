@@ -98,6 +98,7 @@ public class Clock extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         if (!iStop.isEmpty()) {
             super.passivate();
         }

@@ -65,6 +65,7 @@ public class InsNode extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         if(in.getSingleValue()!=null) {
             valueAtIn = in.getSingleValue();
             super.holdIn("active", 0.0);

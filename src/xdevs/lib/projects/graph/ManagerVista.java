@@ -71,6 +71,7 @@ public class ManagerVista extends AtomicState {
 
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		Iterator iteradorInAnimacion = inAnimacion.getValues().iterator();
 		if (iteradorInAnimacion.hasNext()) {
 			_managerGL3D.actualizar();

@@ -112,6 +112,7 @@ public class IC7410 extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         Integer tempValueAtPin1 = (iPin1.isEmpty())? null : iPin1.getSingleValue();
         Integer tempValueAtPin2 = (iPin2.isEmpty())? null : iPin2.getSingleValue();
         Integer tempValueAtPin3 = (iPin3.isEmpty())? null : iPin3.getSingleValue();

@@ -98,6 +98,7 @@ public class DataMemory extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
 
         // Primero procesamos las señales de lectura asíncrona
         if (!ADDR.isEmpty()) {

@@ -72,6 +72,7 @@ public class Nand3 extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         boolean activate = false;
         // Primero procesamos los valores de las entradas.
         Integer tempValueAtIn0 = (iIn0.isEmpty())? null : iIn0.getSingleValue();

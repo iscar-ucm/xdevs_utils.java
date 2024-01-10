@@ -57,6 +57,7 @@ public class NodeJ extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         // Primero procesamos los valores de las entradas.
         if(!inPortIn1.isEmpty()) {
             valueAtIn1 = inPortIn1.getSingleValue();

@@ -49,6 +49,7 @@ public class Shift2 extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         // Primero procesamos los valores de las entradas.
         Integer tempValueAtIn = inPortIn.getSingleValue();
         if (tempValueAtIn != null) {

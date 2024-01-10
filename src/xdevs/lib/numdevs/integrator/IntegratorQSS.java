@@ -44,6 +44,7 @@ public class IntegratorQSS extends Atomic {
     }
 	
     public void deltext(double e) {
+        super.resume(e);
         x = x + u*e;
         u = in.getSingleValue();
         if (super.getSigma()==0) return;

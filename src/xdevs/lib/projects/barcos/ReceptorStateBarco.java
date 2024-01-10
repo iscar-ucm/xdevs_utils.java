@@ -37,6 +37,7 @@ public class ReceptorStateBarco extends AtomicState {
 	}
 
 	public void deltext(double e) {
+		super.resume(e);
 	}
 
 	@Override

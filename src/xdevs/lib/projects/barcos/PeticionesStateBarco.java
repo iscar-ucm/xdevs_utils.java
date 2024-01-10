@@ -38,6 +38,7 @@ public class PeticionesStateBarco extends AtomicState{
 
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		this.activate();
 	}
 

@@ -35,6 +35,7 @@ public class ThreadZoom extends AtomicState {
 
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		Iterator<Vector<Number>> iteradorIn = InZoom.getValues().iterator();
 		Vector<Number> datos;
 		if (iteradorIn.hasNext()) {

@@ -69,6 +69,7 @@ public class FlipFlopD extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         // Primero miramos si hay algo en D:
         Integer tempValueAtD = iD.getSingleValue();
         if (tempValueAtD != null) {

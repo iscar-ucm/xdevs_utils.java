@@ -51,6 +51,7 @@ public class RutaState extends AtomicState{
 
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		// TODO Auto-generated method stub
 		Iterator<Object> iteradorSolicitud = InRuta.getValues().iterator();
 		while (iteradorSolicitud.hasNext()) {

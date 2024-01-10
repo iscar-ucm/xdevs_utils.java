@@ -60,6 +60,7 @@ public class InstructionsMemory extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         Integer tempValueAtADDR = ADDR.getSingleValue();
         if(tempValueAtADDR!=null) {
             valueAtADDR = tempValueAtADDR / 4;

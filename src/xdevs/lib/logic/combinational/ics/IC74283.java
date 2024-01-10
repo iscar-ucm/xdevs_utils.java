@@ -118,6 +118,7 @@ public class IC74283 extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         Integer tempValueAtPin2 = (iPin2.isEmpty())? null : iPin2.getSingleValue();
         Integer tempValueAtPin3 = (iPin3.isEmpty())? null : iPin3.getSingleValue();
         Integer tempValueAtPin5 = (iPin5.isEmpty())? null : iPin5.getSingleValue();

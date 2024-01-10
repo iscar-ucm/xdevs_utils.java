@@ -79,6 +79,7 @@ public class Operador extends AtomicState{
 
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		// TODO Auto-generated method stub
 		Iterator<Double> iterador1 = in1.getValues().iterator();
 		Iterator<Double> iterador2 = in2.getValues().iterator();

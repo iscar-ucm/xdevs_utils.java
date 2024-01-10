@@ -51,6 +51,7 @@ public class ThreadAnimacion extends AtomicState {
 
 	@Override
 	public void deltext(double e) {
+		super.resume(e);
 		Iterator<Number> iteradorFPS = this.inFPS.getValues().iterator();
 		Iterator<Number> iteradorEspera = this.inEspera.getValues().iterator();
 		int FPS=0;

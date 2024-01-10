@@ -62,6 +62,7 @@ public class ScopeMulti extends Atomic {
 
     @Override
     public void deltext(double e) {
+        super.resume(e);
         time += e;
         for(Port<?> inPort : inPorts) {
             if(!inPort.isEmpty()) {

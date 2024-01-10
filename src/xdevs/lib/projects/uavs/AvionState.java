@@ -708,7 +708,7 @@ public class AvionState extends AtomicState implements IFuncion,Dibujable,Seguib
 		//interna tendremos calculados los valores de los datos del avi�n para el instante k+1
 		
 		deltint();
-		deltext(e);	
+		deltext(0);	
 	}
 
 

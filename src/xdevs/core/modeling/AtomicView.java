@@ -120,7 +120,6 @@ public class AtomicView extends Atomic {
         inportViews.forEach((port) -> {
             graph.repaint(new mxRectangle(port.getGeometry().getRectangle()));
         });
-        atomic.setSigma(atomic.getSigma() - e);
         atomic.deltext(e);
         super.holdIn(atomic.getPhase(), atomic.getSigma());
         Object[] objs = {block};
@@ -143,7 +142,6 @@ public class AtomicView extends Atomic {
 
     @Override
     public void deltcon(double e) {
-        atomic.setSigma(atomic.getSigma() - e);
         deltint();
         deltext(0);
         Object[] objs = {block};
